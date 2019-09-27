@@ -982,4 +982,8 @@ Public Class F1_Clientes
 
 
     End Sub
+
+    Private Sub tbRazonSocial_TextChanged(sender As Object, e As EventArgs) Handles tbRazonSocial.TextChanged
+        tbNombre.Text = tbRazonSocial.Text
+    End Sub
 End Class

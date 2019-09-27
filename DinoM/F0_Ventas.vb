@@ -1837,7 +1837,7 @@ Public Class F0_Ventas
         If (gb_DetalleProducto) Then
             ponerDescripcionProducto(dt)
         End If
-        Dim total As Decimal = dt.Compute("SUM(Total)", "")
+        Dim total As Decimal = dt.Compute("SUM(Total)", "") - dt.Rows(0).Item("Descuento")
         Dim totald As Double = (total / 6.96)
         Dim fechaven As String = dt.Rows(0).Item("fechaventa")
         If Not IsNothing(P_Global.Visualizador) Then
@@ -1896,6 +1896,7 @@ Public Class F0_Ventas
             'objrep.SetDataSource(Dt1Kardex)
             'totald = Math.Round(totald, 2)
             objrep.SetDataSource(dt)
+            objrep.SetParameterValue("Total", total)
             objrep.SetParameterValue("TotalBs", li)
             objrep.SetParameterValue("TotalDo", lid)
             objrep.SetParameterValue("TotalDoN", totald)
