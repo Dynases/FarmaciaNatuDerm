@@ -283,10 +283,9 @@ Partial Class F0_MCompras
         Me.PanelDetalle.BackColor = System.Drawing.Color.White
         Me.PanelDetalle.Controls.Add(Me.GroupPanel4)
         Me.PanelDetalle.Controls.Add(Me.GPanelProductos)
-        Me.PanelDetalle.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelDetalle.Location = New System.Drawing.Point(0, 190)
         Me.PanelDetalle.Name = "PanelDetalle"
-        Me.PanelDetalle.Size = New System.Drawing.Size(1301, 260)
+        Me.PanelDetalle.Size = New System.Drawing.Size(1280, 260)
         Me.PanelDetalle.TabIndex = 2
         '
         'GroupPanel4
@@ -299,7 +298,7 @@ Partial Class F0_MCompras
         Me.GroupPanel4.Font = New System.Drawing.Font("Georgia", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupPanel4.Location = New System.Drawing.Point(0, 0)
         Me.GroupPanel4.Name = "GroupPanel4"
-        Me.GroupPanel4.Size = New System.Drawing.Size(1301, 53)
+        Me.GroupPanel4.Size = New System.Drawing.Size(1280, 53)
         '
         '
         '
@@ -339,7 +338,7 @@ Partial Class F0_MCompras
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel5.Location = New System.Drawing.Point(0, 0)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(1295, 30)
+        Me.Panel5.Size = New System.Drawing.Size(1274, 30)
         Me.Panel5.TabIndex = 0
         '
         'grdetalle
@@ -352,7 +351,7 @@ Partial Class F0_MCompras
         Me.grdetalle.Name = "grdetalle"
         Me.grdetalle.Office2007ColorScheme = Janus.Windows.GridEX.Office2007ColorScheme.Custom
         Me.grdetalle.Office2007CustomColor = System.Drawing.Color.DodgerBlue
-        Me.grdetalle.Size = New System.Drawing.Size(1295, 30)
+        Me.grdetalle.Size = New System.Drawing.Size(1274, 30)
         Me.grdetalle.TabIndex = 0
         Me.grdetalle.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
@@ -366,7 +365,7 @@ Partial Class F0_MCompras
         Me.GPanelProductos.Font = New System.Drawing.Font("Georgia", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GPanelProductos.Location = New System.Drawing.Point(0, 53)
         Me.GPanelProductos.Name = "GPanelProductos"
-        Me.GPanelProductos.Size = New System.Drawing.Size(1301, 207)
+        Me.GPanelProductos.Size = New System.Drawing.Size(1280, 207)
         '
         '
         '
@@ -406,7 +405,7 @@ Partial Class F0_MCompras
         Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel7.Location = New System.Drawing.Point(0, 0)
         Me.Panel7.Name = "Panel7"
-        Me.Panel7.Size = New System.Drawing.Size(1295, 184)
+        Me.Panel7.Size = New System.Drawing.Size(1274, 184)
         Me.Panel7.TabIndex = 0
         '
         'grProductos
@@ -421,7 +420,7 @@ Partial Class F0_MCompras
         Me.grProductos.Name = "grProductos"
         Me.grProductos.Office2007ColorScheme = Janus.Windows.GridEX.Office2007ColorScheme.Custom
         Me.grProductos.Office2007CustomColor = System.Drawing.Color.DodgerBlue
-        Me.grProductos.Size = New System.Drawing.Size(1295, 184)
+        Me.grProductos.Size = New System.Drawing.Size(1274, 184)
         Me.grProductos.TabIndex = 0
         Me.grProductos.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '

@@ -2806,6 +2806,23 @@ Public Class AccesoLogica
 
         Return _resultado
     End Function
+    Public Shared Function L_fnVerificarSiSeContabilizoPagoCompra(_tenumi As String) As Boolean
+        Dim _Tabla As DataTable
+        Dim _resultado As Boolean
+        Dim _listParam As New List(Of Datos.DParametro)
+
+        _listParam.Add(New Datos.DParametro("@tipo", 9))
+        _listParam.Add(New Datos.DParametro("@tenumi", _tenumi))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TC00121Cheque", _listParam)
+
+        If _Tabla.Rows.Count > 0 Then
+            _resultado = True
+        Else
+            _resultado = False
+        End If
+
+        Return _resultado
+    End Function
 #End Region
 
 #Region "COBROS DE LAS COMPRAS"

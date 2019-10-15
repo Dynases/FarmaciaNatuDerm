@@ -657,6 +657,7 @@ Public Class P_Principal
         SideNav1.IsMenuExpanded = False
         Ventana.Select()
         Dim frm As New Pr_HojaRuta
+        frm._modulo = FP_ZONAS
         Dim tab3 As SuperTabItem = superTabControl3.CreateTab(frm.Text)
         frm._tab = tab3
         Dim panel As Panel = P_Global._fnCrearPanelVentanas(frm)

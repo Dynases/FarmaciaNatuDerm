@@ -1491,8 +1491,8 @@ Public Class F0_Ventas
 
             End If
         Else
-            _modulo.Select()
             _tab.Close()
+            _modulo.Select()
         End If
     End Sub
     Public Sub _prCargarIconELiminar()
