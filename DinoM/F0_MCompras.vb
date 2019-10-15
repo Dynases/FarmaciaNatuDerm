@@ -37,6 +37,7 @@ Public Class F0_MCompras
         grCompra.Focus()
         _prAsignarPermisos()
         Me.Text = "COMPRAS"
+        PanelDetalle.Height = 250
     End Sub
     Public Sub _prValidarLote()
         Dim dt As DataTable = L_fnPorcUtilidad()
@@ -174,11 +175,11 @@ Public Class F0_MCompras
         Else
             cbSucursal.SelectedIndex = -1
         End If
-        swTipoVenta.Value = True
+        swTipoVenta.Value = False
         _CodProveedor = 0
         tbFechaVenta.Value = Now.Date
-        tbFechaVenc.Visible = False
-        lbCredito.Visible = False
+        tbFechaVenc.Visible = True
+        lbCredito.Visible = True
         swEmision.Value = True
         tbNFactura.Clear()
         tbNAutorizacion.Clear()
@@ -272,7 +273,7 @@ Public Class F0_MCompras
                 .MaxLength = 50
             End With
             With grdetalle.RootTable.Columns("cbfechavenc")
-                .Width = 150
+                .Width = 120
                 .Caption = "FECHA VENC."
                 .Visible = True
                 .FormatString = "dd/MM/yyyy"
@@ -285,7 +286,7 @@ Public Class F0_MCompras
                 .MaxLength = 50
             End With
             With grdetalle.RootTable.Columns("cbfechavenc")
-                .Width = 150
+                .Width = 120
                 .Caption = "FECHA VENC."
                 .Visible = False
                 .FormatString = "dd/MM/yyyy"
@@ -310,7 +311,7 @@ Public Class F0_MCompras
 
         With grdetalle.RootTable.Columns("producto")
             .Caption = "PRODUCTOS"
-            .Width = 250
+            .Width = 280
             .Visible = True
 
         End With
@@ -321,7 +322,7 @@ Public Class F0_MCompras
         End With
 
         With grdetalle.RootTable.Columns("cbcmin")
-            .Width = 160
+            .Width = 100
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
             .Visible = True
             .FormatString = "0.00"
@@ -333,7 +334,7 @@ Public Class F0_MCompras
             .Visible = False
         End With
         With grdetalle.RootTable.Columns("unidad")
-            .Width = 100
+            .Width = 80
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
             .Visible = True
             .Caption = "Unidad".ToUpper
@@ -347,7 +348,7 @@ Public Class F0_MCompras
         End With
         If (_estadoPor = 1) Then
             With grdetalle.RootTable.Columns("cbutven")
-                .Width = 120
+                .Width = 110
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
                 .Visible = True
                 .FormatString = "0.00"
@@ -358,7 +359,7 @@ Public Class F0_MCompras
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
                 .Visible = True
                 .FormatString = "0.00"
-                .Caption = "Precio Venta.".ToUpper
+                .Caption = "Precio Venta".ToUpper
             End With
         Else
             With grdetalle.RootTable.Columns("cbutven")
@@ -373,7 +374,7 @@ Public Class F0_MCompras
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
                 .Visible = False
                 .FormatString = "0.00"
-                .Caption = "Precio Venta.".ToUpper
+                .Caption = "Precio Venta".ToUpper
             End With
         End If
 
@@ -777,6 +778,7 @@ Public Class F0_MCompras
         grProductos.Focus()
         grProductos.MoveTo(grProductos.FilterRow)
         grProductos.Col = 2
+        PanelDetalle.Height = 370
     End Sub
     Private Sub _DesHabilitarProductos()
         GPanelProductos.Visible = False
@@ -845,6 +847,8 @@ Public Class F0_MCompras
         Dim pordesc As Double = ((montodesc * 100) / grdetalle.GetTotal(grdetalle.RootTable.Columns("cbptot"), AggregateFunction.Sum))
         tbPdesc.Value = pordesc
         tbtotal.Value = grdetalle.GetTotal(grdetalle.RootTable.Columns("cbptot"), AggregateFunction.Sum) - montodesc
+        'Agregado para que Muestre el Subtotal de la compra
+        tbSubtotalC.Value = grdetalle.GetTotal(grdetalle.RootTable.Columns("cbptot"), AggregateFunction.Sum)
     End Sub
     Public Sub _prEliminarFila()
         If (grdetalle.Row >= 0) Then
@@ -961,15 +965,17 @@ Public Class F0_MCompras
             fndui = tbNDui.Text
 
             fautoriz = tbNAutorizacion.Text
-            fmonto = tbtotal.Value.ToString
+            fmonto = tbtotal.Value.ToString + tbMdesc.Value
             sujetoCreditoFiscal = tbSACF.Text
-            nosujetoCreditoFiscal = fmonto - sujetoCreditoFiscal
+            'nosujetoCreditoFiscal = fmonto - sujetoCreditoFiscal
+            nosujetoCreditoFiscal = tbtotal.Value.ToString - sujetoCreditoFiscal
             subTotal = fmonto - nosujetoCreditoFiscal
             'If tbMdesc.Value = String.Empty Then
             '    tbMdesc.Value = 0
             'End If
             fdesc = tbMdesc.Value.ToString
-            importeBaseCreditoFiscal = sujetoCreditoFiscal - fdesc
+            'importeBaseCreditoFiscal = sujetoCreditoFiscal - fdesc
+            importeBaseCreditoFiscal = fmonto - fdesc
             creditoFiscal = importeBaseCreditoFiscal * 0.13
             fccont = tbCodControl.Text
             Dim numi As String = ""
@@ -988,7 +994,8 @@ Public Class F0_MCompras
             nosujetoCreditoFiscal = 0
             subTotal = fmonto
             fdesc = tbMdesc.Value.ToString
-            importeBaseCreditoFiscal = sujetoCreditoFiscal - fdesc
+            'importeBaseCreditoFiscal = sujetoCreditoFiscal - fdesc
+            importeBaseCreditoFiscal = fmonto - fdesc
             creditoFiscal = 0
             fccont = 0
             Dim numi As String = ""
@@ -1274,8 +1281,8 @@ salirIf:
 
                     End If
 
-
                     _prCalcularPrecioTotal()
+                    PanelDetalle.Height = 250
                     _DesHabilitarProductos()
                 Else
                     If (existe) Then
@@ -1512,24 +1519,44 @@ salirIf:
     End Sub
 
     Private Sub btnModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
-        If (grCompra.RowCount > 0) Then
-            _prhabilitar()
-            btnNuevo.Enabled = False
-            btnModificar.Enabled = False
-            btnEliminar.Enabled = False
-            btnGrabar.Enabled = True
+        Dim res As Boolean = L_fnVerificarSiSeContabilizo(tbCodigo.Text)
+        If res Then
+            Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+            ToastNotification.Show(Me, "La Compra no puede ser Modificada porque ya fue contabilizada".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.TopCenter)
+        Else
 
-            PanelNavegacion.Enabled = False
-            _prCargarIconELiminar()
+            If (grCompra.RowCount > 0) Then
+                _prhabilitar()
+                btnNuevo.Enabled = False
+                btnModificar.Enabled = False
+                btnEliminar.Enabled = False
+                btnGrabar.Enabled = True
+
+                PanelNavegacion.Enabled = False
+                _prCargarIconELiminar()
+            End If
         End If
-
-
     End Sub
     Private Sub btnEliminar_Click(sender As Object, e As EventArgs) Handles btnEliminar.Click
+        If (swTipoVenta.Value = False) Then
+            Dim res1 As Boolean = L_fnVerificarPagosCompras(tbCodigo.Text)
+            If res1 Then
+                Dim img As Bitmap = New Bitmap(My.Resources.WARNING, 50, 50)
+                ToastNotification.Show(Me, "No se puede eliminar la Compra con código ".ToUpper + tbCodigo.Text + ", porque tiene pagos realizados, por favor primero elimine los pagos correspondientes a esta compra".ToUpper,
+                                          img, 5000,
+                                          eToastGlowColor.Green,
+                                          eToastPosition.TopCenter)
+                Exit Sub
+            End If
+        End If
+
+        Dim result As Boolean = L_fnVerificarSiSeContabilizo(tbCodigo.Text)
+        If result Then
+            Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+            ToastNotification.Show(Me, "La Compra no puede ser Eliminada porque ya fue contabilizada".ToUpper, img, 4500, eToastGlowColor.Red, eToastPosition.TopCenter)
+        End If
 
         Dim ef = New Efecto
-
-
         ef.tipo = 2
         ef.Context = "¿esta seguro de eliminar el registro?".ToUpper
         ef.Header = "mensaje principal".ToUpper
@@ -1540,7 +1567,6 @@ salirIf:
             Dim mensajeError As String = ""
             Dim res As Boolean = L_fnEliminarCompra(tbCodigo.Text, mensajeError)
             If res Then
-
 
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
 
@@ -1668,8 +1694,6 @@ salirIf:
 
 
 #End Region
-
-
 
 
 End Class

@@ -79,6 +79,8 @@ Partial Class F0_MCompras
         Me.GroupPanel2 = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.grCompra = New Janus.Windows.GridEX.GridEX()
+        Me.tbSubtotalC = New DevComponents.Editors.DoubleInput()
+        Me.LabelX10 = New DevComponents.DotNetBar.LabelX()
         Me.PanelSuperior.SuspendLayout()
         Me.PanelInferior.SuspendLayout()
         CType(Me.BubbleBarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -120,6 +122,7 @@ Partial Class F0_MCompras
         Me.GroupPanel2.SuspendLayout()
         Me.Panel6.SuspendLayout()
         CType(Me.grCompra, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.tbSubtotalC, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'PanelSuperior
@@ -437,6 +440,8 @@ Partial Class F0_MCompras
         'Panel4
         '
         Me.Panel4.BackColor = System.Drawing.Color.Transparent
+        Me.Panel4.Controls.Add(Me.tbSubtotalC)
+        Me.Panel4.Controls.Add(Me.LabelX10)
         Me.Panel4.Controls.Add(Me.tbMdesc)
         Me.Panel4.Controls.Add(Me.tbtotal)
         Me.Panel4.Controls.Add(Me.LabelX8)
@@ -492,12 +497,13 @@ Partial Class F0_MCompras
         Me.LabelX8.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.LabelX8.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LabelX8.ForeColor = System.Drawing.Color.White
-        Me.LabelX8.Location = New System.Drawing.Point(22, 7)
+        Me.LabelX8.Location = New System.Drawing.Point(263, 9)
         Me.LabelX8.Name = "LabelX8"
         Me.LabelX8.SingleLineColor = System.Drawing.SystemColors.Control
         Me.LabelX8.Size = New System.Drawing.Size(86, 18)
         Me.LabelX8.TabIndex = 34
         Me.LabelX8.Text = "P. Descuento:"
+        Me.LabelX8.Visible = False
         '
         'LabelX11
         '
@@ -525,12 +531,13 @@ Partial Class F0_MCompras
         Me.tbPdesc.ButtonFreeText.Shortcut = DevComponents.DotNetBar.eShortcut.F2
         Me.tbPdesc.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tbPdesc.Increment = 1.0R
-        Me.tbPdesc.Location = New System.Drawing.Point(129, 4)
+        Me.tbPdesc.Location = New System.Drawing.Point(262, 33)
         Me.tbPdesc.LockUpdateChecked = False
         Me.tbPdesc.MinValue = 0R
         Me.tbPdesc.Name = "tbPdesc"
         Me.tbPdesc.Size = New System.Drawing.Size(89, 21)
         Me.tbPdesc.TabIndex = 33
+        Me.tbPdesc.Visible = False
         Me.tbPdesc.WatermarkAlignment = DevComponents.Editors.eTextAlignment.Right
         '
         'LabelX9
@@ -1337,6 +1344,39 @@ Partial Class F0_MCompras
         Me.grCompra.TabIndex = 0
         Me.grCompra.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
+        'tbSubtotalC
+        '
+        '
+        '
+        '
+        Me.tbSubtotalC.BackgroundStyle.Class = "DateTimeInputBackground"
+        Me.tbSubtotalC.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.tbSubtotalC.ButtonFreeText.Shortcut = DevComponents.DotNetBar.eShortcut.F2
+        Me.tbSubtotalC.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbSubtotalC.Increment = 1.0R
+        Me.tbSubtotalC.Location = New System.Drawing.Point(129, 6)
+        Me.tbSubtotalC.MinValue = 0R
+        Me.tbSubtotalC.Name = "tbSubtotalC"
+        Me.tbSubtotalC.Size = New System.Drawing.Size(89, 21)
+        Me.tbSubtotalC.TabIndex = 41
+        Me.tbSubtotalC.WatermarkAlignment = DevComponents.Editors.eTextAlignment.Right
+        '
+        'LabelX10
+        '
+        Me.LabelX10.BackColor = System.Drawing.Color.Transparent
+        '
+        '
+        '
+        Me.LabelX10.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX10.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX10.ForeColor = System.Drawing.Color.White
+        Me.LabelX10.Location = New System.Drawing.Point(22, 9)
+        Me.LabelX10.Name = "LabelX10"
+        Me.LabelX10.SingleLineColor = System.Drawing.SystemColors.Control
+        Me.LabelX10.Size = New System.Drawing.Size(101, 18)
+        Me.LabelX10.TabIndex = 42
+        Me.LabelX10.Text = "Subtotal:"
+        '
         'F0_MCompras
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1389,6 +1429,7 @@ Partial Class F0_MCompras
         Me.GroupPanel2.ResumeLayout(False)
         Me.Panel6.ResumeLayout(False)
         CType(Me.grCompra, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.tbSubtotalC, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1447,4 +1488,6 @@ Partial Class F0_MCompras
     Friend WithEvents swEmision As DevComponents.DotNetBar.Controls.SwitchButton
     Friend WithEvents LabelX16 As DevComponents.DotNetBar.LabelX
     Friend WithEvents lbCtrlEnter As DevComponents.DotNetBar.LabelX
+    Friend WithEvents tbSubtotalC As DevComponents.Editors.DoubleInput
+    Friend WithEvents LabelX10 As DevComponents.DotNetBar.LabelX
 End Class
