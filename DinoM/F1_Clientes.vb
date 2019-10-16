@@ -950,13 +950,7 @@ Public Class F1_Clientes
         End If
     End Sub
 
-    Private Sub TextBoxX1_TextChanged(sender As Object, e As EventArgs) Handles Tbdias.TextChanged
 
-    End Sub
-
-    Private Sub btnNuevo_Click(sender As Object, e As EventArgs) Handles btnNuevo.Click
-
-    End Sub
 
     Private Sub btnImprimir_Click(sender As Object, e As EventArgs) Handles btnImprimir.Click
         P_GenerarReporte()

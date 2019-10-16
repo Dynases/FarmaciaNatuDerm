@@ -146,7 +146,7 @@ Partial Class F0_Ventas
         '
         Me.PanelSuperior.Controls.Add(Me.ButtonX1)
         Me.PanelSuperior.Margin = New System.Windows.Forms.Padding(4)
-        Me.PanelSuperior.Size = New System.Drawing.Size(1016, 72)
+        Me.PanelSuperior.Size = New System.Drawing.Size(1215, 72)
         Me.PanelSuperior.Style.Alignment = System.Drawing.StringAlignment.Center
         Me.PanelSuperior.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(150, Byte), Integer))
         Me.PanelSuperior.Style.BackColor2.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(150, Byte), Integer))
@@ -170,7 +170,7 @@ Partial Class F0_Ventas
         '
         Me.PanelInferior.Location = New System.Drawing.Point(0, 570)
         Me.PanelInferior.Margin = New System.Windows.Forms.Padding(4)
-        Me.PanelInferior.Size = New System.Drawing.Size(1016, 39)
+        Me.PanelInferior.Size = New System.Drawing.Size(1215, 39)
         Me.PanelInferior.Style.Alignment = System.Drawing.StringAlignment.Center
         Me.PanelInferior.Style.BackColor1.Color = System.Drawing.Color.Transparent
         Me.PanelInferior.Style.BackColor2.Color = System.Drawing.Color.Transparent
@@ -229,13 +229,13 @@ Partial Class F0_Ventas
         '
         'PanelToolBar2
         '
-        Me.PanelToolBar2.Location = New System.Drawing.Point(936, 0)
+        Me.PanelToolBar2.Location = New System.Drawing.Point(1135, 0)
         Me.PanelToolBar2.Margin = New System.Windows.Forms.Padding(4)
         '
         'PanelPrincipal
         '
         Me.PanelPrincipal.Margin = New System.Windows.Forms.Padding(4)
-        Me.PanelPrincipal.Size = New System.Drawing.Size(1016, 609)
+        Me.PanelPrincipal.Size = New System.Drawing.Size(1215, 609)
         Me.PanelPrincipal.Controls.SetChildIndex(Me.PanelInferior, 0)
         Me.PanelPrincipal.Controls.SetChildIndex(Me.PanelUsuario, 0)
         Me.PanelPrincipal.Controls.SetChildIndex(Me.PanelSuperior, 0)
@@ -259,7 +259,7 @@ Partial Class F0_Ventas
         '
         'MPanelUserAct
         '
-        Me.MPanelUserAct.Location = New System.Drawing.Point(861, 0)
+        Me.MPanelUserAct.Location = New System.Drawing.Point(1060, 0)
         Me.MPanelUserAct.Margin = New System.Windows.Forms.Padding(4)
         Me.MPanelUserAct.Size = New System.Drawing.Size(155, 39)
         '
@@ -270,7 +270,7 @@ Partial Class F0_Ventas
         '
         Me.MRlAccion.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.MRlAccion.Margin = New System.Windows.Forms.Padding(4)
-        Me.MRlAccion.Size = New System.Drawing.Size(560, 72)
+        Me.MRlAccion.Size = New System.Drawing.Size(759, 72)
         '
         'PanelContent
         '
@@ -279,17 +279,17 @@ Partial Class F0_Ventas
         Me.PanelContent.Controls.Add(Me.PanelContentSup)
         Me.PanelContent.Controls.Add(Me.PanelTotal)
         Me.PanelContent.Margin = New System.Windows.Forms.Padding(4)
-        Me.PanelContent.Size = New System.Drawing.Size(983, 498)
+        Me.PanelContent.Size = New System.Drawing.Size(1182, 498)
         '
         'Panel1
         '
         Me.Panel1.Margin = New System.Windows.Forms.Padding(4)
-        Me.Panel1.Size = New System.Drawing.Size(1016, 498)
+        Me.Panel1.Size = New System.Drawing.Size(1215, 498)
         '
         'MSuperTabControlPanel1
         '
         Me.MSuperTabControlPanel1.Margin = New System.Windows.Forms.Padding(4)
-        Me.MSuperTabControlPanel1.Size = New System.Drawing.Size(983, 498)
+        Me.MSuperTabControlPanel1.Size = New System.Drawing.Size(1182, 498)
         '
         'MSuperTabControl
         '
@@ -309,14 +309,14 @@ Partial Class F0_Ventas
         Me.MSuperTabControl.Controls.Add(Me.SuperTabControlPanel2)
         Me.MSuperTabControl.Margin = New System.Windows.Forms.Padding(4)
         Me.MSuperTabControl.SelectedTabIndex = 1
-        Me.MSuperTabControl.Size = New System.Drawing.Size(1016, 498)
+        Me.MSuperTabControl.Size = New System.Drawing.Size(1215, 498)
         Me.MSuperTabControl.Tabs.AddRange(New DevComponents.DotNetBar.BaseItem() {Me.SuperTabItem1})
         Me.MSuperTabControl.Controls.SetChildIndex(Me.SuperTabControlPanel2, 0)
         Me.MSuperTabControl.Controls.SetChildIndex(Me.MSuperTabControlPanel1, 0)
         '
         'PictureBox1
         '
-        Me.PictureBox1.Location = New System.Drawing.Point(592, 0)
+        Me.PictureBox1.Location = New System.Drawing.Point(791, 0)
         Me.PictureBox1.Margin = New System.Windows.Forms.Padding(4)
         '
         'SuperTabItem1
@@ -446,7 +446,7 @@ Partial Class F0_Ventas
         Me.PanelContentSup.Dock = System.Windows.Forms.DockStyle.Top
         Me.PanelContentSup.Location = New System.Drawing.Point(0, 0)
         Me.PanelContentSup.Name = "PanelContentSup"
-        Me.PanelContentSup.Size = New System.Drawing.Size(983, 211)
+        Me.PanelContentSup.Size = New System.Drawing.Size(1182, 211)
         Me.PanelContentSup.TabIndex = 0
         '
         'GroupPanel1
@@ -460,7 +460,7 @@ Partial Class F0_Ventas
         Me.GroupPanel1.ImeMode = System.Windows.Forms.ImeMode.NoControl
         Me.GroupPanel1.Location = New System.Drawing.Point(0, 0)
         Me.GroupPanel1.Name = "GroupPanel1"
-        Me.GroupPanel1.Size = New System.Drawing.Size(983, 211)
+        Me.GroupPanel1.Size = New System.Drawing.Size(1182, 211)
         '
         '
         '
@@ -523,7 +523,7 @@ Partial Class F0_Ventas
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(0, 0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(977, 188)
+        Me.Panel2.Size = New System.Drawing.Size(1176, 188)
         Me.Panel2.TabIndex = 234
         '
         'swEmision
@@ -657,9 +657,9 @@ Partial Class F0_Ventas
         Me.GroupPanelFactura2.Controls.Add(Me.LabelX7)
         Me.GroupPanelFactura2.DisabledBackColor = System.Drawing.Color.Empty
         Me.GroupPanelFactura2.Dock = System.Windows.Forms.DockStyle.Right
-        Me.GroupPanelFactura2.Location = New System.Drawing.Point(799, 0)
+        Me.GroupPanelFactura2.Location = New System.Drawing.Point(826, 0)
         Me.GroupPanelFactura2.Name = "GroupPanelFactura2"
-        Me.GroupPanelFactura2.Size = New System.Drawing.Size(350, 171)
+        Me.GroupPanelFactura2.Size = New System.Drawing.Size(350, 188)
         '
         '
         '
@@ -1185,7 +1185,7 @@ Partial Class F0_Ventas
         Me.PanelDetalle.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelDetalle.Location = New System.Drawing.Point(0, 211)
         Me.PanelDetalle.Name = "PanelDetalle"
-        Me.PanelDetalle.Size = New System.Drawing.Size(983, 147)
+        Me.PanelDetalle.Size = New System.Drawing.Size(1182, 147)
         Me.PanelDetalle.TabIndex = 1
         '
         'GroupPanel4
@@ -1198,7 +1198,7 @@ Partial Class F0_Ventas
         Me.GroupPanel4.Font = New System.Drawing.Font("Georgia", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupPanel4.Location = New System.Drawing.Point(0, 0)
         Me.GroupPanel4.Name = "GroupPanel4"
-        Me.GroupPanel4.Size = New System.Drawing.Size(983, 147)
+        Me.GroupPanel4.Size = New System.Drawing.Size(1182, 147)
         '
         '
         '
@@ -1238,7 +1238,7 @@ Partial Class F0_Ventas
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel5.Location = New System.Drawing.Point(0, 0)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(977, 124)
+        Me.Panel5.Size = New System.Drawing.Size(1176, 124)
         Me.Panel5.TabIndex = 0
         '
         'grdetalle
@@ -1251,7 +1251,7 @@ Partial Class F0_Ventas
         Me.grdetalle.Name = "grdetalle"
         Me.grdetalle.Office2007ColorScheme = Janus.Windows.GridEX.Office2007ColorScheme.Custom
         Me.grdetalle.Office2007CustomColor = System.Drawing.Color.DodgerBlue
-        Me.grdetalle.Size = New System.Drawing.Size(977, 124)
+        Me.grdetalle.Size = New System.Drawing.Size(1176, 124)
         Me.grdetalle.TabIndex = 0
         Me.grdetalle.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
@@ -1265,7 +1265,7 @@ Partial Class F0_Ventas
         Me.PanelTotal.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.PanelTotal.Location = New System.Drawing.Point(0, 358)
         Me.PanelTotal.Name = "PanelTotal"
-        Me.PanelTotal.Size = New System.Drawing.Size(983, 140)
+        Me.PanelTotal.Size = New System.Drawing.Size(1182, 140)
         Me.PanelTotal.TabIndex = 1
         '
         'GroupPanelFactura
@@ -1416,7 +1416,7 @@ Partial Class F0_Ventas
         Me.Panel4.Controls.Add(Me.tbPdesc)
         Me.Panel4.Controls.Add(Me.LabelX9)
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Panel4.Location = New System.Drawing.Point(602, 0)
+        Me.Panel4.Location = New System.Drawing.Point(801, 0)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(381, 140)
         Me.Panel4.TabIndex = 39
@@ -1597,7 +1597,7 @@ Partial Class F0_Ventas
         Me.ButtonX1.Image = Global.DinoM.My.Resources.Resources._14
         Me.ButtonX1.ImageFixedSize = New System.Drawing.Size(48, 48)
         Me.ButtonX1.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top
-        Me.ButtonX1.Location = New System.Drawing.Point(856, 0)
+        Me.ButtonX1.Location = New System.Drawing.Point(1055, 0)
         Me.ButtonX1.Name = "ButtonX1"
         Me.ButtonX1.Size = New System.Drawing.Size(80, 72)
         Me.ButtonX1.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
@@ -1681,7 +1681,7 @@ Partial Class F0_Ventas
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1016, 609)
+        Me.ClientSize = New System.Drawing.Size(1215, 609)
         Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "F0_Ventas"
         Me.Text = "F0_Ventas"
