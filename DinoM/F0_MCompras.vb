@@ -107,6 +107,7 @@ Public Class F0_MCompras
         tbNitProv.ReadOnly = True
         swEmision.IsReadOnly = True
         swConsigna.IsReadOnly = True
+        swRetencion.IsReadOnly = True
         tbNFactura.ReadOnly = True
         tbNAutorizacion.ReadOnly = True
         tbCodControl.ReadOnly = True
@@ -120,6 +121,8 @@ Public Class F0_MCompras
         btnNuevo.Enabled = True
         btnEliminar.Enabled = True
 
+        tbSubtotalC.IsInputReadOnly = True
+        tbMdesc.IsInputReadOnly = True
         tbtotal.IsInputReadOnly = True
 
         grCompra.Enabled = True
@@ -150,11 +153,14 @@ Public Class F0_MCompras
         tbNitProv.ReadOnly = False
         swEmision.IsReadOnly = False
         swConsigna.IsReadOnly = False
+        swRetencion.IsReadOnly = False
         tbNFactura.ReadOnly = False
         tbNAutorizacion.ReadOnly = False
         tbCodControl.ReadOnly = False
         tbNDui.ReadOnly = False
         tbSACF.ReadOnly = False
+
+        tbMdesc.IsInputReadOnly = False
     End Sub
     Public Sub _prFiltrar()
         'cargo el buscador
@@ -185,6 +191,7 @@ Public Class F0_MCompras
         lbCredito.Visible = True
         swEmision.Value = True
         swConsigna.Value = False
+        swRetencion.Value = False
         tbNFactura.Clear()
         tbNAutorizacion.Clear()
         tbCodControl.Clear()
@@ -234,6 +241,7 @@ Public Class F0_MCompras
             tbNFactura.Text = .GetValue("canumemis")
             tbNitProv.Text = .GetValue("yddctnum")
             swConsigna.Value = .GetValue("caconsigna")
+            swRetencion.Value = .GetValue("caretenc")
 
             'If (swTipoVenta.Value = False) Then
 
@@ -251,7 +259,13 @@ Public Class F0_MCompras
 
         _prCargarDetalleVenta(tbCodigo.Text)
         tbMdesc.Value = grCompra.GetValue("cadesc")
-        _prCalcularPrecioTotal()
+        If swRetencion.Value = False Then
+            _prCalcularPrecioTotal()
+        Else
+            tbtotal.Value = grCompra.GetValue("total")
+            tbSubtotalC.Value = tbtotal.Value + tbMdesc.Value
+        End If
+
         LblPaginacion.Text = Str(grCompra.Row + 1) + "/" + grCompra.RowCount.ToString
 
         'Recuperar datos si es con factura
@@ -579,6 +593,12 @@ Public Class F0_MCompras
             .Visible = False
             .Caption = "Consigna"
         End With
+        With grCompra.RootTable.Columns("caretenc")
+            .Width = 120
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .Visible = False
+            .Caption = "Retención"
+        End With
         With grCompra
             .DefaultFilterRowComparison = FilterConditionOperator.Contains
             .FilterMode = FilterMode.Automatic
@@ -854,12 +874,19 @@ Public Class F0_MCompras
 
     End Sub
     Public Sub _prCalcularPrecioTotal()
+        Dim ret As Double
         Dim montodesc As Double = tbMdesc.Value
         Dim pordesc As Double = ((montodesc * 100) / grdetalle.GetTotal(grdetalle.RootTable.Columns("cbptot"), AggregateFunction.Sum))
         tbPdesc.Value = pordesc
         tbtotal.Value = grdetalle.GetTotal(grdetalle.RootTable.Columns("cbptot"), AggregateFunction.Sum) - montodesc
         'Agregado para que Muestre el Subtotal de la compra
         tbSubtotalC.Value = grdetalle.GetTotal(grdetalle.RootTable.Columns("cbptot"), AggregateFunction.Sum)
+
+        If swRetencion.Value = True Then
+            ret = tbSubtotalC.Value * 0.08
+            tbSubtotalC.Text = tbSubtotalC.Value - ret
+            tbtotal.Text = tbSubtotalC.Text
+        End If
     End Sub
     Public Sub _prEliminarFila()
         If (grdetalle.Row >= 0) Then
@@ -904,15 +931,39 @@ Public Class F0_MCompras
 
         End If
         If (cbSucursal.SelectedIndex < 0) Then
-
-
-            Dim img As Bitmap = New Bitmap(My.Resources.Mensaje, 50, 50)
+            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
             ToastNotification.Show(Me, "Por Favor Seleccione una Sucursal".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
             tbProveedor.Focus()
             Return False
-
-
         End If
+        If swEmision.Value = True Then
+            If (tbNFactura.Text = String.Empty) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por favor debe llenar el ".ToUpper + lbNFactura.Text.ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbNFactura.Focus()
+                Return False
+            End If
+            If (tbNAutorizacion.Text = String.Empty) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por Favor debe llenar el número de autorización".ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbNAutorizacion.Focus()
+                Return False
+            End If
+            If (tbCodControl.Text = String.Empty) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por Favor debe llenar el código de control".ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbCodControl.Focus()
+                Return False
+            End If
+        Else
+            If (tbNFactura.Text = String.Empty) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por favor debe llenar el ".ToUpper + lbNFactura.Text.ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbNFactura.Focus()
+                Return False
+            End If
+        End If
+
         Return True
     End Function
 
@@ -923,7 +974,7 @@ Public Class F0_MCompras
         '                                   _cadesc As Double, detalle As DataTable
 
         RecuperarDatosTFC001()  'Recupera datos para grabar en la BDDiconDinoNatu en la Tabla TFC001
-        Dim res As Boolean = L_fnGrabarCompra("", cbSucursal.Value, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodProveedor, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), 1, tbObservacion.Text, tbMdesc.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), _detalleCompras, IIf(swEmision.Value = True, 1, 0), tbNFactura.Text, IIf(swConsigna.Value = True, 1, 0))
+        Dim res As Boolean = L_fnGrabarCompra("", cbSucursal.Value, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodProveedor, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), 1, tbObservacion.Text, tbMdesc.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), _detalleCompras, IIf(swEmision.Value = True, 1, 0), tbNFactura.Text, IIf(swConsigna.Value = True, 1, 0), IIf(swRetencion.Value = True, 1, 0))
 
 
 
@@ -1019,7 +1070,7 @@ Public Class F0_MCompras
     Private Sub _prGuardarModificado()
 
         RecuperarDatosTFC001()
-        Dim res As Boolean = L_fnModificarCompra(tbCodigo.Text, cbSucursal.Value, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodProveedor, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), cbSucursal.Value, tbObservacion.Text, tbMdesc.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), _detalleCompras, IIf(swEmision.Value = True, 1, 0), tbNFactura.Text, IIf(swConsigna.Value = True, 1, 0))
+        Dim res As Boolean = L_fnModificarCompra(tbCodigo.Text, cbSucursal.Value, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodProveedor, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), cbSucursal.Value, tbObservacion.Text, tbMdesc.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), _detalleCompras, IIf(swEmision.Value = True, 1, 0), tbNFactura.Text, IIf(swConsigna.Value = True, 1, 0), IIf(swRetencion.Value = True, 1, 0))
 
         If res Then
 
@@ -1700,6 +1751,12 @@ salirIf:
 
     Private Sub tbSACF_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tbSACF.KeyPress
         g_prValidarTextBox(1, e)
+    End Sub
+
+    Private Sub swRetencion_ValueChanged(sender As Object, e As EventArgs) Handles swRetencion.ValueChanged
+        If swRetencion.Value = False Or swRetencion.Value = True Then
+            _prCalcularPrecioTotal()
+        End If
     End Sub
 
 
