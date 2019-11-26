@@ -62,8 +62,8 @@ Public Class F0_Ventas
         _prCargarNameLabel()
 
         'Ocultar paneles de Facturación
-        GroupPanelFactura2.Visible = False
-        GroupPanelFactura.Visible = False
+        'GroupPanelFactura2.Visible = False
+        'GroupPanelFactura.Visible = False
     End Sub
     Public Sub _prCargarNameLabel()
         Dim dt As DataTable = L_fnNameLabel()
@@ -1396,9 +1396,9 @@ Public Class F0_Ventas
         If res Then
             'res = P_fnGrabarFacturarTFV001(numi)
 
-            'If (gb_FacturaEmite) Then
-            '    P_fnGenerarFactura(numi)
-            'End If
+            If (gb_FacturaEmite) Then
+                P_fnGenerarFactura(numi)
+            End If
 
             Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
             ToastNotification.Show(Me, "Código de Venta ".ToUpper + tbCodigo.Text + " Grabado con Exito.".ToUpper,
@@ -1456,11 +1456,12 @@ Public Class F0_Ventas
         Dim res As Boolean = L_fnModificarVenta(tbCodigo.Text, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), _CodCliente, IIf(swMoneda.Value = True, 1, 0), tbObservacion.Text, tbMdesc.Value, tbIce.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), IIf(swEmision.Value = True, 1, 0))
         If res Then
 
-            'If (gb_FacturaEmite) Then
-            '    L_fnEliminarDatos("TFV001", "fvanumi=" + tbCodigo.Text.Trim)
-            '    L_fnEliminarDatos("TFV0011", "fvbnumi=" + tbCodigo.Text.Trim)
-            '    P_fnGenerarFactura(tbCodigo.Text.Trim)
-            'End If
+            If (gb_FacturaEmite) Then
+                L_fnEliminarDatos("TFV001", "fvanumi=" + tbCodigo.Text.Trim)
+                L_fnEliminarDatos("TFV0011", "fvbnumi=" + tbCodigo.Text.Trim)
+                P_fnGenerarFactura(tbCodigo.Text.Trim)
+            End If
+
             _prImiprimirNotaVenta(tbCodigo.Text)
 
             Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
@@ -1587,7 +1588,8 @@ Public Class F0_Ventas
 
     Private Function P_fnGrabarFacturarTFV001(numi As String) As Boolean
         Dim a As Double = CDbl(tbtotal.Value + tbMdesc.Value)
-        Dim b As Double = CDbl(IIf(IsDBNull(tbIce.Value), 0, tbIce.Value)) 'Ya esta calculado el 55% del ICE
+        'Dim b As Double = CDbl(IIf(IsDBNull(tbIce.Value), 0, tbIce.Value)) 'Ya esta calculado el 55% del ICE
+        Dim b As Double = CDbl("0")
         Dim c As Double = CDbl("0")
         Dim d As Double = CDbl("0")
         Dim e As Double = a - b - c - d

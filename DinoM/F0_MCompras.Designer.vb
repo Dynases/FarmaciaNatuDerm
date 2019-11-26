@@ -44,6 +44,8 @@ Partial Class F0_MCompras
         Me.PanelContentSup = New System.Windows.Forms.Panel()
         Me.GroupPanel1 = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.swRetencion = New DevComponents.DotNetBar.Controls.SwitchButton()
+        Me.LabelX13 = New DevComponents.DotNetBar.LabelX()
         Me.swConsigna = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.LabelX12 = New DevComponents.DotNetBar.LabelX()
         Me.lbCtrlEnter = New DevComponents.DotNetBar.LabelX()
@@ -83,8 +85,6 @@ Partial Class F0_MCompras
         Me.GroupPanel2 = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel6 = New System.Windows.Forms.Panel()
         Me.grCompra = New Janus.Windows.GridEX.GridEX()
-        Me.swRetencion = New DevComponents.DotNetBar.Controls.SwitchButton()
-        Me.LabelX13 = New DevComponents.DotNetBar.LabelX()
         Me.PanelSuperior.SuspendLayout()
         Me.PanelInferior.SuspendLayout()
         CType(Me.BubbleBarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -678,6 +678,39 @@ Partial Class F0_MCompras
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(1295, 167)
         Me.Panel2.TabIndex = 234
+        '
+        'swRetencion
+        '
+        '
+        '
+        '
+        Me.swRetencion.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.swRetencion.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.swRetencion.Location = New System.Drawing.Point(715, 136)
+        Me.swRetencion.Name = "swRetencion"
+        Me.swRetencion.OffBackColor = System.Drawing.Color.RoyalBlue
+        Me.swRetencion.OffText = "NO"
+        Me.swRetencion.OnBackColor = System.Drawing.Color.LightSkyBlue
+        Me.swRetencion.OnText = "SI"
+        Me.swRetencion.Size = New System.Drawing.Size(65, 22)
+        Me.swRetencion.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.swRetencion.TabIndex = 377
+        Me.swRetencion.Visible = False
+        '
+        'LabelX13
+        '
+        '
+        '
+        '
+        Me.LabelX13.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX13.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX13.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.LabelX13.Location = New System.Drawing.Point(640, 134)
+        Me.LabelX13.Name = "LabelX13"
+        Me.LabelX13.Size = New System.Drawing.Size(70, 23)
+        Me.LabelX13.TabIndex = 378
+        Me.LabelX13.Text = "Retención:"
+        Me.LabelX13.Visible = False
         '
         'swConsigna
         '
@@ -1416,37 +1449,6 @@ Partial Class F0_MCompras
         Me.grCompra.Size = New System.Drawing.Size(940, 421)
         Me.grCompra.TabIndex = 0
         Me.grCompra.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
-        '
-        'swRetencion
-        '
-        '
-        '
-        '
-        Me.swRetencion.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.swRetencion.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.swRetencion.Location = New System.Drawing.Point(715, 136)
-        Me.swRetencion.Name = "swRetencion"
-        Me.swRetencion.OffBackColor = System.Drawing.Color.RoyalBlue
-        Me.swRetencion.OffText = "NO"
-        Me.swRetencion.OnBackColor = System.Drawing.Color.LightSkyBlue
-        Me.swRetencion.OnText = "SI"
-        Me.swRetencion.Size = New System.Drawing.Size(65, 22)
-        Me.swRetencion.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.swRetencion.TabIndex = 377
-        '
-        'LabelX13
-        '
-        '
-        '
-        '
-        Me.LabelX13.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX13.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelX13.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
-        Me.LabelX13.Location = New System.Drawing.Point(640, 134)
-        Me.LabelX13.Name = "LabelX13"
-        Me.LabelX13.Size = New System.Drawing.Size(70, 23)
-        Me.LabelX13.TabIndex = 378
-        Me.LabelX13.Text = "Retención:"
         '
         'F0_MCompras
         '

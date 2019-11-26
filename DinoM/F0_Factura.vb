@@ -1096,7 +1096,8 @@ Public Class F0_Factura
     End Sub
     Private Function P_fnGrabarFacturarTFV001(numi As String) As Boolean
         Dim a As Double = CDbl(tbtotal.Value + tbMdesc.Value)
-        Dim b As Double = CDbl(IIf(IsDBNull(tbIce.Value), 0, tbIce.Value)) 'Ya esta calculado el 55% del ICE
+        'Dim b As Double = CDbl(IIf(IsDBNull(tbIce.Value), 0, tbIce.Value)) 'Ya esta calculado el 55% del ICE
+        Dim b As Double = CDbl("0")
         Dim c As Double = CDbl("0")
         Dim d As Double = CDbl("0")
         Dim e As Double = a - b - c - d
