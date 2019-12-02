@@ -73,7 +73,6 @@ Public Class F1_Clientes
         Gmc_Cliente.MaxZoom = 24
         Gmc_Cliente.Zoom = 15.5
         Gmc_Cliente.AutoScroll = True
-
         GMapProvider.Language = LanguageType.Spanish
     End Sub
     Public Sub _prInicarMapa()
@@ -706,8 +705,6 @@ Public Class F1_Clientes
             _Overlay.Markers.Clear()
             P_AgregarPunto(plg, _nombre, _ci)
         Else
-
-
             _Overlay.Markers.Clear()
             Gmc_Cliente.Position = New PointLatLng(-17.3931784, -66.1738852)
         End If

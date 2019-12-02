@@ -17,7 +17,7 @@ Public Class P_Principal
         _prCambiarStyle()
         ' This call is required by the designer.
         InitializeComponent()
-        FP_Configuracion.Select ()
+        FP_Configuracion.Select()
 
         ' Add any initialization after the InitializeComponent() call.
 
@@ -118,6 +118,7 @@ Public Class P_Principal
         listaTabs.Add(MetroTilePanel7)
         listaTabs.Add(MetroTilePanelVentas)
         listaTabs.Add(MenuCreditos)
+        listaTabs.Add(MenuProduccio)
 
 
         Dim idRolUsu As String = gi_userRol
@@ -457,7 +458,7 @@ Public Class P_Principal
         tab3.Icon = frm.Icon
     End Sub
 
- 
+
 
     Private Sub btConfDosificacion_Click(sender As Object, e As EventArgs) Handles btConfDosificacion.Click
         SideNav1.IsMenuExpanded = False
@@ -472,7 +473,7 @@ Public Class P_Principal
         tab3.AttachedControl.Controls.Add(panel)
         frm.Show()
         tab3.Text = frm.Text
-        Dim blah As New Bitmap(New Bitmap(My.Resources.Mensaje), 20, 20)
+        Dim blah As New Bitmap(New Bitmap(My.Resources.mensaje), 20, 20)
         Dim ico As Icon = Icon.FromHandle(blah.GetHicon())
 
         tab3.Icon = ico
@@ -502,7 +503,7 @@ Public Class P_Principal
         Dim frm As New F0_AnularFactura
         frm._nameButton = btVentAnularFactura.Name
         Dim tab3 As SuperTabItem = superTabControl3.CreateTab(frm.Text)
-     
+
         Dim panel As Panel = P_Global._fnCrearPanelVentanas(frm)
         superTabControl3.SelectedTabIndex = superTabControl3.Tabs.Count - 1
         tab3.AttachedControl.Controls.Add(panel)
@@ -548,7 +549,7 @@ Public Class P_Principal
         tab3.AttachedControl.Controls.Add(panel)
         frm.Show()
         tab3.Text = frm.Text
-        Dim blah As New Bitmap(New Bitmap(My.Resources.Mensaje), 20, 20)
+        Dim blah As New Bitmap(New Bitmap(My.Resources.mensaje), 20, 20)
         Dim ico As Icon = Icon.FromHandle(blah.GetHicon())
         tab3.Icon = ico
     End Sub
@@ -589,7 +590,7 @@ Public Class P_Principal
         superTabControl3.SelectedTabIndex = superTabControl3.Tabs.Count - 1
         tab3.AttachedControl.Controls.Add(panel)
         frm.Show()
-      
+
         tab3.Text = "SALDO PRODUCTO"
         Dim blah As New Bitmap(New Bitmap(My.Resources.check_mark), 20, 20)
         Dim ico As Icon = Icon.FromHandle(blah.GetHicon())
@@ -651,7 +652,7 @@ Public Class P_Principal
         tab3.Icon = ico
     End Sub
 
-    
+
 
     Private Sub btHojaRuta_Click(sender As Object, e As EventArgs) Handles btZonaReporteRuta.Click
         SideNav1.IsMenuExpanded = False
@@ -719,7 +720,7 @@ Public Class P_Principal
         tab3.Icon = frm.Icon
     End Sub
 
-   
+
     Private Sub btnCredEstCuenta_Click(sender As Object, e As EventArgs) Handles btnCredEstCuenta.Click
         SideNav1.IsMenuExpanded = False
         Ventana.Select()
@@ -983,6 +984,22 @@ Public Class P_Principal
 
     Private Sub SideNav1_Click(sender As Object, e As EventArgs) Handles SideNav1.Click
 
+    End Sub
+
+    Private Sub btConfProductoCompuestos_Click_1(sender As Object, e As EventArgs) Handles btConfProductoCompuestos.Click
+        SideNav1.IsMenuExpanded = False
+        Ventana.Select()
+        Dim frm As New F0_ProductoCompuesto
+        frm._nameButton = btConfProductoCompuestos.Name
+        frm._modulo = FP_Configuracion
+        Dim tab3 As SuperTabItem = superTabControl3.CreateTab(frm.Text)
+        frm._tab = tab3
+        Dim panel As Panel = P_Global._fnCrearPanelVentanas(frm)
+        superTabControl3.SelectedTabIndex = superTabControl3.Tabs.Count - 1
+        tab3.AttachedControl.Controls.Add(panel)
+        frm.Show()
+        tab3.Text = frm.Text
+        tab3.Icon = frm.Icon
     End Sub
 
     'Private Sub btnCredPagoCliente_Click(sender As Object, e As EventArgs) Handles btnCredPagoCliente.Click

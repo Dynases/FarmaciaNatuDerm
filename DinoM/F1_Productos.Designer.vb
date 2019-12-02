@@ -87,6 +87,8 @@ Partial Class F1_Productos
         Me.SuperTabItem_DetalleProducto = New DevComponents.DotNetBar.SuperTabItem()
         Me.btExcel = New DevComponents.DotNetBar.ButtonX()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.swTipoProducto = New DevComponents.DotNetBar.Controls.SwitchButton()
+        Me.LabelX19 = New DevComponents.DotNetBar.LabelX()
         CType(Me.SuperTabPrincipal, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuperTabPrincipal.SuspendLayout()
         Me.SuperTabControlPanelRegistro.SuspendLayout()
@@ -1066,6 +1068,8 @@ Partial Class F1_Productos
         '
         Me.Panel2.AutoScroll = True
         Me.Panel2.BackColor = System.Drawing.Color.Transparent
+        Me.Panel2.Controls.Add(Me.swTipoProducto)
+        Me.Panel2.Controls.Add(Me.LabelX19)
         Me.Panel2.Controls.Add(Me.lbgrupo1)
         Me.Panel2.Controls.Add(Me.btgrupo3)
         Me.Panel2.Controls.Add(Me.GroupBox1)
@@ -1260,6 +1264,39 @@ Partial Class F1_Productos
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(1322, 329)
         Me.TableLayoutPanel1.TabIndex = 227
         '
+        'swTipoProducto
+        '
+        '
+        '
+        '
+        Me.swTipoProducto.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.swTipoProducto.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.swTipoProducto.Location = New System.Drawing.Point(140, 275)
+        Me.swTipoProducto.Name = "swTipoProducto"
+        Me.swTipoProducto.OffBackColor = System.Drawing.Color.LawnGreen
+        Me.swTipoProducto.OffText = "MATERIA PRIMA"
+        Me.swTipoProducto.OnBackColor = System.Drawing.Color.Gold
+        Me.swTipoProducto.OnText = "FARMACIA"
+        Me.swTipoProducto.Size = New System.Drawing.Size(144, 22)
+        Me.swTipoProducto.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.swTipoProducto.TabIndex = 373
+        Me.swTipoProducto.Value = True
+        Me.swTipoProducto.ValueObject = "Y"
+        '
+        'LabelX19
+        '
+        '
+        '
+        '
+        Me.LabelX19.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX19.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX19.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.LabelX19.Location = New System.Drawing.Point(13, 272)
+        Me.LabelX19.Name = "LabelX19"
+        Me.LabelX19.Size = New System.Drawing.Size(75, 23)
+        Me.LabelX19.TabIndex = 374
+        Me.LabelX19.Text = "Tipo:"
+        '
         'F1_Productos
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1373,4 +1410,6 @@ Partial Class F1_Productos
     Friend WithEvents SuperTabItem_DetalleProducto As DevComponents.DotNetBar.SuperTabItem
     Friend WithEvents SuperTabControlPanel1 As DevComponents.DotNetBar.SuperTabControlPanel
     Friend WithEvents SuperTabItem_Imagenes As DevComponents.DotNetBar.SuperTabItem
+    Friend WithEvents swTipoProducto As DevComponents.DotNetBar.Controls.SwitchButton
+    Friend WithEvents LabelX19 As DevComponents.DotNetBar.LabelX
 End Class

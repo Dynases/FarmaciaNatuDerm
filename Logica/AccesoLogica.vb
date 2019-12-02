@@ -415,7 +415,7 @@ Public Class AccesoLogica
                                               _yfcdprod2 As String, _yfgr1 As Integer, _yfgr2 As Integer,
                                               _yfgr3 As Integer, _yfgr4 As Integer, _yfMed As Integer, _yfumin As Integer,
                                               _yfusup As Integer, _yfvsup As Double, _yfsmin As Integer, _yfap As Integer,
-                                              _yfimg As String, TY0051 As DataTable
+                                              _yfimg As String, TY0051 As DataTable, _tipoProducto As String
                                               ) As Boolean
         Dim _resultado As Boolean
         '@yfnumi ,@yfcprod ,@yfcbarra ,@yfcdprod1 ,@yfcdprod2 ,
@@ -439,7 +439,7 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@yfumin", _yfumin))
         _listParam.Add(New Datos.DParametro("@yfusup", _yfusup))
         _listParam.Add(New Datos.DParametro("@yfvsup", _yfvsup))
-        _listParam.Add(New Datos.DParametro("@yfmstk", 0))
+        _listParam.Add(New Datos.DParametro("@yfmstk", _tipoProducto))
         _listParam.Add(New Datos.DParametro("@yfclot", 0))
 
         _listParam.Add(New Datos.DParametro("@yfsmin", _yfsmin))
@@ -465,7 +465,7 @@ Public Class AccesoLogica
                                                  _yfgr3 As Integer, _yfgr4 As Integer, _yfMed As Integer,
                                                  _yfumin As Integer, _yfusup As Integer, _yfvsup As Double,
                                                  _yfsmin As Integer, _yfap As Integer, _yfimg As String,
-                                                 TY0051 As DataTable
+                                                 TY0051 As DataTable, _tipoProducto As String
                                               ) As Boolean
         Dim _resultado As Boolean
 
@@ -487,7 +487,7 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@yfumin", _yfumin))
         _listParam.Add(New Datos.DParametro("@yfusup", _yfusup))
         _listParam.Add(New Datos.DParametro("@yfvsup", _yfvsup))
-        _listParam.Add(New Datos.DParametro("@yfmstk", 0))
+        _listParam.Add(New Datos.DParametro("@yfmstk", _tipoProducto))
         _listParam.Add(New Datos.DParametro("@yfclot", 0))
 
         _listParam.Add(New Datos.DParametro("@yfsmin", _yfsmin))
@@ -5050,6 +5050,67 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@almacen", CodAlmacen))
         _Tabla = D_ProcedimientoConParam("sp_Mam_SaldosProducto", _listParam)
 
+        Return _Tabla
+    End Function
+#End Region
+
+#Region "TP002 Productos Compuestos"
+    Public Shared Function L_fnGrabarProductoCompuesto(ByRef _id As String, _idVenta As String, _codProducto As String, _tipo As Integer, _fecha As String, _fechaVencimiento As String,
+                                           _fechaFabrica As String, _descripcion As String,
+                                           _observacion As Double, _total As Double, detalle As DataTable)
+        Dim _Tabla As DataTable
+        Dim _resultado As Boolean
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 1))
+        _listParam.Add(New Datos.DParametro("@pcnumi", _id))
+        _listParam.Add(New Datos.DParametro("@pctv1numi", _idVenta))
+        _listParam.Add(New Datos.DParametro("@pccod", _codProducto))
+        _listParam.Add(New Datos.DParametro("@pcest", 1))
+        _listParam.Add(New Datos.DParametro("@pctipo", _tipo))
+        _listParam.Add(New Datos.DParametro("@pcfech", _fecha))
+        _listParam.Add(New Datos.DParametro("@pcfven", _fechaVencimiento))
+        _listParam.Add(New Datos.DParametro("@pcffab", _fechaFabrica))
+        _listParam.Add(New Datos.DParametro("@pcdesc", _descripcion))
+        _listParam.Add(New Datos.DParametro("@pcobser", _observacion))
+        _listParam.Add(New Datos.DParametro("@pctotal", _total))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _listParam.Add(New Datos.DParametro("@TP0021", "", detalle))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TV001", _listParam)
+        If _Tabla.Rows.Count > 0 Then
+            _id = _Tabla.Rows(0).Item(0)
+            _resultado = True
+        Else
+            _resultado = False
+        End If
+        Return _resultado
+    End Function
+    Public Shared Function L_fnProductoCompuestoTraerGeneral() As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 4))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_fnProductoCompuestoTraerGeneralXId(_id As String) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 5))
+        _listParam.Add(New Datos.DParametro("@pcnumi", _id))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_fnProductoCompuestoTraerDetalleXId(_id As String) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 6))
+        _listParam.Add(New Datos.DParametro("@pcnumi", _id))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
         Return _Tabla
     End Function
 #End Region

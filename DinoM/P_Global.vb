@@ -120,6 +120,7 @@ Module P_Global
     Public gi_Mayusculas As Integer = 0
     'configuracion del sistema tabla TCG011
     Public gd_notaAproTeo As Double = 0
+    Public gi_fuenteTamano As Integer = 8
 #End Region
 
 #Region "Toast"

@@ -255,6 +255,7 @@ Public Class F1_Productos
         dgjDetalleProducto.AllowEdit = InheritableBoolean.True
         dgjDetalleProducto.RootTable.Columns("delete").Visible = True
         adicionarFilaDetalleProducto()
+        swTipoProducto.IsReadOnly = False
     End Sub
 
     Public Overrides Sub _PMOInhabilitar()
@@ -281,6 +282,7 @@ Public Class F1_Productos
         btnImprimir.Visible = True
         dgjDetalleProducto.AllowEdit = InheritableBoolean.False
         dgjDetalleProducto.RootTable.Columns("delete").Visible = False
+        swTipoProducto.IsReadOnly = True
     End Sub
 
     Public Overrides Sub _PMOLimpiar()
@@ -298,6 +300,7 @@ Public Class F1_Productos
             _prSeleccionarCombo(cbUnidMaxima)
             _prSeleccionarCombo(cbUniVenta)
             swEstado.Value = True
+            swTipoProducto.Value = True
             tbConversion.Value = 1
 
             tbStockMinimo.Value = 0
@@ -351,7 +354,9 @@ Public Class F1_Productos
                                                 tbConversion.Text,
                                                 IIf(tbStockMinimo.Text = String.Empty, 0, tbStockMinimo.Text),
                                                 IIf(swEstado.Value = True, 1, 0), nameImg,
-                                                quitarUltimaFilaVacia(CType(dgjDetalleProducto.DataSource, DataTable).DefaultView.ToTable(False, "yfanumi", "yfayfnumi", "yfasim", "yfadesc", "estado")))
+                                                quitarUltimaFilaVacia(CType(dgjDetalleProducto.DataSource, DataTable).DefaultView.ToTable(False, "yfanumi", "yfayfnumi", "yfasim", "yfadesc", "estado")),
+                                                IIf(swTipoProducto.Value = True, 0, 1))
+
 
         If res Then
             Modificado = False
@@ -380,9 +385,9 @@ Public Class F1_Productos
 
         Dim nameImage As String = JGrM_Buscador.GetValue("yfimg")
         If (Modificado = False) Then
-            res = L_fnModificarProducto(tbCodigo.Text, tbCodProd.Text, tbCodBarra.Text, tbDescPro.Text, tbDescCort.Text, cbgrupo1.Value, cbgrupo2.Value, cbgrupo3.Value, cbgrupo4.Value, cbUMed.Value, cbUniVenta.Value, cbUnidMaxima.Value, tbConversion.Text, IIf(tbStockMinimo.Text = String.Empty, 0, tbStockMinimo.Text), IIf(swEstado.Value = True, 1, 0), nameImage, quitarUltimaFilaVacia(CType(dgjDetalleProducto.DataSource, DataTable).DefaultView.ToTable(False, "yfanumi", "yfayfnumi", "yfasim", "yfadesc", "estado")))
+            res = L_fnModificarProducto(tbCodigo.Text, tbCodProd.Text, tbCodBarra.Text, tbDescPro.Text, tbDescCort.Text, cbgrupo1.Value, cbgrupo2.Value, cbgrupo3.Value, cbgrupo4.Value, cbUMed.Value, cbUniVenta.Value, cbUnidMaxima.Value, tbConversion.Text, IIf(tbStockMinimo.Text = String.Empty, 0, tbStockMinimo.Text), IIf(swEstado.Value = True, 1, 0), nameImage, quitarUltimaFilaVacia(CType(dgjDetalleProducto.DataSource, DataTable).DefaultView.ToTable(False, "yfanumi", "yfayfnumi", "yfasim", "yfadesc", "estado")), IIf(swTipoProducto.Value = True, 0, 1))
         Else
-            res = L_fnModificarProducto(tbCodigo.Text, tbCodProd.Text, tbCodBarra.Text, tbDescPro.Text, tbDescCort.Text, cbgrupo1.Value, cbgrupo2.Value, cbgrupo3.Value, cbgrupo4.Value, cbUMed.Value, cbUniVenta.Value, cbUnidMaxima.Value, tbConversion.Text, tbStockMinimo.Text, IIf(swEstado.Value = True, 1, 0), nameImg, quitarUltimaFilaVacia(CType(dgjDetalleProducto.DataSource, DataTable).DefaultView.ToTable(False, "yfanumi", "yfayfnumi", "yfasim", "yfadesc", "estado")))
+            res = L_fnModificarProducto(tbCodigo.Text, tbCodProd.Text, tbCodBarra.Text, tbDescPro.Text, tbDescCort.Text, cbgrupo1.Value, cbgrupo2.Value, cbgrupo3.Value, cbgrupo4.Value, cbUMed.Value, cbUniVenta.Value, cbUnidMaxima.Value, tbConversion.Text, tbStockMinimo.Text, IIf(swEstado.Value = True, 1, 0), nameImg, quitarUltimaFilaVacia(CType(dgjDetalleProducto.DataSource, DataTable).DefaultView.ToTable(False, "yfanumi", "yfayfnumi", "yfasim", "yfadesc", "estado")), IIf(swTipoProducto.Value = True, 0, 1))
         End If
         If res Then
 
@@ -610,6 +615,7 @@ Public Class F1_Productos
             lbFecha.Text = CType(.GetValue("yffact"), Date).ToString("dd/MM/yyyy")
             lbHora.Text = .GetValue("yfhact").ToString
             lbUsuario.Text = .GetValue("yfuact").ToString
+            swTipoProducto.Value = IIf(.GetValue("yfmstk").ToString = 0, True, False)
 
         End With
         Dim name As String = JGrM_Buscador.GetValue("yfimg")

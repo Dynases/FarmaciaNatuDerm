@@ -283,7 +283,6 @@ Public Class F0_Ventas
             If (proforma = 0) Then
                 SwProforma.Value = False
                 tbProforma.Clear()
-
             Else
                 tbProforma.Text = proforma
                 SwProforma.Value = True

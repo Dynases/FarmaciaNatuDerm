@@ -311,8 +311,8 @@ Partial Class F0_Ventas
         Me.MSuperTabControl.SelectedTabIndex = 1
         Me.MSuperTabControl.Size = New System.Drawing.Size(1215, 498)
         Me.MSuperTabControl.Tabs.AddRange(New DevComponents.DotNetBar.BaseItem() {Me.SuperTabItem1})
-        Me.MSuperTabControl.Controls.SetChildIndex(Me.SuperTabControlPanel2, 0)
         Me.MSuperTabControl.Controls.SetChildIndex(Me.MSuperTabControlPanel1, 0)
+        Me.MSuperTabControl.Controls.SetChildIndex(Me.SuperTabControlPanel2, 0)
         '
         'PictureBox1
         '
@@ -332,7 +332,7 @@ Partial Class F0_Ventas
         Me.SuperTabControlPanel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SuperTabControlPanel2.Location = New System.Drawing.Point(0, 0)
         Me.SuperTabControlPanel2.Name = "SuperTabControlPanel2"
-        Me.SuperTabControlPanel2.Size = New System.Drawing.Size(983, 498)
+        Me.SuperTabControlPanel2.Size = New System.Drawing.Size(1182, 498)
         Me.SuperTabControlPanel2.TabIndex = 0
         Me.SuperTabControlPanel2.TabItem = Me.SuperTabItem1
         '
@@ -349,7 +349,7 @@ Partial Class F0_Ventas
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 498.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(983, 498)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(1182, 498)
         Me.TableLayoutPanel1.TabIndex = 1
         '
         'PanelVentas
@@ -360,7 +360,7 @@ Partial Class F0_Ventas
         Me.PanelVentas.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelVentas.Location = New System.Drawing.Point(3, 3)
         Me.PanelVentas.Name = "PanelVentas"
-        Me.PanelVentas.Size = New System.Drawing.Size(977, 492)
+        Me.PanelVentas.Size = New System.Drawing.Size(1176, 492)
         Me.PanelVentas.TabIndex = 0
         '
         'GroupPanel2
@@ -373,7 +373,7 @@ Partial Class F0_Ventas
         Me.GroupPanel2.Font = New System.Drawing.Font("Georgia", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.GroupPanel2.Location = New System.Drawing.Point(0, 0)
         Me.GroupPanel2.Name = "GroupPanel2"
-        Me.GroupPanel2.Size = New System.Drawing.Size(977, 492)
+        Me.GroupPanel2.Size = New System.Drawing.Size(1176, 492)
         '
         '
         '
@@ -413,7 +413,7 @@ Partial Class F0_Ventas
         Me.Panel6.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel6.Location = New System.Drawing.Point(0, 0)
         Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(971, 469)
+        Me.Panel6.Size = New System.Drawing.Size(1170, 469)
         Me.Panel6.TabIndex = 0
         '
         'grVentas
@@ -435,7 +435,7 @@ Partial Class F0_Ventas
         Me.grVentas.SelectedFormatStyle.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.grVentas.SelectedFormatStyle.ForeColor = System.Drawing.Color.White
         Me.grVentas.SelectOnExpand = False
-        Me.grVentas.Size = New System.Drawing.Size(971, 469)
+        Me.grVentas.Size = New System.Drawing.Size(1170, 469)
         Me.grVentas.TabIndex = 0
         Me.grVentas.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
