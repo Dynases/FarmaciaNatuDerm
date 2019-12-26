@@ -1298,8 +1298,6 @@ Public Class F0_Ventas
 
     End Sub
     Public Sub _prCalcularPrecioTotal()
-
-
         Dim montodesc As Double = tbMdesc.Value
         Dim pordesc As Double = ((montodesc * 100) / grdetalle.GetTotal(grdetalle.RootTable.Columns("tbtotdesc"), AggregateFunction.Sum))
         tbPdesc.Value = pordesc
@@ -1310,10 +1308,6 @@ Public Class F0_Ventas
         Else
             tbtotal.Value = grdetalle.GetTotal(grdetalle.RootTable.Columns("tbtotdesc"), AggregateFunction.Sum) - montodesc
         End If
-
-
-
-
     End Sub
     Public Sub _prEliminarFila()
         If (grdetalle.Row >= 0) Then
@@ -2532,11 +2526,7 @@ salirIf:
                         Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
                         ToastNotification.Show(Me, "El producto con el lote ya existe modifique su cantidad".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
                     End If
-
-
-
                 End If
-
             End If
         End If
         If e.KeyData = Keys.Escape Then

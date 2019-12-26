@@ -368,6 +368,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Font\Custom.vb" />
+    <Compile Include="Global\enum\ENMensaje.vb" />
     <Compile Include="KardexClienteRes.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1097,6 +1098,10 @@
     <ProjectReference Include="..\Modelo\Modelo.vbproj">
       <Project>{c4004973-be46-410b-82d3-4b6b36f5b877}</Project>
       <Name>Modelo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UTILITIES\UTILITIES.vbproj">
+      <Project>{61CB9C4B-C093-423B-8FF2-002F2B6F3A45}</Project>
+      <Name>UTILITIES</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

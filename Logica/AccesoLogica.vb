@@ -3,6 +3,7 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Text
 Imports Datos.AccesoDatos
+Imports UTILITIES
 
 Public Class AccesoLogica
 
@@ -5084,6 +5085,49 @@ Public Class AccesoLogica
         End If
         Return _resultado
     End Function
+    Public Shared Sub L_ProductoCompuestoCabecera_Grabar2(ByRef _id As String, _cod As String, _estado As String, _descrip As String, _observa As String, _fecha As String, _fechaFab As String, _fechaVen As String, _sucursal As String, _total As String)
+        Dim _Actualizacion As String
+        Dim _Err As Boolean
+        Dim _Tabla As DataTable
+        _Tabla = D_Maximo("TP002", "pcnumi", "pcnumi=pcnumi")
+        If Not IsDBNull(_Tabla.Rows(0).Item(0)) Then
+            _id = _Tabla.Rows(0).Item(0) + 1
+        Else
+            _id = "1"
+        End If
+        _Actualizacion = "'" + Date.Now.Date.ToString("yyyy/MM/dd") + "', '" + Now.Hour.ToString + ":" + Now.Minute.ToString + "' ,'" + L_Usuario + "'"
+        Dim A As String = "'" + _cod + "',"
+        Dim Sql As String
+        Sql = "'" + _cod + "'," + _estado + ",'" + _fecha + "','" + _fechaFab + "','" + _fechaVen + "','" + _descrip + "','" + _observa + "'," + _total + "," + _Actualizacion
+        _Err = D_Insertar_Datos("TP002", Sql)
+    End Sub
+    Public Shared Function L_ProductoCompuestoCabecera_Grabar(ByRef _id As String, _cod As String, _estado As String, _descrip As String, _observa As String, _fecha As String, _fechaFab As String, _fechaVen As String, _total As Double, _detalle As DataTable) As Boolean
+        Dim _Tabla As DataTable
+        Dim _resultado As Boolean
+        Dim _listParam As New List(Of Datos.DParametro)
+        'pcnumi, pccod, pcest, pcfech, pcfven, pcffab, pcdesc, pcobser, pctotal, pcfact, pchact, pcuact
+        _listParam.Add(New Datos.DParametro("@tipo", 1))
+        _listParam.Add(New Datos.DParametro("@pcnumi", _id))
+        _listParam.Add(New Datos.DParametro("@pccod", _cod))
+        _listParam.Add(New Datos.DParametro("@pcest", _estado))
+        _listParam.Add(New Datos.DParametro("@pcfech", _fecha))
+        _listParam.Add(New Datos.DParametro("@pcffab", _fechaFab))
+        _listParam.Add(New Datos.DParametro("@pcfven", _fechaVen))
+        _listParam.Add(New Datos.DParametro("@pcdesc", _descrip))
+        _listParam.Add(New Datos.DParametro("@pcobser", _observa))
+        _listParam.Add(New Datos.DParametro("@pctotal", _total))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _listParam.Add(New Datos.DParametro("@TP0021", "", _detalle))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        If _Tabla.Rows.Count > 0 Then
+            _id = _Tabla.Rows(0).Item(0)
+            _resultado = True
+        Else
+            _resultado = False
+        End If
+
+        Return _resultado
+    End Function
     Public Shared Function L_fnProductoCompuestoTraerGeneral() As DataTable
         Dim _Tabla As DataTable
 
@@ -5111,6 +5155,18 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@pcnumi", _id))
         _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_fnListarProductosCompuestos(_almacen As String) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+
+        _listParam.Add(New Datos.DParametro("@tipo", 7))
+        _listParam.Add(New Datos.DParametro("@almacen", _almacen))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+
         Return _Tabla
     End Function
 #End Region
