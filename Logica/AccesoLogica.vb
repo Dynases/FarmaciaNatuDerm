@@ -5128,6 +5128,52 @@ Public Class AccesoLogica
 
         Return _resultado
     End Function
+    Public Shared Function L_ProductoCompuestoCabecera_Modificar(ByRef _id As String, _cod As String, _estado As String, _descrip As String, _observa As String, _fecha As String, _fechaFab As String, _fechaVen As String, _total As Double, _detalle As DataTable) As Boolean
+        Dim _Tabla As DataTable
+        Dim _resultado As Boolean
+        Dim _listParam As New List(Of Datos.DParametro)
+        'pcnumi, pccod, pcest, pcfech, pcfven, pcffab, pcdesc, pcobser, pctotal, pcfact, pchact, pcuact
+        _listParam.Add(New Datos.DParametro("@tipo", 2))
+        _listParam.Add(New Datos.DParametro("@pcnumi", _id))
+        _listParam.Add(New Datos.DParametro("@pccod", _cod))
+        _listParam.Add(New Datos.DParametro("@pcest", _estado))
+        _listParam.Add(New Datos.DParametro("@pcfech", _fecha))
+        _listParam.Add(New Datos.DParametro("@pcffab", _fechaFab))
+        _listParam.Add(New Datos.DParametro("@pcfven", _fechaVen))
+        _listParam.Add(New Datos.DParametro("@pcdesc", _descrip))
+        _listParam.Add(New Datos.DParametro("@pcobser", _observa))
+        _listParam.Add(New Datos.DParametro("@pctotal", _total))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _listParam.Add(New Datos.DParametro("@TP0021", "", _detalle))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        If _Tabla.Rows.Count > 0 Then
+            _id = _Tabla.Rows(0).Item(0)
+            _resultado = True
+        Else
+            _resultado = False
+        End If
+        Return _resultado
+    End Function
+    Public Shared Function L_ProductoCompuestoCabecera_Eliminar(_id As String, mensaje As String) As Boolean
+        Dim _resultado As Boolean
+        If L_fnbValidarEliminacion(_id, "TP002", "pcnumi", mensaje) = True Then
+            Dim _Tabla As DataTable
+            Dim _listParam As New List(Of Datos.DParametro)
+            _listParam.Add(New Datos.DParametro("@tipo", 3))
+            _listParam.Add(New Datos.DParametro("@pcnumi", _id))
+            _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+            _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+            If _Tabla.Rows.Count > 0 Then
+                _resultado = True
+            Else
+                _resultado = False
+            End If
+        Else
+            _resultado = False
+        End If
+        Return _resultado
+    End Function
+
     Public Shared Function L_fnProductoCompuestoTraerGeneral() As DataTable
         Dim _Tabla As DataTable
 

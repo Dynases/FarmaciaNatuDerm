@@ -156,6 +156,9 @@ Partial Class F0_ProductoCompuesto
         'btnGrabar
         '
         '
+        'btnEliminar
+        '
+        '
         'btnModificar
         '
         '
@@ -273,7 +276,7 @@ Partial Class F0_ProductoCompuesto
         Me.GPanelProductos.Controls.Add(Me.Panel7)
         Me.GPanelProductos.DisabledBackColor = System.Drawing.Color.Empty
         Me.GPanelProductos.Font = New System.Drawing.Font("Georgia", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GPanelProductos.Location = New System.Drawing.Point(189, -22)
+        Me.GPanelProductos.Location = New System.Drawing.Point(168, -20)
         Me.GPanelProductos.Name = "GPanelProductos"
         Me.GPanelProductos.Size = New System.Drawing.Size(720, 40)
         '

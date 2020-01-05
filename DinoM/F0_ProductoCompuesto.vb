@@ -75,11 +75,12 @@ Public Class F0_ProductoCompuesto
         If _Nuevo Then
             MP_NuevoRegistro()
         Else
-
+            MP_ModificarRegistro()
         End If
     End Sub
     Private Sub btnModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
         _Nuevo = False
+        MP_Modificar()
     End Sub
 
     Private Sub Dgv_Detalle_KeyDown_1(sender As Object, e As KeyEventArgs) Handles Dgv_Detalle.KeyDown
@@ -197,7 +198,7 @@ Public Class F0_ProductoCompuesto
                 'Dgv_Detalle.Focus()
                 'Dgv_Detalle.Row = Dgv_Detalle.Row - 1
                 Dim pos As Integer = -1
-                Dgv_Detalle.Row = Dgv_Detalle.RowCount - 1
+                'Dgv_Detalle.Row = Dgv_Detalle.RowCount - 1
                 _fnObtenerFilaDetalle(pos, Dgv_Detalle.GetValue("id"))
                 If (Not _fnExisteProducto(idProducto)) Then
                     'b.yfcdprod1, a.iclot, a.icfven, a.iccven
@@ -245,6 +246,7 @@ Public Class F0_ProductoCompuesto
                     Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
                     Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
                     Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
+                    MP_PonerTotal()
                 Else
                     If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
                         Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
@@ -255,29 +257,43 @@ Public Class F0_ProductoCompuesto
             Else
                 ' If (e.Column.Index = Dgv_Detalle.RootTable.Columns("Jarabe").Index And Dgv_Detalle.CurrentRow.Cells("Jarabe").Value) Then
                 If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
-                        valor = (cantidad * 100) / porcentaje
-                        valor = valor / valor2
-                        total = valor * precio
-                        Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
-                        Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
-                        Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
-                    Else
-                        If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
-                            Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
-                        ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
-                            Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
-                        End If
-                    ' End If
-
+                    valor = (cantidad * 100) / porcentaje
+                    valor = valor / valor2
+                    total = valor * precio
+                    Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
+                    Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
+                    Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
+                    MP_PonerTotal()
+                Else
+                    If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
+                        Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
+                    ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
+                        Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
+                    End If
                 End If
             End If
-            tb_Total.Value = Dgv_Detalle.GetTotal(Dgv_Detalle.RootTable.Columns("pdtotal"), AggregateFunction.Sum)
+
         Catch ex As Exception
             Throw New Exception(ex.Message)
         End Try
     End Sub
+    Private Sub btnEliminar_Click(sender As Object, e As EventArgs) Handles btnEliminar.Click
+        MP_EliminarRegistro()
+    End Sub
 #End Region
 #Region "Metodos privados"
+    Private Sub MP_PonerTotal()
+        If Dgv_Detalle.Row < Dgv_Detalle.RowCount Then
+            Dim lin As Integer = Dgv_Detalle.GetValue("id")
+            Dim pos As Integer = -1
+            _fnObtenerFilaDetalle(pos, lin)
+            Dim estado As Integer = CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("estado")
+            If (estado = 1) Then
+                CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("estado") = 2
+            End If
+            tb_Total.Value = Dgv_Detalle.GetTotal(Dgv_Detalle.RootTable.Columns("pdtotal"), AggregateFunction.Sum)
+        End If
+    End Sub
     Private Sub MP_Iniciar()
         Me.Text = NombreFormulario
         MP_ValidarLote()
@@ -660,6 +676,7 @@ Public Class F0_ProductoCompuesto
         With Dgv_Busqueda
             _idOriginal = .GetValue("id")
             Dim _tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneralXId(_idOriginal)
+            tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
             tb_CodProductoCom.Text = _tablaEncabezado.Rows(0).Item("pccod")
             tb_Descripcion.Text = _tablaEncabezado.Rows(0).Item("pcdesc").ToString()
             tb_Observacion.Text = _tablaEncabezado.Rows(0).Item("pcobser").ToString()
@@ -767,6 +784,26 @@ Public Class F0_ProductoCompuesto
         tb_Id.Focus()
         _Nuevo = True
     End Sub
+    Private Sub MP_Modificar()
+        MP_Habilitar()
+        'btnNuevo.Enabled = False
+        'btnModificar.Enabled = False
+        'btnEliminar.Enabled = False
+        'btnGrabar.Enabled = True
+        '_Nuevo = False
+        tb_Descripcion.Focus()
+        'PanelNavegacion.Enabled = False
+        _prCargarIconELiminar()
+    End Sub
+    Public Sub _prCargarIconELiminar()
+        For i As Integer = 0 To CType(Dgv_Detalle.DataSource, DataTable).Rows.Count - 1 Step 1
+            Dim Bin As New MemoryStream
+            Dim img As New Bitmap(My.Resources.delete, 28, 28)
+            img.Save(Bin, Imaging.ImageFormat.Png)
+            CType(Dgv_Detalle.DataSource, DataTable).Rows(i).Item("img") = Bin.GetBuffer
+            Dgv_Detalle.RootTable.Columns("img").Visible = True
+        Next
+    End Sub
     Private Sub MP_CargarComboLibreriaSucursal(mCombo As Janus.Windows.GridEX.EditControls.MultiColumnCombo)
         Dim dt As New DataTable
         dt = L_fnListarSucursales()
@@ -797,7 +834,7 @@ Public Class F0_ProductoCompuesto
 
         End With
         With Dgv_Productos.RootTable.Columns("yfcprod")
-            .Width = 60
+            .Width = 120
             .Caption = "CÓDIGO"
             .Visible = True
         End With
@@ -807,7 +844,7 @@ Public Class F0_ProductoCompuesto
             .Visible = gb_CodigoBarra
         End With
         With Dgv_Productos.RootTable.Columns("yfcdprod1")
-            .Width = 250
+            .Width = 270
             .Visible = True
             .Caption = "DESCRIPCIÓN"
         End With
@@ -825,13 +862,13 @@ Public Class F0_ProductoCompuesto
         If (dtname.Rows.Count > 0) Then
 
             With Dgv_Productos.RootTable.Columns("grupo1")
-                .Width = 120
+                .Width = 150
                 .Caption = dtname.Rows(0).Item("Grupo 1").ToString
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
                 .Visible = True
             End With
             With Dgv_Productos.RootTable.Columns("grupo2")
-                .Width = 120
+                .Width = 150
                 .Caption = dtname.Rows(0).Item("Grupo 2").ToString
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
                 .Visible = True
@@ -909,7 +946,7 @@ Public Class F0_ProductoCompuesto
         End With
 
         With Dgv_Productos.RootTable.Columns("pcos")
-            .Width = 120
+            .Width = 150
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
             .Visible = False
             .Caption = "Precio Costo"
@@ -918,7 +955,7 @@ Public Class F0_ProductoCompuesto
         With Dgv_Productos.RootTable.Columns("stock")
             .Width = 90
             .FormatString = "0.00"
-            .Visible = True
+            .Visible = False
             .Caption = "STOCK"
         End With
 
@@ -930,18 +967,18 @@ Public Class F0_ProductoCompuesto
             'diseño de la grilla
             .VisualStyle = VisualStyle.Office2007
         End With
-        MP_AplicarCondiccionJanusSinLote()
+        'MP_AplicarCondiccionJanusSinLote()
     End Sub
-    Public Sub MP_AplicarCondiccionJanusSinLote()
-        Dim fc As GridEXFormatCondition
-        fc = New GridEXFormatCondition(Dgv_Productos.RootTable.Columns("stock"), ConditionOperator.Between, -9998 And 0)
-        fc.FormatStyle.ForeColor = Color.Red    '
-        Dgv_Productos.RootTable.FormatConditions.Add(fc)
-        Dim fr As GridEXFormatCondition
-        fr = New GridEXFormatCondition(Dgv_Productos.RootTable.Columns("stock"), ConditionOperator.Equal, -9999)
-        fr.FormatStyle.ForeColor = Color.BlueViolet
-        Dgv_Productos.RootTable.FormatConditions.Add(fr)
-    End Sub
+    'Public Sub MP_AplicarCondiccionJanusSinLote()
+    '    Dim fc As GridEXFormatCondition
+    '    fc = New GridEXFormatCondition(Dgv_Productos.RootTable.Columns("stock"), ConditionOperator.Between, -9998 And 0)
+    '    fc.FormatStyle.ForeColor = Color.Red    '
+    '    Dgv_Productos.RootTable.FormatConditions.Add(fc)
+    '    Dim fr As GridEXFormatCondition
+    '    fr = New GridEXFormatCondition(Dgv_Productos.RootTable.Columns("stock"), ConditionOperator.Equal, -9999)
+    '    fr.FormatStyle.ForeColor = Color.BlueViolet
+    '    Dgv_Productos.RootTable.FormatConditions.Add(fr)
+    'End Sub
     Public Sub MP_ActualizarSaldo(ByRef dt As DataTable, CodProducto As Integer)
         Dim _detalle As DataTable = CType(Dgv_Detalle.DataSource, DataTable)
         For i As Integer = 0 To dt.Rows.Count - 1 Step 1
@@ -1060,7 +1097,7 @@ Public Class F0_ProductoCompuesto
                 Dgv_Detalle.RootTable.ApplyFilter(New Janus.Windows.GridEX.GridEXFilterCondition(Dgv_Detalle.RootTable.Columns("estado"), Janus.Windows.GridEX.ConditionOperator.GreaterThanOrEqualTo, 0))
                 tb_Total.Value = Dgv_Detalle.GetTotal(Dgv_Detalle.RootTable.Columns("pdtotal"), AggregateFunction.Sum)
                 Dgv_Detalle.Select()
-                Dgv_Detalle.Col = 5
+                Dgv_Detalle.Col = 3
                 Dgv_Detalle.Row = Dgv_Detalle.RowCount - 1
             End If
         End If
@@ -1123,24 +1160,76 @@ Public Class F0_ProductoCompuesto
             Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, tb_CodProductoCom.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable))
             If res Then
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
-                ToastNotification.Show(Me, "Código de Venta ".ToUpper + id.ToString() + " Grabado con Exito.".ToUpper,
+                ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + id.ToString() + " Grabado con Exito.".ToUpper,
                                           img, 2000,
                                           eToastGlowColor.Green,
                                           eToastPosition.TopCenter
                                           )
-
                 MP_MostrarGrillaEncabezado()
                 MP_Limpiar()
             Else
                 Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
-                ToastNotification.Show(Me, "La Venta no pudo ser insertado".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                ToastNotification.Show(Me, "El producto compuesto no pudo ser insertado".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
 
             End If
         Catch ex As Exception
             MostrarMensajeError(ex.Message)
         End Try
-
-
     End Sub
+    Public Sub MP_ModificarRegistro()
+        Try
+            Dim id As String = ""
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, tb_CodProductoCom.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable))
+            If res Then
+                Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
+                ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + id.ToString() + " Modificado con Exito.".ToUpper,
+                                          img, 2000,
+                                          eToastGlowColor.Green,
+                                          eToastPosition.TopCenter
+                                          )
+                MP_InHabilitar()
+                MP_Filtrar(1)
+            Else
+                Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                ToastNotification.Show(Me, "El producto compuesto no pudo ser modificada".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+
+            End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
+    Public Sub MP_EliminarRegistro()
+
+        Try
+            Dim ef = New Efecto
+            ef.tipo = 2
+            ef.Context = "¿esta seguro de eliminar el registro?".ToUpper
+            ef.Header = "mensaje principal".ToUpper
+            ef.ShowDialog()
+            Dim bandera As Boolean = False
+            bandera = ef.band
+            If (bandera = True) Then
+                Dim mensajeError As String = ""
+                Dim res As Boolean = L_ProductoCompuestoCabecera_Eliminar(tb_Id.Text, mensajeError)
+                If res Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
+
+                    ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + tb_Id.Text + " eliminado con Exito.".ToUpper,
+                                              img, 2000,
+                                              eToastGlowColor.Green,
+                                              eToastPosition.TopCenter)
+
+                    MP_Filtrar(1)
+
+                Else
+                    Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                    ToastNotification.Show(Me, mensajeError, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                End If
+            End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
+
 #End Region
 End Class

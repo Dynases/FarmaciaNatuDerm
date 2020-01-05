@@ -243,6 +243,7 @@ Partial Class F0_Ventas
         '
         'btnImprimir
         '
+        Me.btnImprimir.Text = "FACTURA"
         '
         'btnUltimo
         '

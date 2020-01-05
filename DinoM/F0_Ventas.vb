@@ -154,7 +154,7 @@ Public Class F0_Ventas
         tbSubTotal.IsInputReadOnly = True
         tbIce.IsInputReadOnly = True
         tbtotal.IsInputReadOnly = True
-
+        'btnModificar.Visible =False
         grVentas.Enabled = True
         PanelNavegacion.Enabled = True
         grdetalle.RootTable.Columns("img").Visible = False
@@ -1385,14 +1385,11 @@ Public Class F0_Ventas
         Dim numi As String = ""
         Dim res As Boolean = L_fnGrabarVenta(numi, "", tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), _CodCliente, IIf(swMoneda.Value = True, 1, 0), tbObservacion.Text, tbMdesc.Value, tbIce.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), IIf(swEmision.Value = True, 1, 0))
 
-
         If res Then
-            'res = P_fnGrabarFacturarTFV001(numi)
-
+            ' res = P_fnGrabarFacturarTFV001(numi)
             If (gb_FacturaEmite) Then
                 P_fnGenerarFactura(numi)
             End If
-
             Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
             ToastNotification.Show(Me, "Código de Venta ".ToUpper + tbCodigo.Text + " Grabado con Exito.".ToUpper,
                                       img, 2000,
@@ -1727,16 +1724,16 @@ Public Class F0_Ventas
             If (gi_FacturaTipo = 1) Then
                 'objrep = New R_FacturaG
             ElseIf (gi_FacturaTipo = 2) Then
-                objrep = New R_FacturaCarta
-                If (Not _Ds.Tables(0).Rows.Count = gi_FacturaCantidadItems) Then
-                    For index = _Ds.Tables(0).Rows.Count To gi_FacturaCantidadItems - 1
-                        'Insertamos la primera fila con el saldo Inicial
-                        Dim f As DataRow = _Ds.Tables(0).NewRow
-                        f.ItemArray() = _Ds.Tables(0).Rows(0).ItemArray
-                        f.Item("fvbcant") = -1
-                        _Ds.Tables(0).Rows.Add(f)
-                    Next
-                End If
+                objrep = New R_Factura_7_5x100
+                'If (Not _Ds.Tables(0).Rows.Count = gi_FacturaCantidadItems) Then
+                '    For index = _Ds.Tables(0).Rows.Count To gi_FacturaCantidadItems - 1
+                '        'Insertamos la primera fila con el saldo Inicial
+                '        Dim f As DataRow = _Ds.Tables(0).NewRow
+                '        f.ItemArray() = _Ds.Tables(0).Rows(0).ItemArray
+                '        f.Item("fvbcant") = -1
+                '        _Ds.Tables(0).Rows.Add(f)
+                '    Next
+                'End If
             End If
 
             objrep.SetDataSource(_Ds.Tables(0))
@@ -1754,11 +1751,11 @@ Public Class F0_Ventas
             objrep.SetParameterValue("ESFC", _Ds1.Tables(0).Rows(0).Item("sbsfc").ToString)
             objrep.SetParameterValue("ENit", _Ds2.Tables(0).Rows(0).Item("scnit").ToString)
             objrep.SetParameterValue("EActividad", _Ds2.Tables(0).Rows(0).Item("scact").ToString)
-            objrep.SetParameterValue("ESms", "''" + _Ds1.Tables(0).Rows(0).Item("sbnota").ToString + "''")
-            objrep.SetParameterValue("ESms2", "''" + _Ds1.Tables(0).Rows(0).Item("sbnota2").ToString + "''")
+            objrep.SetParameterValue("ENota", "''" + _Ds1.Tables(0).Rows(0).Item("sbnota").ToString + "''")
+            objrep.SetParameterValue("ELey", "''" + _Ds1.Tables(0).Rows(0).Item("sbnota2").ToString + "''")
             objrep.SetParameterValue("EDuenho", _Ds2.Tables(0).Rows(0).Item("scnom").ToString) '?
-            objrep.SetParameterValue("URLImageLogo", gs_CarpetaRaiz + "\LogoFactura.jpg")
-            objrep.SetParameterValue("URLImageMarcaAgua", gs_CarpetaRaiz + "\MarcaAguaFactura.jpg")
+            'objrep.SetParameterValue("URLImageLogo", gs_CarpetaRaiz + "\LogoFactura.jpg")
+            'objrep.SetParameterValue("URLImageMarcaAgua", gs_CarpetaRaiz + "\MarcaAguaFactura.jpg")
 
             If (_Ds3.Tables(0).Rows(0).Item("cbvp")) Then 'Vista Previa de la Ventana de Vizualización 1 = True 0 = False
                 P_Global.Visualizador.CrGeneral.ReportSource = objrep 'Comentar
@@ -1870,16 +1867,23 @@ Public Class F0_Ventas
             Dim objrep As New R_NotaDeVenta
             '' GenerarNro(_dt)
             ''objrep.SetDataSource(Dt1Kardex)
-
             objrep.SetDataSource(dt)
             objrep.SetParameterValue("TotalBs", li)
             objrep.SetParameterValue("TotalDo", lid)
             objrep.SetParameterValue("TotalDoN", totald)
             objrep.SetParameterValue("usuario", gs_user)
             objrep.SetParameterValue("estado", 1)
-            P_Global.Visualizador.CrGeneral.ReportSource = objrep 'Comentar
-            P_Global.Visualizador.Show() 'Comentar
-            P_Global.Visualizador.BringToFront() 'Comentar
+
+            Dim pd As New PrintDocument()
+            pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
+            If (Not pd.PrinterSettings.IsValid) Then
+                ToastNotification.Show(Me, "La Impresora ".ToUpper + "EPSON LX-350 ESC/P" + "No Existe".ToUpper,
+                                       My.Resources.WARNING, 5 * 1000,
+                                       eToastGlowColor.Blue, eToastPosition.BottomRight)
+            Else
+                objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString '"EPSON TM-T20II Receipt5 (1)"
+                objrep.PrintToPrinter(1, False, 1, 1)
+            End If
         Else
             Dim objrep As New R_NotaDeVenta
             'Dim objrep As New R_NotaDeVentaSinLote
@@ -1898,9 +1902,21 @@ Public Class F0_Ventas
             'objrep.SetParameterValue("P_Empresa3", ParEmp4)
             objrep.SetParameterValue("usuario", gs_user)
             objrep.SetParameterValue("estado", 1)
-            P_Global.Visualizador.CrGeneral.ReportSource = objrep 'Comentar
-            P_Global.Visualizador.Show() 'Comentar
-            P_Global.Visualizador.BringToFront() 'Comentar
+            'P_Global.Visualizador.CrGeneral.ReportSource = objrep 'Comentar
+            'P_Global.Visualizador.Show() 'Comentar
+            '.Visualizador.BringToFront() 'Comentar
+
+
+            Dim pd As New PrintDocument()
+            pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
+            If (Not pd.PrinterSettings.IsValid) Then
+                ToastNotification.Show(Me, "La Impresora ".ToUpper + "EPSON LX-350 ESC/P" + "No Existe".ToUpper,
+                                       My.Resources.WARNING, 5 * 1000,
+                                       eToastGlowColor.Blue, eToastPosition.BottomRight)
+            Else
+                objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString '"EPSON TM-T20II Receipt5 (1)"
+                objrep.PrintToPrinter(1, False, 1, 1)
+            End If
         End If
 
     End Sub
@@ -2090,9 +2106,7 @@ Public Class F0_Ventas
     Private Sub tbCliente_KeyDown(sender As Object, e As KeyEventArgs) Handles tbCliente.KeyDown
         If (_fnAccesible()) Then
             If e.KeyData = Keys.Control + Keys.Enter Then
-
                 Dim dt As DataTable
-
                 dt = L_fnListarClientes()
                 '              a.ydnumi, a.ydcod, a.yddesc, a.yddctnum, a.yddirec
                 ',a.ydtelf1 ,a.ydfnac 
@@ -2987,9 +3001,22 @@ salirIf:
         TbNombre2.Text = nom2
     End Sub
     Private Sub btnImprimir_Click(sender As Object, e As EventArgs) Handles btnImprimir.Click
-        If (Not _fnAccesible()) Then
-            P_GenerarReporte(tbCodigo.Text)
+        'If (Not _fnAccesible()) Then
+        '    P_GenerarReporte(tbCodigo.Text)
 
+        'End If
+        If (P_fnValidarFactura()) Then
+            'Validar para facturar
+            If tbCodigo.Text <> String.Empty Then
+                P_prImprimirFacturar(tbCodigo.Text, True, True)
+            End If
+        Else
+            'Volver todo al estada anterior
+            ToastNotification.Show(Me, "No es posible facturar, vuelva a ingresar a la mesa he intente nuevamente!!!".ToUpper,
+                                   My.Resources.OK,
+                                   5 * 1000,
+                                   eToastGlowColor.Red,
+                                   eToastPosition.MiddleCenter)
         End If
     End Sub
 
