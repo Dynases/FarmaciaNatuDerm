@@ -301,6 +301,12 @@
     <Compile Include="F0_Proforma.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="F0_VentaProductoCompuesto.Designer.vb">
+      <DependentUpon>F0_VentaProductoCompuesto.vb</DependentUpon>
+    </Compile>
+    <Compile Include="F0_VentaProductoCompuesto.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="F0_Ventas.Designer.vb">
       <DependentUpon>F0_Ventas.vb</DependentUpon>
     </Compile>
@@ -817,6 +823,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="F0_Proforma.resx">
       <DependentUpon>F0_Proforma.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="F0_VentaProductoCompuesto.resx">
+      <DependentUpon>F0_VentaProductoCompuesto.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="F0_Ventas.resx">
       <DependentUpon>F0_Ventas.vb</DependentUpon>
