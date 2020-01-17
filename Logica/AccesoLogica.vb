@@ -1795,6 +1795,29 @@ Public Class AccesoLogica
         End If
         Return _resultado
     End Function
+
+    Public Shared Function L_fnNotaCompras(_numi As Integer) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+
+        _listParam.Add(New Datos.DParametro("@tipo", 12))
+        _listParam.Add(New Datos.DParametro("@numi", _numi))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TC001", _listParam)
+
+        Return _Tabla
+    End Function
+
+    Public Shared Function L_DatosEmpresa(_Cia As String) As DataSet
+        Dim _Tabla As DataTable
+        Dim _Ds As New DataSet
+        Dim _Where As String
+        _Where = " scnumi = " + _Cia
+
+        _Tabla = D_Datos_Tabla("*", "TS003", _Where)
+        _Ds.Tables.Add(_Tabla)
+        Return _Ds
+    End Function
 #End Region
 
 #Region "TA002 Deposito"
