@@ -31,7 +31,9 @@ Partial Class F1_Productos
         Dim cbgrupo3_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Dim cbgrupo4_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Dim cbUMed_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
+        Dim cb_TipoProducto_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.swTipoProducto = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.cbUniVenta = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
         Me.LabelX5 = New DevComponents.DotNetBar.LabelX()
@@ -76,6 +78,9 @@ Partial Class F1_Productos
         Me.tbStockMinimo = New DevComponents.Editors.IntegerInput()
         Me.GroupPanel2 = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.cb_TipoProducto = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
+        Me.btn_TipoProducto = New DevComponents.DotNetBar.ButtonX()
+        Me.LabelX19 = New DevComponents.DotNetBar.LabelX()
         Me.GroupPanel3 = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.SuperTabControl_Imagenes_DetalleProducto = New DevComponents.DotNetBar.SuperTabControl()
         Me.SuperTabControlPanel1 = New DevComponents.DotNetBar.SuperTabControlPanel()
@@ -87,8 +92,6 @@ Partial Class F1_Productos
         Me.SuperTabItem_DetalleProducto = New DevComponents.DotNetBar.SuperTabItem()
         Me.btExcel = New DevComponents.DotNetBar.ButtonX()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.swTipoProducto = New DevComponents.DotNetBar.Controls.SwitchButton()
-        Me.LabelX19 = New DevComponents.DotNetBar.LabelX()
         CType(Me.SuperTabPrincipal, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuperTabPrincipal.SuspendLayout()
         Me.SuperTabControlPanelRegistro.SuspendLayout()
@@ -120,6 +123,7 @@ Partial Class F1_Productos
         CType(Me.tbStockMinimo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupPanel2.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        CType(Me.cb_TipoProducto, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupPanel3.SuspendLayout()
         CType(Me.SuperTabControl_Imagenes_DetalleProducto, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuperTabControl_Imagenes_DetalleProducto.SuspendLayout()
@@ -210,9 +214,6 @@ Partial Class F1_Productos
         Me.BubbleBarUsuario.SelectedTabColors.BorderColor = System.Drawing.Color.Black
         '
         'btnSalir
-        '
-        '
-        'btnGrabar
         '
         '
         'PanelToolBar2
@@ -316,6 +317,7 @@ Partial Class F1_Productos
         'GroupBox1
         '
         Me.GroupBox1.BackColor = System.Drawing.Color.Transparent
+        Me.GroupBox1.Controls.Add(Me.swTipoProducto)
         Me.GroupBox1.Controls.Add(Me.Panel4)
         Me.GroupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.GroupBox1.Font = New System.Drawing.Font("Arial", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -326,6 +328,25 @@ Partial Class F1_Productos
         Me.GroupBox1.TabIndex = 28
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Unidades"
+        '
+        'swTipoProducto
+        '
+        '
+        '
+        '
+        Me.swTipoProducto.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.swTipoProducto.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.swTipoProducto.Location = New System.Drawing.Point(135, -7)
+        Me.swTipoProducto.Name = "swTipoProducto"
+        Me.swTipoProducto.OffBackColor = System.Drawing.Color.LawnGreen
+        Me.swTipoProducto.OffText = "MATERIA PRIMA"
+        Me.swTipoProducto.OnBackColor = System.Drawing.Color.Gold
+        Me.swTipoProducto.OnText = "FARMACIA"
+        Me.swTipoProducto.Size = New System.Drawing.Size(144, 22)
+        Me.swTipoProducto.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.swTipoProducto.TabIndex = 373
+        Me.swTipoProducto.Value = True
+        Me.swTipoProducto.ValueObject = "Y"
         '
         'Panel4
         '
@@ -1068,7 +1089,8 @@ Partial Class F1_Productos
         '
         Me.Panel2.AutoScroll = True
         Me.Panel2.BackColor = System.Drawing.Color.Transparent
-        Me.Panel2.Controls.Add(Me.swTipoProducto)
+        Me.Panel2.Controls.Add(Me.cb_TipoProducto)
+        Me.Panel2.Controls.Add(Me.btn_TipoProducto)
         Me.Panel2.Controls.Add(Me.LabelX19)
         Me.Panel2.Controls.Add(Me.lbgrupo1)
         Me.Panel2.Controls.Add(Me.btgrupo3)
@@ -1091,6 +1113,49 @@ Partial Class F1_Productos
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(428, 300)
         Me.Panel2.TabIndex = 216
+        '
+        'cb_TipoProducto
+        '
+        cb_TipoProducto_DesignTimeLayout.LayoutString = resources.GetString("cb_TipoProducto_DesignTimeLayout.LayoutString")
+        Me.cb_TipoProducto.DesignTimeLayout = cb_TipoProducto_DesignTimeLayout
+        Me.cb_TipoProducto.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_TipoProducto.Location = New System.Drawing.Point(140, 270)
+        Me.cb_TipoProducto.Name = "cb_TipoProducto"
+        Me.cb_TipoProducto.Office2007ColorScheme = Janus.Windows.GridEX.Office2007ColorScheme.Custom
+        Me.cb_TipoProducto.Office2007CustomColor = System.Drawing.Color.DodgerBlue
+        Me.cb_TipoProducto.SelectedIndex = -1
+        Me.cb_TipoProducto.SelectedItem = Nothing
+        Me.cb_TipoProducto.Size = New System.Drawing.Size(144, 22)
+        Me.cb_TipoProducto.TabIndex = 375
+        Me.cb_TipoProducto.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
+        '
+        'btn_TipoProducto
+        '
+        Me.btn_TipoProducto.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
+        Me.btn_TipoProducto.BackColor = System.Drawing.Color.Transparent
+        Me.btn_TipoProducto.ColorTable = DevComponents.DotNetBar.eButtonColor.Flat
+        Me.btn_TipoProducto.Image = Global.DinoM.My.Resources.Resources.add
+        Me.btn_TipoProducto.ImageFixedSize = New System.Drawing.Size(25, 23)
+        Me.btn_TipoProducto.Location = New System.Drawing.Point(290, 269)
+        Me.btn_TipoProducto.Name = "btn_TipoProducto"
+        Me.btn_TipoProducto.Size = New System.Drawing.Size(28, 23)
+        Me.btn_TipoProducto.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.btn_TipoProducto.TabIndex = 376
+        Me.btn_TipoProducto.Visible = False
+        '
+        'LabelX19
+        '
+        '
+        '
+        '
+        Me.LabelX19.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX19.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX19.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.LabelX19.Location = New System.Drawing.Point(13, 272)
+        Me.LabelX19.Name = "LabelX19"
+        Me.LabelX19.Size = New System.Drawing.Size(75, 23)
+        Me.LabelX19.TabIndex = 374
+        Me.LabelX19.Text = "Tipo:"
         '
         'GroupPanel3
         '
@@ -1264,39 +1329,6 @@ Partial Class F1_Productos
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(1322, 329)
         Me.TableLayoutPanel1.TabIndex = 227
         '
-        'swTipoProducto
-        '
-        '
-        '
-        '
-        Me.swTipoProducto.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.swTipoProducto.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.swTipoProducto.Location = New System.Drawing.Point(140, 275)
-        Me.swTipoProducto.Name = "swTipoProducto"
-        Me.swTipoProducto.OffBackColor = System.Drawing.Color.LawnGreen
-        Me.swTipoProducto.OffText = "MATERIA PRIMA"
-        Me.swTipoProducto.OnBackColor = System.Drawing.Color.Gold
-        Me.swTipoProducto.OnText = "FARMACIA"
-        Me.swTipoProducto.Size = New System.Drawing.Size(144, 22)
-        Me.swTipoProducto.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.swTipoProducto.TabIndex = 373
-        Me.swTipoProducto.Value = True
-        Me.swTipoProducto.ValueObject = "Y"
-        '
-        'LabelX19
-        '
-        '
-        '
-        '
-        Me.LabelX19.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX19.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelX19.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
-        Me.LabelX19.Location = New System.Drawing.Point(13, 272)
-        Me.LabelX19.Name = "LabelX19"
-        Me.LabelX19.Size = New System.Drawing.Size(75, 23)
-        Me.LabelX19.TabIndex = 374
-        Me.LabelX19.Text = "Tipo:"
-        '
         'F1_Productos
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1342,6 +1374,7 @@ Partial Class F1_Productos
         Me.GroupPanel2.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        CType(Me.cb_TipoProducto, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupPanel3.ResumeLayout(False)
         CType(Me.SuperTabControl_Imagenes_DetalleProducto, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SuperTabControl_Imagenes_DetalleProducto.ResumeLayout(False)
@@ -1412,4 +1445,6 @@ Partial Class F1_Productos
     Friend WithEvents SuperTabItem_Imagenes As DevComponents.DotNetBar.SuperTabItem
     Friend WithEvents swTipoProducto As DevComponents.DotNetBar.Controls.SwitchButton
     Friend WithEvents LabelX19 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents cb_TipoProducto As Janus.Windows.GridEX.EditControls.MultiColumnCombo
+    Friend WithEvents btn_TipoProducto As DevComponents.DotNetBar.ButtonX
 End Class

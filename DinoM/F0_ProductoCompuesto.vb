@@ -7,25 +7,29 @@ Imports DevComponents.DotNetBar.Controls
 Imports UTILITIES
 Public Class F0_ProductoCompuesto
 #Region "Variables"
-    Dim IdProducto As Integer
+
     Dim OcultarFact As Integer = 0
     Dim NombreFormulario As String = "PRODUCTOS COMPUESTOS"
-    Dim Modificado As Boolean = False
+    Dim grup1 As String = " "
+    Dim grup2 As String = " "
+
     Public _nameButton As String
     Public _tab As SuperTabItem
     Public _modulo As SideNavItem
     Public Limpiar As Boolean = False  'Bandera para indicar si limpiar todos los datos o mantener datos ya registrados
-    Dim G_Lote As Boolean = False
-    Dim _idOriginal As Integer
-    Dim _idVenta As Integer
-    Dim _Pos As Integer
-    Dim _Nuevo As Boolean
-    Public _IdCliente As Integer = 0
-    Dim FilaSelectLote As DataRow = Nothing
-    Dim grup1 As String = " "
-    Dim grup2 As String = " "
     Public Tipo As Integer = 0
-    Public _idProcucto As Integer = 0
+    Public _idProcuctoCompuesto As Integer = 0
+    Public _IdCliente As Integer = 0
+
+    Dim G_Lote As Boolean = False
+    Dim _Nuevo As Boolean = False
+    Dim Modificado As Boolean = False
+
+    Dim _idVenta, _Pos, _idProducto, _idOriginal, IdUnidad As Integer
+
+    Dim FilaSelectLote As DataRow = Nothing
+
+
 #End Region
 #Region "Eventos del formulario"
 
@@ -164,70 +168,6 @@ Public Class F0_ProductoCompuesto
             e.Cancel = True
         End If
     End Sub
-    Private Sub Dgv_Productos_KeyDown(sender As Object, e As KeyEventArgs)
-        Try
-            If e.KeyData = Keys.Enter Then
-                Dim idProducto, Etiqueda, idUnidad, Unidad, costo As String
-                'Dim Bin As New MemoryStream
-                'Dim img As New Bitmap(My.Resources.delete, 28, 28)
-                'img.Save(Bin, Imaging.ImageFormat.Png)
-
-                idProducto = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfnumi").Value)
-                Etiqueda = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfcdprod1").Value)
-                idUnidad = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfumin").Value)
-                Unidad = Convert.ToString(Dgv_Productos.CurrentRow.Cells("UnidMin").Value)
-                costo = Convert.ToString(Dgv_Productos.CurrentRow.Cells("pcos").Value)
-                'Dim nuevaFila As DataRow = CType(Dgv_Detalle.DataSource, DataTable).NewRow()
-
-                'nuevaFila(0) = 0
-                'nuevaFila(1) = idProducto
-                'nuevaFila(2) = _fnSiguienteNumi() + 1
-                'nuevaFila(3) = Etiqueda
-                'nuevaFila(4) = ""
-                'nuevaFila(5) = idUnidad
-                'nuevaFila(6) = Unidad
-                'nuevaFila(7) = "0.00"
-                'nuevaFila(8) = "0.00"
-                'nuevaFila(9) = "100"
-                'nuevaFila(10) = "1000"
-                'nuevaFila(11) = False
-                'nuevaFila(12) = "0.0000"
-                'nuevaFila(13) = costo
-                'nuevaFila(14) = "0.00"
-                'nuevaFila(15) = 0
-                'nuevaFila(16) = Bin.GetBuffer
-
-
-                'CType(Dgv_Detalle.DataSource, DataTable).Rows.Add(nuevaFila)
-                'GPanelProductos.Height = 80
-                'GPanelProductos.Visible = False
-                'Dgv_Detalle.Focus()
-                'Dgv_Detalle.Row = Dgv_Detalle.Row - 1
-                Dim pos As Integer = -1
-                'Dgv_Detalle.Row = Dgv_Detalle.RowCount - 1
-                _fnObtenerFilaDetalle(pos, Dgv_Detalle.GetValue("id"))
-                If (Not _fnExisteProducto(idProducto)) Then
-                    'b.yfcdprod1, a.iclot, a.icfven, a.iccven
-                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("idProducto") = idProducto
-                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("pdeti") = Etiqueda
-                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("IdUnidad") = idUnidad
-                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("UnidadMin") = Unidad
-                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("pdprec") = costo
-                    tb_Total.Value = Dgv_Detalle.GetTotal(Dgv_Detalle.RootTable.Columns("pdtotal"), AggregateFunction.Sum)
-                    _DesHabilitarProductos()
-                Else
-                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                    ToastNotification.Show(Me, "El producto ya existe modifique su cantidad".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                End If
-            End If
-            If e.KeyData = Keys.Escape Then
-                _DesHabilitarProductos()
-                FilaSelectLote = Nothing
-            End If
-        Catch ex As Exception
-            MostrarMensajeError(ex.Message)
-        End Try
-    End Sub
     Private Sub _prAddDetalleProductosCompuesntos()
         '   a.tbnumi ,a.tbtv1numi ,a.tbty5prod ,b.yfcdprod1 as producto,a.tbest ,a.tbcmin ,a.tbumin ,Umin .ycdes3 as unidad,a.tbpbas ,a.tbptot ,a.tbobs ,
         'a.tbpcos,a.tblote ,a.tbfechaVenc , a.tbptot2, a.tbfact ,a.tbhact ,a.tbuact,1 as estado,Cast(null as Image) as img
@@ -337,7 +277,7 @@ Public Class F0_ProductoCompuesto
             dt = L_fnProductoCompuestoTraerGeneral()
         Else
             'Cuando se incia desde venta
-            dt = L_fnProductoCompuestoTraerGeneral2(_idProcucto)
+            dt = L_fnProductoCompuestoTraerGeneral2(_idProcuctoCompuesto)
         End If
 
         Dgv_Busqueda.DataSource = dt
@@ -1153,7 +1093,7 @@ Public Class F0_ProductoCompuesto
         If btnGrabar.Enabled = True Then
             MP_Salir()
         Else
-            If _idProcucto = 0 Then
+            If _idProcuctoCompuesto = 0 Then
                 _tab.Close()
                 _modulo.Select()
             Else
@@ -1183,17 +1123,16 @@ Public Class F0_ProductoCompuesto
     Private Sub MP_GrabarProductoCompuesto()
         Try
             Dim id As String
-            If IdProducto <> 0 Then
+            If _idProcuctoCompuesto <> 0 Then
                 Dim tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneral_Venta(-1)
                 Dim filaEncabezado As DataRow = tablaEncabezado.NewRow()
                 With filaEncabezado
                     .Item("Id") = 0
-                    .Item("IdVenta") = IdProducto
+                    .Item("IdVenta") = _idProcuctoCompuesto
                     .Item("Codigo") = tb_Codigo
                     .Item("Descripcion") = tb_Descripcion
 
                     .Item("Estado") = CType(ENEstadoProductoCompuestoVenta.Pendiente, Integer)
-                    .Item("Cantidad") = tb_Cantidad.Value
                     .Item("Codigo") = tb_Codigo
                     .Item("Codigo") = tb_Codigo
                     .Item("Codigo") = tb_Codigo
@@ -1217,7 +1156,7 @@ Public Class F0_ProductoCompuesto
     Public Sub MP_NuevoRegistro()
         Try
             Dim id As String = ""
-            Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, tb_Codigo.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable))
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value, IdUnidad)
             If res Then
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                 ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + id.ToString() + " Grabado con Exito.".ToUpper,
@@ -1236,13 +1175,79 @@ Public Class F0_ProductoCompuesto
             MostrarMensajeError(ex.Message)
         End Try
     End Sub
+
+    Private Sub Dgv_Productos_KeyDown_1(sender As Object, e As KeyEventArgs) Handles Dgv_Productos.KeyDown
+        Try
+            If e.KeyData = Keys.Enter Then
+                Dim idProducto, Etiqueda, idUnidad, Unidad, costo As String
+                'Dim Bin As New MemoryStream
+                'Dim img As New Bitmap(My.Resources.delete, 28, 28)
+                'img.Save(Bin, Imaging.ImageFormat.Png)
+
+                idProducto = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfnumi").Value)
+                Etiqueda = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfcdprod1").Value)
+                idUnidad = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfumin").Value)
+                Unidad = Convert.ToString(Dgv_Productos.CurrentRow.Cells("UnidMin").Value)
+                costo = Convert.ToString(Dgv_Productos.CurrentRow.Cells("pcos").Value)
+                'Dim nuevaFila As DataRow = CType(Dgv_Detalle.DataSource, DataTable).NewRow()
+
+                'nuevaFila(0) = 0
+                'nuevaFila(1) = idProducto
+                'nuevaFila(2) = _fnSiguienteNumi() + 1
+                'nuevaFila(3) = Etiqueda
+                'nuevaFila(4) = ""
+                'nuevaFila(5) = idUnidad
+                'nuevaFila(6) = Unidad
+                'nuevaFila(7) = "0.00"
+                'nuevaFila(8) = "0.00"
+                'nuevaFila(9) = "100"
+                'nuevaFila(10) = "1000"
+                'nuevaFila(11) = False
+                'nuevaFila(12) = "0.0000"
+                'nuevaFila(13) = costo
+                'nuevaFila(14) = "0.00"
+                'nuevaFila(15) = 0
+                'nuevaFila(16) = Bin.GetBuffer
+
+
+                'CType(Dgv_Detalle.DataSource, DataTable).Rows.Add(nuevaFila)
+                'GPanelProductos.Height = 80
+                'GPanelProductos.Visible = False
+                'Dgv_Detalle.Focus()
+                'Dgv_Detalle.Row = Dgv_Detalle.Row - 1
+                Dim pos As Integer = -1
+                'Dgv_Detalle.Row = Dgv_Detalle.RowCount - 1
+                _fnObtenerFilaDetalle(pos, Dgv_Detalle.GetValue("id"))
+                If (Not _fnExisteProducto(idProducto)) Then
+                    'b.yfcdprod1, a.iclot, a.icfven, a.iccven
+                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("idProducto") = idProducto
+                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("pdeti") = Etiqueda
+                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("IdUnidad") = idUnidad
+                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("UnidadMin") = Unidad
+                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("pdprec") = costo
+                    tb_Total.Value = Dgv_Detalle.GetTotal(Dgv_Detalle.RootTable.Columns("pdtotal"), AggregateFunction.Sum)
+                    _DesHabilitarProductos()
+                Else
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "El producto ya existe modifique su cantidad".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                End If
+            End If
+            If e.KeyData = Keys.Escape Then
+                _DesHabilitarProductos()
+                FilaSelectLote = Nothing
+            End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
+
     Public Sub MP_ModificarRegistro()
         Try
             Dim id As String = ""
-            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, tb_Codigo.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable))
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value, IdUnidad)
             If res Then
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
-                ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + id.ToString() + " Modificado con Exito.".ToUpper,
+                ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + tb_Id.Text.ToString() + " Modificado con Exito.".ToUpper,
                                           img, 2000,
                                           eToastGlowColor.Green,
                                           eToastPosition.TopCenter
@@ -1291,61 +1296,40 @@ Public Class F0_ProductoCompuesto
     End Sub
     Private Sub tb_Codigo_KeyDown(sender As Object, e As KeyEventArgs) Handles tb_Codigo.KeyDown
         Try
-            If (tb_Id.Text <> String.Empty) Then
-                If e.KeyData = Keys.Control + Keys.Enter Then
-                    Dim dt As DataTable
-                    dt = L_fnListarClientes()
-                    '              a.ydnumi, a.ydcod, a.yddesc, a.yddctnum, a.yddirec
-                    ',a.ydtelf1 ,a.ydfnac 
-
-                    Dim listEstCeldas As New List(Of Modelo.Celda)
-                    listEstCeldas.Add(New Modelo.Celda("ydnumi,", True, "ID", 50))
-                    listEstCeldas.Add(New Modelo.Celda("ydcod", False, "ID", 50))
-                    listEstCeldas.Add(New Modelo.Celda("ydrazonsocial", True, "RAZON SOCIAL", 180))
-                    listEstCeldas.Add(New Modelo.Celda("yddesc", True, "NOMBRE", 280))
-                    listEstCeldas.Add(New Modelo.Celda("yddctnum", True, "N. Documento".ToUpper, 150))
-                    listEstCeldas.Add(New Modelo.Celda("yddirec", True, "DIRECCION", 220))
-                    listEstCeldas.Add(New Modelo.Celda("ydtelf1", True, "Telefono".ToUpper, 200))
-                    listEstCeldas.Add(New Modelo.Celda("ydfnac", True, "F.Nacimiento".ToUpper, 150, "MM/dd,YYYY"))
-                    listEstCeldas.Add(New Modelo.Celda("ydnumivend,", False, "ID", 50))
-                    listEstCeldas.Add(New Modelo.Celda("vendedor,", False, "ID", 50))
-                    listEstCeldas.Add(New Modelo.Celda("yddias", False, "CRED", 50))
-                    Dim ef = New Efecto
-                    ef.tipo = 3
-                    ef.dt = dt
-                    ef.SeleclCol = 2
-                    ef.listEstCeldas = listEstCeldas
-                    ef.alto = 50
-                    ef.ancho = 350
-                    ef.Context = "Seleccione Cliente".ToUpper
-                    ef.ShowDialog()
-                    Dim bandera As Boolean = False
-                    bandera = ef.band
-                    If (bandera = True) Then
-                        Dim Row As Janus.Windows.GridEX.GridEXRow = ef.Row
-
-                        _CodCliente = Row.Cells("ydnumi").Value
-                        tbCliente.Text = Row.Cells("ydrazonsocial").Value
-                        _dias = Row.Cells("yddias").Value
-
-                        Dim numiVendedor As Integer = IIf(IsDBNull(Row.Cells("ydnumivend").Value), 0, Row.Cells("ydnumivend").Value)
-                        If (numiVendedor > 0) Then
-                            tbVendedor.Text = Row.Cells("vendedor").Value
-                            _CodEmpleado = Row.Cells("ydnumivend").Value
-
-                            grdetalle.Select()
-                            Table_Producto = Nothing
-                        Else
-                            tbVendedor.Clear()
-                            _CodEmpleado = 0
-                            tbVendedor.Focus()
-                            Table_Producto = Nothing
-
+            If cbSucursal.SelectedIndex <> -1 Then
+                If (tb_Fecha.IsInputReadOnly = False) Then
+                    If e.KeyData = Keys.Control + Keys.Enter Then
+                        Dim dt As DataTable
+                        dt = L_fnProductoCompuesto_Formula(cbSucursal.Value)
+                        Dim listEstCeldas As New List(Of Modelo.Celda)
+                        listEstCeldas.Add(New Modelo.Celda("yfnumi,", False, "CÓDIGO UNICO", 50))
+                        listEstCeldas.Add(New Modelo.Celda("yfcprod", True, "CÓDIGO PROD.", 100))
+                        listEstCeldas.Add(New Modelo.Celda("tfcdprod1", True, "DESCRIPCIÓN", 180))
+                        listEstCeldas.Add(New Modelo.Celda("grupo1", True, "GRUPO 1", 280))
+                        listEstCeldas.Add(New Modelo.Celda("yfumin", False, "ID UNIDAD".ToUpper, 150))
+                        listEstCeldas.Add(New Modelo.Celda("UnidMin", True, "UNIDAD", 220))
+                        listEstCeldas.Add(New Modelo.Celda("Stock", True, "STOCK".ToUpper, 200))
+                        Dim ef = New Efecto
+                        ef.tipo = 3
+                        ef.dt = dt
+                        ef.SeleclCol = 2
+                        ef.listEstCeldas = listEstCeldas
+                        ef.alto = 50
+                        ef.ancho = 350
+                        ef.Context = "Seleccione una Formula".ToUpper
+                        ef.ShowDialog()
+                        Dim bandera As Boolean = False
+                        bandera = ef.band
+                        If (bandera = True) Then
+                            Dim Row As Janus.Windows.GridEX.GridEXRow = ef.Row
+                            _idProducto = Row.Cells("yfnumi").Value
+                            tb_Codigo.Text = Row.Cells("yfcprod").Value
+                            tb_Descripcion.Text = Row.Cells("yfcdprod1").Value
+                            IdUnidad = Row.Cells("yfumin").Value
                         End If
+
                     End If
-
                 End If
-
             End If
         Catch ex As Exception
             MostrarMensajeError(ex.Message)
