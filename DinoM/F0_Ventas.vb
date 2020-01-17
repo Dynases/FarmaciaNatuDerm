@@ -2679,7 +2679,7 @@ salirIf:
             Else
                 Dim frm As F0_ProductoCompuesto = New F0_ProductoCompuesto()
                 frm.Tipo = 1
-                frm._idProcucto = grProductos.GetValue("Id")
+                frm._idProcuctoCompuesto = grProductos.GetValue("Id")
                 frm.Show()
                 grProductos.Height = 70
                 grProductos.Visible = True
