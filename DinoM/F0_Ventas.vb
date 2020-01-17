@@ -3167,7 +3167,6 @@ salirIf:
     Private Sub ButtonX1_Click(sender As Object, e As EventArgs) Handles ButtonX1.Click
         If (Not _fnAccesible()) Then
             P_GenerarReporte(tbCodigo.Text)
-
         End If
     End Sub
     Private Sub swTipoVenta_Leave(sender As Object, e As EventArgs) Handles swTipoVenta.Leave

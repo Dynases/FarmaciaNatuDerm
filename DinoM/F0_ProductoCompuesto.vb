@@ -164,7 +164,7 @@ Public Class F0_ProductoCompuesto
             e.Cancel = True
         End If
     End Sub
-    Private Sub Dgv_Productos_KeyDown(sender As Object, e As KeyEventArgs) Handles Dgv_Productos.KeyDown
+    Private Sub Dgv_Productos_KeyDown(sender As Object, e As KeyEventArgs)
         Try
             If e.KeyData = Keys.Enter Then
                 Dim idProducto, Etiqueda, idUnidad, Unidad, costo As String
@@ -605,7 +605,7 @@ Public Class F0_ProductoCompuesto
 
         sw_ProductoCompuesto.IsReadOnly = False
         tb_Id.ReadOnly = False
-        tb_CodProductoCom.ReadOnly = False
+        tb_Codigo.ReadOnly = False
         tb_Descripcion.ReadOnly = False
         tb_Observacion.ReadOnly = False
         tb_Fecha.IsInputReadOnly = False
@@ -627,7 +627,7 @@ Public Class F0_ProductoCompuesto
         btnGrabar.Enabled = False
         sw_ProductoCompuesto.IsReadOnly = True
         tb_Id.ReadOnly = True
-        tb_CodProductoCom.ReadOnly = True
+        tb_Codigo.ReadOnly = True
         tb_Descripcion.ReadOnly = True
         tb_Observacion.ReadOnly = True
         tb_Fecha.IsInputReadOnly = True
@@ -643,7 +643,7 @@ Public Class F0_ProductoCompuesto
     Private Sub MP_Limpiar()
         sw_ProductoCompuesto.IsReadOnly = False
         tb_Id.Clear()
-        tb_CodProductoCom.Clear()
+        tb_Codigo.Clear()
         tb_Descripcion.Clear()
         tb_Observacion.Clear()
         tb_Fecha.Value = Now.Date
@@ -706,7 +706,7 @@ Public Class F0_ProductoCompuesto
             _idOriginal = .GetValue("id")
             Dim _tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneralXId(_idOriginal)
             tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
-            tb_CodProductoCom.Text = _tablaEncabezado.Rows(0).Item("pccod")
+            tb_Codigo.Text = _tablaEncabezado.Rows(0).Item("pccod")
             tb_Descripcion.Text = _tablaEncabezado.Rows(0).Item("pcdesc").ToString()
             tb_Observacion.Text = _tablaEncabezado.Rows(0).Item("pcobser").ToString()
             tb_Fecha.Value = _tablaEncabezado.Rows(0).Item("pcfech").ToString()
@@ -1180,10 +1180,35 @@ Public Class F0_ProductoCompuesto
                                eToastGlowColor.Green,
                                eToastPosition.TopCenter)
     End Sub
-    Private Sub MP_NuevoRegistro2()
+    Private Sub MP_GrabarProductoCompuesto()
         Try
             Dim id As String
-            ' L_ProductoCompuestoCabecera_Grabar(id, tb_CodProductoCom.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, cbSucursal.Value, tb_Total.Value)
+            If IdProducto <> 0 Then
+                Dim tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneral_Venta(-1)
+                Dim filaEncabezado As DataRow = tablaEncabezado.NewRow()
+                With filaEncabezado
+                    .Item("Id") = 0
+                    .Item("IdVenta") = IdProducto
+                    .Item("Codigo") = tb_Codigo
+                    .Item("Descripcion") = tb_Descripcion
+
+                    .Item("Estado") = CType(ENEstadoProductoCompuestoVenta.Pendiente, Integer)
+                    .Item("Cantidad") = tb_Cantidad.Value
+                    .Item("Codigo") = tb_Codigo
+                    .Item("Codigo") = tb_Codigo
+                    .Item("Codigo") = tb_Codigo
+                    .Item("Codigo") = tb_Codigo
+                    .Item("Codigo") = tb_Codigo
+                    .Item("Codigo") = tb_Codigo
+                    .Item("Codigo") = tb_Codigo
+                    .Item("Codigo") = tb_Codigo
+                    .Item("Codigo") = tb_Codigo
+                    .Item("Codigo") = tb_Codigo
+                End With
+
+            End If
+            'Obtiene la estructura de la tabla TV0014 Formulas-Venta
+
         Catch ex As Exception
             MostrarMensajeError(ex.Message)
         End Try
@@ -1192,7 +1217,7 @@ Public Class F0_ProductoCompuesto
     Public Sub MP_NuevoRegistro()
         Try
             Dim id As String = ""
-            Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, tb_CodProductoCom.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable))
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, tb_Codigo.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable))
             If res Then
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                 ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + id.ToString() + " Grabado con Exito.".ToUpper,
@@ -1214,7 +1239,7 @@ Public Class F0_ProductoCompuesto
     Public Sub MP_ModificarRegistro()
         Try
             Dim id As String = ""
-            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, tb_CodProductoCom.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable))
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, tb_Codigo.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable))
             If res Then
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                 ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + id.ToString() + " Modificado con Exito.".ToUpper,
@@ -1264,9 +1289,67 @@ Public Class F0_ProductoCompuesto
             MostrarMensajeError(ex.Message)
         End Try
     End Sub
+    Private Sub tb_Codigo_KeyDown(sender As Object, e As KeyEventArgs) Handles tb_Codigo.KeyDown
+        Try
+            If (tb_Id.Text <> String.Empty) Then
+                If e.KeyData = Keys.Control + Keys.Enter Then
+                    Dim dt As DataTable
+                    dt = L_fnListarClientes()
+                    '              a.ydnumi, a.ydcod, a.yddesc, a.yddctnum, a.yddirec
+                    ',a.ydtelf1 ,a.ydfnac 
 
-    Private Sub tb_FechaVencimieto_Click(sender As Object, e As EventArgs) Handles tb_FechaVencimieto.Click
+                    Dim listEstCeldas As New List(Of Modelo.Celda)
+                    listEstCeldas.Add(New Modelo.Celda("ydnumi,", True, "ID", 50))
+                    listEstCeldas.Add(New Modelo.Celda("ydcod", False, "ID", 50))
+                    listEstCeldas.Add(New Modelo.Celda("ydrazonsocial", True, "RAZON SOCIAL", 180))
+                    listEstCeldas.Add(New Modelo.Celda("yddesc", True, "NOMBRE", 280))
+                    listEstCeldas.Add(New Modelo.Celda("yddctnum", True, "N. Documento".ToUpper, 150))
+                    listEstCeldas.Add(New Modelo.Celda("yddirec", True, "DIRECCION", 220))
+                    listEstCeldas.Add(New Modelo.Celda("ydtelf1", True, "Telefono".ToUpper, 200))
+                    listEstCeldas.Add(New Modelo.Celda("ydfnac", True, "F.Nacimiento".ToUpper, 150, "MM/dd,YYYY"))
+                    listEstCeldas.Add(New Modelo.Celda("ydnumivend,", False, "ID", 50))
+                    listEstCeldas.Add(New Modelo.Celda("vendedor,", False, "ID", 50))
+                    listEstCeldas.Add(New Modelo.Celda("yddias", False, "CRED", 50))
+                    Dim ef = New Efecto
+                    ef.tipo = 3
+                    ef.dt = dt
+                    ef.SeleclCol = 2
+                    ef.listEstCeldas = listEstCeldas
+                    ef.alto = 50
+                    ef.ancho = 350
+                    ef.Context = "Seleccione Cliente".ToUpper
+                    ef.ShowDialog()
+                    Dim bandera As Boolean = False
+                    bandera = ef.band
+                    If (bandera = True) Then
+                        Dim Row As Janus.Windows.GridEX.GridEXRow = ef.Row
 
+                        _CodCliente = Row.Cells("ydnumi").Value
+                        tbCliente.Text = Row.Cells("ydrazonsocial").Value
+                        _dias = Row.Cells("yddias").Value
+
+                        Dim numiVendedor As Integer = IIf(IsDBNull(Row.Cells("ydnumivend").Value), 0, Row.Cells("ydnumivend").Value)
+                        If (numiVendedor > 0) Then
+                            tbVendedor.Text = Row.Cells("vendedor").Value
+                            _CodEmpleado = Row.Cells("ydnumivend").Value
+
+                            grdetalle.Select()
+                            Table_Producto = Nothing
+                        Else
+                            tbVendedor.Clear()
+                            _CodEmpleado = 0
+                            tbVendedor.Focus()
+                            Table_Producto = Nothing
+
+                        End If
+                    End If
+
+                End If
+
+            End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
     End Sub
 
 #End Region

@@ -5224,6 +5224,17 @@ Public Class AccesoLogica
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
         Return _Tabla
     End Function
+
+    Public Shared Function L_fnProductoCompuestoTraerGeneral_Venta(_IdVenta As String) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 4))
+        _listParam.Add(New Datos.DParametro("@tgIdVenta", _IdVenta))
+        _listParam.Add(New Datos.DParametro("@tguact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TV0014", _listParam)
+        Return _Tabla
+    End Function
 #End Region
 
 End Class
