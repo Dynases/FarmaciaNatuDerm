@@ -25,7 +25,7 @@ Public Class F0_ProductoCompuesto
     Dim _Nuevo As Boolean = False
     Dim Modificado As Boolean = False
 
-    Dim _idVenta, _Pos, _idProducto, _idOriginal, IdUnidad As Integer
+    Dim _Pos, _idProducto, _idOriginal, IdUnidad As Integer
 
     Dim FilaSelectLote As DataRow = Nothing
 
@@ -92,7 +92,70 @@ Public Class F0_ProductoCompuesto
         _Nuevo = False
         MP_Modificar()
     End Sub
+    Private Sub Dgv_Productos_KeyDown_1(sender As Object, e As KeyEventArgs) Handles Dgv_Productos.KeyDown
+        Try
+            If e.KeyData = Keys.Enter Then
+                Dim idProducto, Etiqueda, idUnidad, Unidad, costo As String
+                'Dim Bin As New MemoryStream
+                'Dim img As New Bitmap(My.Resources.delete, 28, 28)
+                'img.Save(Bin, Imaging.ImageFormat.Png)
 
+                idProducto = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfnumi").Value)
+                Etiqueda = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfcdprod1").Value)
+                idUnidad = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfumin").Value)
+                Unidad = Convert.ToString(Dgv_Productos.CurrentRow.Cells("UnidMin").Value)
+                costo = Convert.ToString(Dgv_Productos.CurrentRow.Cells("pcos").Value)
+                'Dim nuevaFila As DataRow = CType(Dgv_Detalle.DataSource, DataTable).NewRow()
+
+                'nuevaFila(0) = 0
+                'nuevaFila(1) = idProducto
+                'nuevaFila(2) = _fnSiguienteNumi() + 1
+                'nuevaFila(3) = Etiqueda
+                'nuevaFila(4) = ""
+                'nuevaFila(5) = idUnidad
+                'nuevaFila(6) = Unidad
+                'nuevaFila(7) = "0.00"
+                'nuevaFila(8) = "0.00"
+                'nuevaFila(9) = "100"
+                'nuevaFila(10) = "1000"
+                'nuevaFila(11) = False
+                'nuevaFila(12) = "0.0000"
+                'nuevaFila(13) = costo
+                'nuevaFila(14) = "0.00"
+                'nuevaFila(15) = 0
+                'nuevaFila(16) = Bin.GetBuffer
+
+
+                'CType(Dgv_Detalle.DataSource, DataTable).Rows.Add(nuevaFila)
+                'GPanelProductos.Height = 80
+                'GPanelProductos.Visible = False
+                'Dgv_Detalle.Focus()
+                'Dgv_Detalle.Row = Dgv_Detalle.Row - 1
+                Dim pos As Integer = -1
+                'Dgv_Detalle.Row = Dgv_Detalle.RowCount - 1
+                _fnObtenerFilaDetalle(pos, Dgv_Detalle.GetValue("id"))
+                If (Not _fnExisteProducto(idProducto)) Then
+                    'b.yfcdprod1, a.iclot, a.icfven, a.iccven
+                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("idProducto") = idProducto
+                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("pdeti") = Etiqueda
+                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("IdUnidad") = idUnidad
+                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("UnidadMin") = Unidad
+                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("pdprec") = costo
+                    tb_Total.Value = Dgv_Detalle.GetTotal(Dgv_Detalle.RootTable.Columns("pdtotal"), AggregateFunction.Sum)
+                    _DesHabilitarProductos()
+                Else
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "El producto ya existe modifique su cantidad".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                End If
+            End If
+            If e.KeyData = Keys.Escape Then
+                _DesHabilitarProductos()
+                FilaSelectLote = Nothing
+            End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
     Private Sub Dgv_Detalle_KeyDown_1(sender As Object, e As KeyEventArgs) Handles Dgv_Detalle.KeyDown
         If tb_Descripcion.Text = String.Empty Then
             Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
@@ -249,6 +312,7 @@ Public Class F0_ProductoCompuesto
             MP_MostrarGrillaEncabezado()
             MP_Habilitar()
             MP_IniciarMenu()
+            _Nuevo = True
         Else
             Me.Text = NombreFormulario
             MP_ValidarLote()
@@ -551,7 +615,8 @@ Public Class F0_ProductoCompuesto
         tb_Fecha.IsInputReadOnly = False
         tb_FechaFabrica.IsInputReadOnly = False
         tb_FechaVencimieto.IsInputReadOnly = False
-
+        tb_Total.IsInputReadOnly = False
+        Tb_Precio4.IsInputReadOnly = False
         If (tb_Id.Text.Length > 0) Then
             cbSucursal.ReadOnly = True
         Else
@@ -573,7 +638,8 @@ Public Class F0_ProductoCompuesto
         tb_Fecha.IsInputReadOnly = True
         tb_FechaFabrica.IsInputReadOnly = True
         tb_FechaVencimieto.IsInputReadOnly = True
-
+        tb_Total.IsInputReadOnly = True
+        Tb_Precio4.IsInputReadOnly = True
         Dgv_Detalle.RootTable.Columns("img").Visible = False
         If (GPanelProductos.Visible = True) Then
             _DesHabilitarProductos()
@@ -604,6 +670,7 @@ Public Class F0_ProductoCompuesto
         End If
 
         tb_Total.Value = 0
+        Tb_Precio4.Value = 0
         tb_Descripcion.Focus()
         FilaSelectLote = Nothing
         'MP_AddDetalle()
@@ -644,7 +711,7 @@ Public Class F0_ProductoCompuesto
         Dgv_Busqueda.Row = _N
         With Dgv_Busqueda
             _idOriginal = .GetValue("id")
-            Dim _tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneralXId(_idOriginal)
+            Dim _tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneralXId(_idOriginal, cbSucursal.Value)
             tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
             tb_Codigo.Text = _tablaEncabezado.Rows(0).Item("pccod")
             tb_Descripcion.Text = _tablaEncabezado.Rows(0).Item("pcdesc").ToString()
@@ -653,6 +720,8 @@ Public Class F0_ProductoCompuesto
             tb_FechaFabrica.Value = _tablaEncabezado.Rows(0).Item("pcffab").ToString()
             tb_FechaVencimieto.Value = _tablaEncabezado.Rows(0).Item("pcfven").ToString()
             tb_Total.Value = _tablaEncabezado.Rows(0).Item("pctotal").ToString()
+            Tb_Precio4.Value = _tablaEncabezado.Rows(0).Item("pcPrecio").ToString()
+            _idProducto = _tablaEncabezado.Rows(0).Item("pcIdProducto").ToString()
             'CARGAR DETALLE 
             MP_MostrarGrillaDetalle(_idOriginal)
         End With
@@ -750,7 +819,6 @@ Public Class F0_ProductoCompuesto
         'btnNuevo.Enabled = True
         MP_Limpiar()
         tb_Id.Focus()
-        _Nuevo = True
     End Sub
     Private Sub MP_Modificar()
         MP_Habilitar()
@@ -1120,34 +1188,10 @@ Public Class F0_ProductoCompuesto
                                eToastGlowColor.Green,
                                eToastPosition.TopCenter)
     End Sub
-    Private Sub MP_GrabarProductoCompuesto()
+    Private Sub MP_ProductoCompuesto_Venta(_Id As String)
         Try
-            Dim id As String
-            If _idProcuctoCompuesto <> 0 Then
-                Dim tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneral_Venta(-1)
-                Dim filaEncabezado As DataRow = tablaEncabezado.NewRow()
-                With filaEncabezado
-                    .Item("Id") = 0
-                    .Item("IdVenta") = _idProcuctoCompuesto
-                    .Item("Codigo") = tb_Codigo
-                    .Item("Descripcion") = tb_Descripcion
-
-                    .Item("Estado") = CType(ENEstadoProductoCompuestoVenta.Pendiente, Integer)
-                    .Item("Codigo") = tb_Codigo
-                    .Item("Codigo") = tb_Codigo
-                    .Item("Codigo") = tb_Codigo
-                    .Item("Codigo") = tb_Codigo
-                    .Item("Codigo") = tb_Codigo
-                    .Item("Codigo") = tb_Codigo
-                    .Item("Codigo") = tb_Codigo
-                    .Item("Codigo") = tb_Codigo
-                    .Item("Codigo") = tb_Codigo
-                    .Item("Codigo") = tb_Codigo
-                End With
-
-            End If
-            'Obtiene la estructura de la tabla TV0014 Formulas-Venta
-
+            _idProcuctoCompuesto = _Id
+            Me.Close()
         Catch ex As Exception
             MostrarMensajeError(ex.Message)
         End Try
@@ -1156,7 +1200,7 @@ Public Class F0_ProductoCompuesto
     Public Sub MP_NuevoRegistro()
         Try
             Dim id As String = ""
-            Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value, IdUnidad)
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value)
             If res Then
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                 ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + id.ToString() + " Grabado con Exito.".ToUpper,
@@ -1166,6 +1210,10 @@ Public Class F0_ProductoCompuesto
                                           )
                 MP_MostrarGrillaEncabezado()
                 MP_Limpiar()
+                'Validaciones para cerrar el formulario desde Venta
+                If _idProcuctoCompuesto <> 0 Then
+                    MP_ProductoCompuesto_Venta(id)
+                End If
             Else
                 Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
                 ToastNotification.Show(Me, "El producto compuesto no pudo ser insertado".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
@@ -1175,76 +1223,10 @@ Public Class F0_ProductoCompuesto
             MostrarMensajeError(ex.Message)
         End Try
     End Sub
-
-    Private Sub Dgv_Productos_KeyDown_1(sender As Object, e As KeyEventArgs) Handles Dgv_Productos.KeyDown
-        Try
-            If e.KeyData = Keys.Enter Then
-                Dim idProducto, Etiqueda, idUnidad, Unidad, costo As String
-                'Dim Bin As New MemoryStream
-                'Dim img As New Bitmap(My.Resources.delete, 28, 28)
-                'img.Save(Bin, Imaging.ImageFormat.Png)
-
-                idProducto = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfnumi").Value)
-                Etiqueda = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfcdprod1").Value)
-                idUnidad = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfumin").Value)
-                Unidad = Convert.ToString(Dgv_Productos.CurrentRow.Cells("UnidMin").Value)
-                costo = Convert.ToString(Dgv_Productos.CurrentRow.Cells("pcos").Value)
-                'Dim nuevaFila As DataRow = CType(Dgv_Detalle.DataSource, DataTable).NewRow()
-
-                'nuevaFila(0) = 0
-                'nuevaFila(1) = idProducto
-                'nuevaFila(2) = _fnSiguienteNumi() + 1
-                'nuevaFila(3) = Etiqueda
-                'nuevaFila(4) = ""
-                'nuevaFila(5) = idUnidad
-                'nuevaFila(6) = Unidad
-                'nuevaFila(7) = "0.00"
-                'nuevaFila(8) = "0.00"
-                'nuevaFila(9) = "100"
-                'nuevaFila(10) = "1000"
-                'nuevaFila(11) = False
-                'nuevaFila(12) = "0.0000"
-                'nuevaFila(13) = costo
-                'nuevaFila(14) = "0.00"
-                'nuevaFila(15) = 0
-                'nuevaFila(16) = Bin.GetBuffer
-
-
-                'CType(Dgv_Detalle.DataSource, DataTable).Rows.Add(nuevaFila)
-                'GPanelProductos.Height = 80
-                'GPanelProductos.Visible = False
-                'Dgv_Detalle.Focus()
-                'Dgv_Detalle.Row = Dgv_Detalle.Row - 1
-                Dim pos As Integer = -1
-                'Dgv_Detalle.Row = Dgv_Detalle.RowCount - 1
-                _fnObtenerFilaDetalle(pos, Dgv_Detalle.GetValue("id"))
-                If (Not _fnExisteProducto(idProducto)) Then
-                    'b.yfcdprod1, a.iclot, a.icfven, a.iccven
-                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("idProducto") = idProducto
-                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("pdeti") = Etiqueda
-                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("IdUnidad") = idUnidad
-                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("UnidadMin") = Unidad
-                    CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("pdprec") = costo
-                    tb_Total.Value = Dgv_Detalle.GetTotal(Dgv_Detalle.RootTable.Columns("pdtotal"), AggregateFunction.Sum)
-                    _DesHabilitarProductos()
-                Else
-                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                    ToastNotification.Show(Me, "El producto ya existe modifique su cantidad".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                End If
-            End If
-            If e.KeyData = Keys.Escape Then
-                _DesHabilitarProductos()
-                FilaSelectLote = Nothing
-            End If
-        Catch ex As Exception
-            MostrarMensajeError(ex.Message)
-        End Try
-    End Sub
-
     Public Sub MP_ModificarRegistro()
         Try
             Dim id As String = ""
-            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value, IdUnidad)
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, ENEstadoProductoCompuesto.Habilitado, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value)
             If res Then
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                 ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + tb_Id.Text.ToString() + " Modificado con Exito.".ToUpper,

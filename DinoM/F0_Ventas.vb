@@ -36,6 +36,7 @@ Public Class F0_Ventas
     Dim grup1 As String = " "
     Dim grup2 As String = " "
     Dim _tipo As Integer
+    Dim _FormulaGrabada As Boolean = False
 #End Region
 
 #Region "Metodos Privados"
@@ -515,6 +516,12 @@ Public Class F0_Ventas
                 .FormatString = "yyyy/MM/dd"
             End With
         End If
+        With grdetalle.RootTable.Columns("tbTipo")
+            .Width = 90
+            .FormatString = "0"
+            .Visible = False
+            .Caption = "Tipo"
+        End With
         With grdetalle.RootTable.Columns("stock")
             .Width = 120
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
@@ -929,7 +936,6 @@ Public Class F0_Ventas
             .Visible = True
             .Caption = "STOCK"
         End With
-
         With grProductos
             .DefaultFilterRowComparison = FilterConditionOperator.Contains
             .FilterMode = FilterMode.Automatic
@@ -1235,7 +1241,7 @@ Public Class F0_Ventas
         Dim Bin As New MemoryStream
         Dim img As New Bitmap(My.Resources.delete, 28, 28)
         img.Save(Bin, Imaging.ImageFormat.Png)
-        CType(grdetalle.DataSource, DataTable).Rows.Add(_fnSiguienteNumi() + 1, 0, 0, "", 0, "", 0, 0, 0, "", 0, 0, 0, 0, 0, "", 0, "20170101", CDate("2017/01/01"), 0, Now.Date, "", "", 0, Bin.GetBuffer, 0)
+        CType(grdetalle.DataSource, DataTable).Rows.Add(_fnSiguienteNumi() + 1, 0, 0, "", 0, "", 0, 0, 0, "", 0, 0, 0, 0, 0, "", 0, "20200101", CDate("2020/01/01"), 0, Now.Date, "", "", 0, Bin.GetBuffer, 0, 1)
     End Sub
 
     Public Function _fnSiguienteNumi()
@@ -1492,11 +1498,11 @@ Public Class F0_Ventas
 
             _Limpiar()
             Table_Producto = Nothing
-
+            _FormulaGrabada = True
         Else
             Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
             ToastNotification.Show(Me, "La Venta no pudo ser insertado".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-
+            _FormulaGrabada = False
         End If
 
     End Sub
@@ -1546,19 +1552,19 @@ Public Class F0_Ventas
                                       eToastGlowColor.Green,
                                       eToastPosition.TopCenter
                                       )
-
-
             _prCargarVenta()
             _prSalir()
+            _FormulaGrabada = True
 
         Else
             Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
             ToastNotification.Show(Me, "La Venta no pudo ser Modificada".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-
+            _FormulaGrabada = False
         End If
     End Sub
     Private Sub _prSalir()
         If btnGrabar.Enabled = True Then
+            MP_EliminarFormula()
             _prInhabiliitar()
             If grVentas.RowCount > 0 Then
                 _prMostrarRegistro(0)
@@ -2680,9 +2686,13 @@ salirIf:
                 Dim frm As F0_ProductoCompuesto = New F0_ProductoCompuesto()
                 frm.Tipo = 1
                 frm._idProcuctoCompuesto = grProductos.GetValue("Id")
-                frm.Show()
-                grProductos.Height = 70
-                grProductos.Visible = True
+                frm.ShowDialog()
+                If frm._idProcuctoCompuesto <> 0 Then
+                    Dim _idProcuctoCompuesto = frm._idProcuctoCompuesto
+                    grProductos.Height = 70
+                    grProductos.Visible = True
+                    MP_AgregarDetalle_ProductoCompuesto(_idProcuctoCompuesto)
+                End If
             End If
         End If
         If e.KeyData = Keys.Escape Then
@@ -2707,6 +2717,57 @@ salirIf:
 
         End If
 
+    End Sub
+    Private Sub MP_AgregarDetalle_ProductoCompuesto(_idProductoCompuesto As String)
+        Dim _tProductoCompuesto As DataTable = L_fnProductoCompuestoTraerGeneralXId(_idProductoCompuesto, cbSucursal.Value)
+        If _tProductoCompuesto.Rows.Count <> 0 Then
+            Dim pcnumi, pcest, idUnidad As Integer
+            Dim pccod, pcfven, pcffab, pcdesc, Unidad, lote As String
+            Dim pccosto, pcPrecio, stock As Decimal
+            pcnumi = _tProductoCompuesto.Rows(0).Item("id")
+            pcest = _tProductoCompuesto.Rows(0).Item("pcest")
+            idUnidad = _tProductoCompuesto.Rows(0).Item("IdUnidad")
+
+            pccod = _tProductoCompuesto.Rows(0).Item("pccod")
+            pcfven = _tProductoCompuesto.Rows(0).Item("pcfven")
+            pcffab = _tProductoCompuesto.Rows(0).Item("pcffab")
+            pcdesc = _tProductoCompuesto.Rows(0).Item("pcdesc")
+            Unidad = _tProductoCompuesto.Rows(0).Item("Unidad")
+            lote = "20200101"
+
+            pccosto = _tProductoCompuesto.Rows(0).Item("pctotal")
+            pcPrecio = _tProductoCompuesto.Rows(0).Item("pcPrecio")
+            stock = _tProductoCompuesto.Rows(0).Item("stock")
+
+            Dim pos As Integer = -1
+            grdetalle.Row = grdetalle.RowCount - 1
+            _fnObtenerFilaDetalle(pos, grdetalle.GetValue("tbnumi"))
+
+            If (Not _fnExisteProductoConLote(pcnumi, lote, pcfven)) Then
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbty5prod") = pcnumi
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("codigo") = pccod
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("yfcbarra") = 0
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("producto") = pcdesc
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbumin") = idUnidad
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("unidad") = Unidad
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbpbas") = pcPrecio
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbptot") = pcPrecio
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbtotdesc") = pcPrecio
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbcmin") = 1
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbpcos") = pccosto
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbptot2") = pccosto
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tblote") = lote
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbfechaVenc") = pcfven
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("stock") = stock
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbTipo") = 2 'Certifica que es de tipo  Formula
+                _prCalcularPrecioTotal()
+                _DesHabilitarProductos()
+                FilaSelectLote = Nothing
+            Else
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "El producto con el lote ya existe modifique su cantidad".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+            End If
+        End If
     End Sub
     Private Sub grdetalle_CellValueChanged(sender As Object, e As ColumnActionEventArgs) Handles grdetalle.CellValueChanged
         If (e.Column.Index = grdetalle.RootTable.Columns("tbcmin").Index) Or (e.Column.Index = grdetalle.RootTable.Columns("tbpbas").Index) Then
@@ -3231,6 +3292,24 @@ salirIf:
 
     Private Sub cbSucursal_ValueChanged(sender As Object, e As EventArgs) Handles cbSucursal.ValueChanged
         Table_Producto = Nothing
+    End Sub
+
+    Private Sub F0_Ventas_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        MP_EliminarFormula()
+    End Sub
+    Private Sub MP_EliminarFormula()
+        If grdetalle.RowCount > 0 Then
+            'Elimina la formula si no se graba la venta
+            If _FormulaGrabada = False Then
+                For i As Integer = 0 To CType(grdetalle.DataSource, DataTable).Rows.Count - 1 Step 1
+                    If CType(grdetalle.DataSource, DataTable).Rows(i).Item("tbTipo") = 2 Then
+                        Dim idProductoCompuesto = CType(grdetalle.DataSource, DataTable).Rows(i).Item("tbty5prod")
+                        L_ProductoCompuestoCabecera_Eliminar(idProductoCompuesto, "")
+                    End If
+                Next
+            End If
+            _FormulaGrabada = False
+        End If
     End Sub
 #End Region
 End Class

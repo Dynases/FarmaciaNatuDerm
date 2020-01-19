@@ -5124,7 +5124,7 @@ Public Class AccesoLogica
         Sql = "'" + _cod + "'," + _estado + ",'" + _fecha + "','" + _fechaFab + "','" + _fechaVen + "','" + _descrip + "','" + _observa + "'," + _total + "," + _Actualizacion
         _Err = D_Insertar_Datos("TP002", Sql)
     End Sub
-    Public Shared Function L_ProductoCompuestoCabecera_Grabar(ByRef _id As String, _pcIdProducto As String, _pcIdDetalleFormula As String, _cod As String, _estado As String, _descrip As String, _observa As String, _fecha As String, _fechaFab As String, _fechaVen As String, _total As Double, _detalle As DataTable, _pcPrecio As String, _pcIdUni As String) As Boolean
+    Public Shared Function L_ProductoCompuestoCabecera_Grabar(ByRef _id As String, _pcIdProducto As String, _pcIdDetalleFormula As String, _cod As String, _estado As String, _descrip As String, _observa As String, _fecha As String, _fechaFab As String, _fechaVen As String, _total As Double, _detalle As DataTable, _pcPrecio As String) As Boolean
         Dim _Tabla As DataTable
         Dim _resultado As Boolean
         Dim _listParam As New List(Of Datos.DParametro)
@@ -5142,7 +5142,7 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@pcobser", _observa))
         _listParam.Add(New Datos.DParametro("@pctotal", _total))
         _listParam.Add(New Datos.DParametro("@pcPrecio", _pcPrecio))
-        _listParam.Add(New Datos.DParametro("@pcIdUni", _pcIdUni))
+
         _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
         _listParam.Add(New Datos.DParametro("@TP0021", "", _detalle))
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
@@ -5155,7 +5155,7 @@ Public Class AccesoLogica
 
         Return _resultado
     End Function
-    Public Shared Function L_ProductoCompuestoCabecera_Modificar(ByRef _id As String, _pcIdProducto As String, _pcIdDetalleFormula As String, _cod As String, _estado As String, _descrip As String, _observa As String, _fecha As String, _fechaFab As String, _fechaVen As String, _total As Double, _detalle As DataTable, _pcPrecio As String, _pcIdUni As String) As Boolean
+    Public Shared Function L_ProductoCompuestoCabecera_Modificar(ByRef _id As String, _pcIdProducto As String, _pcIdDetalleFormula As String, _cod As String, _estado As String, _descrip As String, _observa As String, _fecha As String, _fechaFab As String, _fechaVen As String, _total As Double, _detalle As DataTable, _pcPrecio As String) As Boolean
         Dim _Tabla As DataTable
         Dim _resultado As Boolean
         Dim _listParam As New List(Of Datos.DParametro)
@@ -5172,7 +5172,6 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@pcdesc", _descrip))
         _listParam.Add(New Datos.DParametro("@pcobser", _observa))
         _listParam.Add(New Datos.DParametro("@pcPrecio", _pcPrecio))
-        _listParam.Add(New Datos.DParametro("@pcIdUni", _pcIdUni))
         _listParam.Add(New Datos.DParametro("@pctotal", _total))
         _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
         _listParam.Add(New Datos.DParametro("@TP0021", "", _detalle))
@@ -5214,12 +5213,12 @@ Public Class AccesoLogica
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
         Return _Tabla
     End Function
-    Public Shared Function L_fnProductoCompuestoTraerGeneralXId(_id As String) As DataTable
+    Public Shared Function L_fnProductoCompuestoTraerGeneralXId(_id As String, _idAlmacen As String) As DataTable
         Dim _Tabla As DataTable
-
         Dim _listParam As New List(Of Datos.DParametro)
         _listParam.Add(New Datos.DParametro("@tipo", 5))
         _listParam.Add(New Datos.DParametro("@pcnumi", _id))
+        _listParam.Add(New Datos.DParametro("@almacen", _idAlmacen))
         _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
         Return _Tabla
