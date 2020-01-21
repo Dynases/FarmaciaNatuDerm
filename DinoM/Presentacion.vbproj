@@ -205,6 +205,12 @@
     <Compile Include="F0_Cobrar_Vendedor.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="F0_Formula.Designer.vb">
+      <DependentUpon>F0_Formula.vb</DependentUpon>
+    </Compile>
+    <Compile Include="F0_Formula.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="F0_KardexMovimiento.Designer.vb">
       <DependentUpon>F0_KardexMovimiento.vb</DependentUpon>
     </Compile>
@@ -299,12 +305,6 @@
       <DependentUpon>F0_Proforma.vb</DependentUpon>
     </Compile>
     <Compile Include="F0_Proforma.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="F0_VentaProductoCompuesto.Designer.vb">
-      <DependentUpon>F0_VentaProductoCompuesto.vb</DependentUpon>
-    </Compile>
-    <Compile Include="F0_VentaProductoCompuesto.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="F0_Ventas.Designer.vb">
@@ -782,6 +782,9 @@
     <EmbeddedResource Include="F0_Cobrar_Vendedor.resx">
       <DependentUpon>F0_Cobrar_Vendedor.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="F0_Formula.resx">
+      <DependentUpon>F0_Formula.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="F0_KardexMovimiento.resx">
       <DependentUpon>F0_KardexMovimiento.vb</DependentUpon>
     </EmbeddedResource>
@@ -829,9 +832,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="F0_Proforma.resx">
       <DependentUpon>F0_Proforma.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="F0_VentaProductoCompuesto.resx">
-      <DependentUpon>F0_VentaProductoCompuesto.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="F0_Ventas.resx">
       <DependentUpon>F0_Ventas.vb</DependentUpon>

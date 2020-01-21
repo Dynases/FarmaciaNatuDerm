@@ -33,7 +33,6 @@ Partial Class F1_Productos
         Dim cbUMed_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Dim cb_TipoProducto_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.swTipoProducto = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.cbUniVenta = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
         Me.LabelX5 = New DevComponents.DotNetBar.LabelX()
@@ -317,7 +316,6 @@ Partial Class F1_Productos
         'GroupBox1
         '
         Me.GroupBox1.BackColor = System.Drawing.Color.Transparent
-        Me.GroupBox1.Controls.Add(Me.swTipoProducto)
         Me.GroupBox1.Controls.Add(Me.Panel4)
         Me.GroupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.GroupBox1.Font = New System.Drawing.Font("Arial", 11.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -328,25 +326,6 @@ Partial Class F1_Productos
         Me.GroupBox1.TabIndex = 28
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Unidades"
-        '
-        'swTipoProducto
-        '
-        '
-        '
-        '
-        Me.swTipoProducto.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.swTipoProducto.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.swTipoProducto.Location = New System.Drawing.Point(135, -7)
-        Me.swTipoProducto.Name = "swTipoProducto"
-        Me.swTipoProducto.OffBackColor = System.Drawing.Color.LawnGreen
-        Me.swTipoProducto.OffText = "MATERIA PRIMA"
-        Me.swTipoProducto.OnBackColor = System.Drawing.Color.Gold
-        Me.swTipoProducto.OnText = "FARMACIA"
-        Me.swTipoProducto.Size = New System.Drawing.Size(144, 22)
-        Me.swTipoProducto.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.swTipoProducto.TabIndex = 373
-        Me.swTipoProducto.Value = True
-        Me.swTipoProducto.ValueObject = "Y"
         '
         'Panel4
         '
@@ -1443,7 +1422,6 @@ Partial Class F1_Productos
     Friend WithEvents SuperTabItem_DetalleProducto As DevComponents.DotNetBar.SuperTabItem
     Friend WithEvents SuperTabControlPanel1 As DevComponents.DotNetBar.SuperTabControlPanel
     Friend WithEvents SuperTabItem_Imagenes As DevComponents.DotNetBar.SuperTabItem
-    Friend WithEvents swTipoProducto As DevComponents.DotNetBar.Controls.SwitchButton
     Friend WithEvents LabelX19 As DevComponents.DotNetBar.LabelX
     Friend WithEvents cb_TipoProducto As Janus.Windows.GridEX.EditControls.MultiColumnCombo
     Friend WithEvents btn_TipoProducto As DevComponents.DotNetBar.ButtonX

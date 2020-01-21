@@ -1,4 +1,5 @@
 ﻿Public Enum ENEstadoProductoCompuesto
-    Habilitado = 1
-    Deshabilitado = 2
+    GENERAL = 1
+    PRODUCCION = 2
+    MAGISTRAL = 3
 End Enum

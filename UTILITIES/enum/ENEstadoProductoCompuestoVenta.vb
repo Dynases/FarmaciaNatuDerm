@@ -1,5 +1,5 @@
 ﻿Public Enum ENEstadoProductoCompuestoVenta
-    NoExiste = 0
-    Pendiente = 1
-    Completado = 2
+    NO_EXISTE = 0
+    PENDIENTE = 1
+    COMPLETADO = 2
 End Enum

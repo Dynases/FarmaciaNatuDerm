@@ -5142,7 +5142,6 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@pcobser", _observa))
         _listParam.Add(New Datos.DParametro("@pctotal", _total))
         _listParam.Add(New Datos.DParametro("@pcPrecio", _pcPrecio))
-
         _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
         _listParam.Add(New Datos.DParametro("@TP0021", "", _detalle))
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
@@ -5213,6 +5212,15 @@ Public Class AccesoLogica
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
         Return _Tabla
     End Function
+    Public Shared Function L_fnProductoCompuestoTraerGeneral_Estado() As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 10))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        Return _Tabla
+    End Function
     Public Shared Function L_fnProductoCompuestoTraerGeneralXId(_id As String, _idAlmacen As String) As DataTable
         Dim _Tabla As DataTable
         Dim _listParam As New List(Of Datos.DParametro)
@@ -5271,6 +5279,65 @@ Public Class AccesoLogica
         Dim _listParam As New List(Of Datos.DParametro)
         _listParam.Add(New Datos.DParametro("@tipo", 9))
         _listParam.Add(New Datos.DParametro("@almacen", _almacen))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_fnProductoCompuesto_Buscar(_idAlmacen As String, _fechaIni As String, _fechaFinal As String, _Tipo As String, _Estado As String) As DataTable
+        Dim _Tabla As DataTable
+        Dim sb As New StringBuilder
+        sb.Append("SELECT 
+	                    a.tanumi as IdVenta,
+	                    c.yddesc as cliente,
+	                    b.tbty5prod as IdFormula,
+	                    d.pcdesc as Producto,
+	                    b.tbcmin as Cantidad,
+	                    a.tafdoc as Fecha,
+	                    CAST(0 as bit) as Selecionar,
+                        CASE d.pcEstado  WHEN 1 THEN 'PENDIENTE'
+							WHEN 2 THEN 'COMPLETADO' END AS Estado
+                    FROM  
+	                    TV001 a 
+	                    JOIN TV0011 b ON b.tbtv1numi = a.tanumi AND b.tbTipo = 2
+	                    JOIN TY004 AS c on c .ydnumi  =a.taclpr and a.taest > 0
+	                    JOIN TP002 AS d ON d.pcnumi = b.tbty5prod 
+                    WHERE a.taest > 0 AND   ")
+        If _idAlmacen > 0 Then
+            sb.Append(String.Format(" a.taalm = {0} AND   ", _idAlmacen))
+        End If
+        If _fechaIni <> String.Empty Then
+            sb.Append(String.Format(" a.tafdoc>= '{0}'   and a.tafdoc <= '{1}'  AND   ", _fechaIni, _fechaFinal))
+        End If
+        If _Tipo > 0 Then
+            sb.Append(String.Format(" d.pcest = {0} AND   ", _Tipo))
+        End If
+        If _Estado = 1 Or _Estado = 2 Then
+            sb.Append(String.Format(" d.pcEstado = {0} AND   ", _Estado))
+        End If
+        If _Estado = 3 Then
+            sb.Append(" d.pcEstado IN (1,2) AND   ")
+        End If
+        sb.Length = sb.Length - 7
+        sb.Append(" ORDER BY  a.tanumi DESC")
+        _Tabla = D_Datos_EjecutarConulta(sb.ToString())
+        Return _Tabla
+    End Function
+    Public Shared Function L_fnProductoCompuestoTraerDetalleX_IdVenta(_idVenta As String) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 11))
+        _listParam.Add(New Datos.DParametro("@tanumi", _idVenta))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_fnProductoCompuestoTraerDetalleXId_Nuevo(_id As String) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 12))
+        _listParam.Add(New Datos.DParametro("@pcnumi", _id))
         _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
         Return _Tabla

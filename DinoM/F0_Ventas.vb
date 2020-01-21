@@ -47,6 +47,7 @@ Public Class F0_Ventas
 
         _prValidarLote()
         _prCargarComboLibreriaSucursal(cbSucursal)
+
         lbTipoMoneda.Visible = False
         swMoneda.Visible = False
         P_prCargarVariablesIndispensables()
@@ -110,6 +111,7 @@ Public Class F0_Ventas
             .Refresh()
         End With
     End Sub
+
     Private Sub _prAsignarPermisos()
 
         Dim dtRolUsu As DataTable = L_prRolDetalleGeneral(gi_userRol, _nameButton)
@@ -700,7 +702,7 @@ Public Class F0_Ventas
 
     Private Sub _prCargarProductosCompuestos()
         Dim dt As New DataTable
-        dt = L_fnProductoCompuestoTraerGeneral()
+        dt = L_fnProductoCompuestoTraerGeneral_Estado()
         grProductos.DataSource = dt
         grProductos.RetrieveStructure()
         grProductos.AlternatingColors = True
@@ -727,7 +729,7 @@ Public Class F0_Ventas
         With grProductos.RootTable.Columns(3)
             .Key = "pcdesc"
             .Caption = "Descripción"
-            .Width = 400
+            .Width = 250
             .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
             .CellStyle.FontSize = gi_fuenteTamano
             .AllowSort = False
@@ -737,7 +739,7 @@ Public Class F0_Ventas
         With grProductos.RootTable.Columns(4)
             .Key = "pcobser"
             .Caption = "Observación"
-            .Width = 300
+            .Width = 250
             .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
             .CellStyle.FontSize = gi_fuenteTamano
             .AllowSort = False
@@ -755,6 +757,16 @@ Public Class F0_Ventas
             .AllowSort = False
         End With
         With grProductos.RootTable.Columns(6)
+            .Key = "TIpo"
+            .Caption = "TIpo"
+            .Width = 150
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+        End With
+        With grProductos.RootTable.Columns(7)
             .Key = "Estado"
             .Caption = "Estado"
             .Width = 150
@@ -762,7 +774,7 @@ Public Class F0_Ventas
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
             .CellStyle.FontSize = gi_fuenteTamano
             .AllowSort = False
-            .Visible = False
+            .Visible = True
         End With
         'Habilitar Filtradores
         With grProductos
@@ -1489,13 +1501,8 @@ Public Class F0_Ventas
                                       eToastPosition.TopCenter
                                       )
             _prImiprimirNotaVenta(numi)
-
-            If swTipoVenta.Value = True Then
-
-            End If
-
+            MP_VerificarFormulas_Eliminadas()
             _prCargarVenta()
-
             _Limpiar()
             Table_Producto = Nothing
             _FormulaGrabada = True
@@ -2990,29 +2997,33 @@ salirIf:
 
                         Dim cant As Integer = grdetalle.GetValue("tbcmin")
                         Dim stock As Integer = grdetalle.GetValue("stock")
-                        If (cant > stock) And stock <> -9999 Then
-                            Dim lin As Integer = grdetalle.GetValue("tbnumi")
-                            Dim pos As Integer = -1
-                            _fnObtenerFilaDetalle(pos, lin)
-                            CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbcmin") = 1
-                            CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbptot") = CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbpbas")
-                            CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbptot2") = grdetalle.GetValue("tbpcos") * 1
-                            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                            ToastNotification.Show(Me, "La cantidad de la venta no debe ser mayor al del stock" & vbCrLf &
-                            "Stock=" + Str(stock).ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                            grdetalle.SetValue("tbcmin", 1)
-                            grdetalle.SetValue("tbptot", grdetalle.GetValue("tbpbas"))
-                            grdetalle.SetValue("tbptot2", grdetalle.GetValue("tbpcos") * 1)
+                        Dim Tipo As Integer = grdetalle.GetValue("tbTipo")
+                        If Tipo <> 2 Then
+                            If (cant > stock) And stock <> -9999 Then
+                                Dim lin As Integer = grdetalle.GetValue("tbnumi")
+                                Dim pos As Integer = -1
+                                _fnObtenerFilaDetalle(pos, lin)
+                                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbcmin") = 1
+                                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbptot") = CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbpbas")
+                                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbptot2") = grdetalle.GetValue("tbpcos") * 1
+                                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                                ToastNotification.Show(Me, "La cantidad de la venta no debe ser mayor al del stock" & vbCrLf &
+                                "Stock=" + Str(stock).ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                                grdetalle.SetValue("tbcmin", 1)
+                                grdetalle.SetValue("tbptot", grdetalle.GetValue("tbpbas"))
+                                grdetalle.SetValue("tbptot2", grdetalle.GetValue("tbpcos") * 1)
 
-                            _prCalcularPrecioTotal()
-                        Else
-                            If (cant = stock) Then
-                                'grdetalle.SelectedFormatStyle.ForeColor = Color.Blue
-                                'grdetalle.CurrentRow.Cells.Item(e.Column).FormatStyle = New GridEXFormatStyle
-                                'grdetalle.CurrentRow.Cells(e.Column).FormatStyle.BackColor = Color.Pink
-                                'grdetalle.CurrentRow.Cells.Item(e.Column).FormatStyle.BackColor = Color.DodgerBlue
-                                'grdetalle.CurrentRow.Cells.Item(e.Column).FormatStyle.ForeColor = Color.White
-                                'grdetalle.CurrentRow.Cells.Item(e.Column).FormatStyle.FontBold = TriState.True
+                                _prCalcularPrecioTotal()
+
+                            Else
+                                If (cant = stock) Then
+                                    'grdetalle.SelectedFormatStyle.ForeColor = Color.Blue
+                                    'grdetalle.CurrentRow.Cells.Item(e.Column).FormatStyle = New GridEXFormatStyle
+                                    'grdetalle.CurrentRow.Cells(e.Column).FormatStyle.BackColor = Color.Pink
+                                    'grdetalle.CurrentRow.Cells.Item(e.Column).FormatStyle.BackColor = Color.DodgerBlue
+                                    'grdetalle.CurrentRow.Cells.Item(e.Column).FormatStyle.ForeColor = Color.White
+                                    'grdetalle.CurrentRow.Cells.Item(e.Column).FormatStyle.FontBold = TriState.True
+                                End If
                             End If
                         End If
                     Else
@@ -3309,6 +3320,21 @@ salirIf:
                 Next
             End If
             _FormulaGrabada = False
+        End If
+    End Sub
+    Public Sub MP_VerificarFormulas_Eliminadas()
+        If grdetalle.RowCount > 0 Then
+            'Elimina la formula si no se graba la venta
+            For i As Integer = 0 To CType(grdetalle.DataSource, DataTable).Rows.Count - 1 Step 1
+                If CType(grdetalle.DataSource, DataTable).Rows(i).Item("estado") = -1 Then 'Eliminado OK
+                    If CType(grdetalle.DataSource, DataTable).Rows(i).Item("tbTipo") = 2 Then 'Tipo 2 OK
+                        'Elimina la formula creada
+                        Dim idProductoCompuesto = CType(grdetalle.DataSource, DataTable).Rows(i).Item("tbty5prod")
+                        L_ProductoCompuestoCabecera_Eliminar(idProductoCompuesto, "")
+                    End If
+                End If
+
+            Next
         End If
     End Sub
 #End Region

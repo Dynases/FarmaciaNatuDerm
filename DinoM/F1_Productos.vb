@@ -257,7 +257,6 @@ Public Class F1_Productos
         dgjDetalleProducto.AllowEdit = InheritableBoolean.True
         dgjDetalleProducto.RootTable.Columns("delete").Visible = True
         adicionarFilaDetalleProducto()
-        swTipoProducto.IsReadOnly = False
     End Sub
 
     Public Overrides Sub _PMOInhabilitar()
@@ -285,7 +284,7 @@ Public Class F1_Productos
         btnImprimir.Visible = True
         dgjDetalleProducto.AllowEdit = InheritableBoolean.False
         dgjDetalleProducto.RootTable.Columns("delete").Visible = False
-        swTipoProducto.IsReadOnly = True
+
     End Sub
 
     Public Overrides Sub _PMOLimpiar()
@@ -304,9 +303,7 @@ Public Class F1_Productos
             _prSeleccionarCombo(cbUniVenta)
             _prSeleccionarCombo(cb_TipoProducto)
             swEstado.Value = True
-            swTipoProducto.Value = True
             tbConversion.Value = 1
-
             tbStockMinimo.Value = 0
         End If
         tbCodProd.Focus()

@@ -23,10 +23,13 @@ Partial Class F0_ProductoCompuesto
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F0_ProductoCompuesto))
+        Dim cb_Tipo_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Dim cbSucursal_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Me.PanelContentSup = New System.Windows.Forms.Panel()
         Me.GroupPanel1 = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.LabelX8 = New DevComponents.DotNetBar.LabelX()
+        Me.cb_Tipo = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
         Me.Tb_Precio4 = New DevComponents.Editors.DoubleInput()
         Me.LabelX5 = New DevComponents.DotNetBar.LabelX()
         Me.LabelX17 = New DevComponents.DotNetBar.LabelX()
@@ -79,6 +82,7 @@ Partial Class F0_ProductoCompuesto
         Me.PanelContentSup.SuspendLayout()
         Me.GroupPanel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        CType(Me.cb_Tipo, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Tb_Precio4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.cbSucursal, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tb_FechaVencimieto, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -276,6 +280,8 @@ Partial Class F0_ProductoCompuesto
         '
         Me.Panel2.AutoScroll = True
         Me.Panel2.BackColor = System.Drawing.Color.White
+        Me.Panel2.Controls.Add(Me.LabelX8)
+        Me.Panel2.Controls.Add(Me.cb_Tipo)
         Me.Panel2.Controls.Add(Me.Tb_Precio4)
         Me.Panel2.Controls.Add(Me.LabelX5)
         Me.Panel2.Controls.Add(Me.LabelX17)
@@ -300,6 +306,37 @@ Partial Class F0_ProductoCompuesto
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(945, 188)
         Me.Panel2.TabIndex = 234
+        '
+        'LabelX8
+        '
+        Me.LabelX8.BackColor = System.Drawing.Color.Transparent
+        '
+        '
+        '
+        Me.LabelX8.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX8.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.LabelX8.Location = New System.Drawing.Point(449, 159)
+        Me.LabelX8.Name = "LabelX8"
+        Me.LabelX8.SingleLineColor = System.Drawing.SystemColors.Control
+        Me.LabelX8.Size = New System.Drawing.Size(129, 23)
+        Me.LabelX8.TabIndex = 378
+        Me.LabelX8.Text = "Tipo:"
+        '
+        'cb_Tipo
+        '
+        cb_Tipo_DesignTimeLayout.LayoutString = resources.GetString("cb_Tipo_DesignTimeLayout.LayoutString")
+        Me.cb_Tipo.DesignTimeLayout = cb_Tipo_DesignTimeLayout
+        Me.cb_Tipo.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_Tipo.Location = New System.Drawing.Point(591, 159)
+        Me.cb_Tipo.Name = "cb_Tipo"
+        Me.cb_Tipo.Office2007ColorScheme = Janus.Windows.GridEX.Office2007ColorScheme.Custom
+        Me.cb_Tipo.Office2007CustomColor = System.Drawing.Color.DodgerBlue
+        Me.cb_Tipo.SelectedIndex = -1
+        Me.cb_Tipo.SelectedItem = Nothing
+        Me.cb_Tipo.Size = New System.Drawing.Size(164, 22)
+        Me.cb_Tipo.TabIndex = 377
+        Me.cb_Tipo.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
         'Tb_Precio4
         '
@@ -344,13 +381,12 @@ Partial Class F0_ProductoCompuesto
         Me.LabelX17.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.LabelX17.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LabelX17.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
-        Me.LabelX17.Location = New System.Drawing.Point(450, 106)
+        Me.LabelX17.Location = New System.Drawing.Point(448, 106)
         Me.LabelX17.Name = "LabelX17"
         Me.LabelX17.SingleLineColor = System.Drawing.SystemColors.Control
         Me.LabelX17.Size = New System.Drawing.Size(129, 23)
         Me.LabelX17.TabIndex = 374
         Me.LabelX17.Text = "Sucursal:"
-        Me.LabelX17.Visible = False
         '
         'cbSucursal
         '
@@ -365,7 +401,6 @@ Partial Class F0_ProductoCompuesto
         Me.cbSucursal.SelectedItem = Nothing
         Me.cbSucursal.Size = New System.Drawing.Size(164, 22)
         Me.cbSucursal.TabIndex = 8
-        Me.cbSucursal.Visible = False
         Me.cbSucursal.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
         'sw_ProductoCompuesto
@@ -1002,6 +1037,7 @@ Partial Class F0_ProductoCompuesto
         Me.GroupPanel1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        CType(Me.cb_Tipo, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Tb_Precio4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.cbSucursal, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tb_FechaVencimieto, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1059,4 +1095,6 @@ Partial Class F0_ProductoCompuesto
     Friend WithEvents GPanelProductos As DevComponents.DotNetBar.Controls.GroupPanel
     Friend WithEvents Panel7 As Panel
     Friend WithEvents Dgv_Productos As Janus.Windows.GridEX.GridEX
+    Friend WithEvents LabelX8 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents cb_Tipo As Janus.Windows.GridEX.EditControls.MultiColumnCombo
 End Class
