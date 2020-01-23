@@ -17,6 +17,61 @@ Public Class F0_Formula
     Private Sub F0_Formula_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         MP_Iniciar()
     End Sub
+    Private Sub Btn_Imprimir_Click(sender As Object, e As EventArgs) Handles Btn_Imprimir.Click
+
+    End Sub
+
+    Private Sub btn_Buscar_Click(sender As Object, e As EventArgs) Handles btn_Buscar.Click
+        MP_Busqueda()
+    End Sub
+
+    Private Sub Dgv_Busqueda_EditingCell(sender As Object, e As EditingCellEventArgs) Handles Dgv_Busqueda.EditingCell
+        Try
+            If (e.Column.Index = Dgv_Busqueda.RootTable.Columns("Selecionar").Index) Then
+                e.Cancel = False
+            Else
+                e.Cancel = True
+            End If
+        Catch ex As Exception
+            MP_MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub Dgv_Busqueda_SelectionChanged(sender As Object, e As EventArgs) Handles Dgv_Busqueda.SelectionChanged
+        Try
+            Dim idFormula = 0
+            If (Dgv_Busqueda.GetRows().Count > 0) Then
+                idFormula = Convert.ToInt32(Dgv_Busqueda.CurrentRow.Cells("IdFormula").Value)
+            End If
+            MP_MostrarGrillaDetalle(idFormula)
+        Catch ex As Exception
+            MP_MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub btn_Confirmar_Click(sender As Object, e As EventArgs) Handles btn_Confirmar.Click
+        Try
+            If Dgv_Busqueda.RowCount < 0 Then
+                Throw New Exception("No se encontraron registros")
+            End If
+            Dim checks = Me.Dgv_Busqueda.GetCheckedRows()
+            Dim listIdFormula = checks.Select(Function(a) Convert.ToInt32(a.Cells("IdFormula").Value)).ToList()
+            For Each idFormula As Integer In listIdFormula
+                Dim listResult = L_FnProductoCompuesto_ModificarEstado(idFormula, ENEstadoProductoCompuestoVenta.COMPLETADO)
+                If (listResult = False) Then
+                    Throw New Exception("No registros para generar el reporte.")
+                End If
+                Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
+                ToastNotification.Show(Me, "Estado de la Formula ".ToUpper + idFormula.ToString() + " Modificado con Exito.".ToUpper,
+                                          img, 2000,
+                                          eToastGlowColor.Green,
+                                          eToastPosition.TopCenter
+                                          )
+            Next
+        Catch ex As Exception
+            MP_MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
 #End Region
 
 #Region "Metodos"
@@ -67,8 +122,7 @@ Public Class F0_Formula
     Private Sub MP_Busqueda()
         Dim dt As New DataTable
         dt = L_fnProductoCompuesto_Buscar(cbSucursal.Value, tb_FechaDe.Value.ToString("yyyy/MM/dd"), tb_FechaHasta.Value.ToString("yyyy/MM/dd"), cb_Tipo.Value, cb_Estado.Value)
-        If dt.Rows.Count > 0 Then
-            Dgv_Busqueda.DataSource = dt
+        Dgv_Busqueda.DataSource = dt
             Dgv_Busqueda.RetrieveStructure()
             Dgv_Busqueda.AlternatingColors = True
             With Dgv_Busqueda.RootTable.Columns("IdVenta")
@@ -131,17 +185,25 @@ Public Class F0_Formula
                 .AllowSort = False
                 .Visible = True
             End With
-            With Dgv_Busqueda.RootTable.Columns("Estado")
-                .Caption = "Estado"
-                .Width = 150
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-            End With
-            'Habilitar Filtradores
-            With Dgv_Busqueda
+        With Dgv_Busqueda.RootTable.Columns("Estado")
+            .Caption = "Estado"
+            .Width = 150
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+        End With
+        Dgv_Busqueda.RootTable.Columns.Add(New GridEXColumn("Check"))
+        With Dgv_Busqueda.RootTable.Columns("Check")
+            .Caption = "N.Estado"
+            .Width = 80
+            .ShowRowSelector = True
+            .UseHeaderSelector = True
+            .FilterEditType = Janus.Windows.GridEX.FilterEditType.NoEdit
+        End With
+        'Habilitar Filtradores
+        With Dgv_Busqueda
                 .DefaultFilterRowComparison = FilterConditionOperator.Contains
                 .FilterMode = FilterMode.Automatic
                 .FilterRowUpdateMode = FilterRowUpdateMode.WhenValueChanges
@@ -153,13 +215,12 @@ Public Class F0_Formula
             If (dt.Rows.Count <= 0) Then
                 MP_MostrarGrillaDetalle(-1)
             End If
-        End If
     End Sub
     Private Sub MP_MostrarGrillaDetalle(_N As Integer)
         Dim dt As New DataTable
         dt = L_fnProductoCompuestoTraerDetalleXId(_N)
-        If dt.Rows.Count > 0 Then
-            Dgv_Detalle.DataSource = dt
+
+        Dgv_Detalle.DataSource = dt
             Dgv_Detalle.RetrieveStructure()
             Dgv_Detalle.AlternatingColors = True
             With Dgv_Detalle.RootTable.Columns(0)
@@ -329,7 +390,7 @@ Public Class F0_Formula
             'diseño de la grilla
             Dgv_Detalle.VisualStyle = VisualStyle.Office2007
 
-        End If
+
 
     End Sub
 
@@ -351,37 +412,7 @@ Public Class F0_Formula
                                eToastPosition.TopCenter)
     End Sub
 
-    Private Sub Btn_Imprimir_Click(sender As Object, e As EventArgs) Handles Btn_Imprimir.Click
 
-    End Sub
-
-    Private Sub btn_Buscar_Click(sender As Object, e As EventArgs) Handles btn_Buscar.Click
-        MP_Busqueda()
-    End Sub
-
-    Private Sub Dgv_Busqueda_EditingCell(sender As Object, e As EditingCellEventArgs) Handles Dgv_Busqueda.EditingCell
-        Try
-            If (e.Column.Index = Dgv_Busqueda.RootTable.Columns("Selecionar").Index) Then
-                e.Cancel = False
-            Else
-                e.Cancel = True
-            End If
-        Catch ex As Exception
-            MP_MostrarMensajeError(ex.Message)
-        End Try
-    End Sub
-
-    Private Sub Dgv_Busqueda_SelectionChanged(sender As Object, e As EventArgs) Handles Dgv_Busqueda.SelectionChanged
-        Try
-            Dim idFormula = 0
-            If (Dgv_Busqueda.GetRows().Count > 0) Then
-                idFormula = Convert.ToInt32(Dgv_Busqueda.CurrentRow.Cells("IdFormula").Value)
-            End If
-            MP_MostrarGrillaDetalle(idFormula)
-        Catch ex As Exception
-            MP_MostrarMensajeError(ex.Message)
-        End Try
-    End Sub
 
 #End Region
 

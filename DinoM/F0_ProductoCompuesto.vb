@@ -20,13 +20,10 @@ Public Class F0_ProductoCompuesto
     Public Tipo As Integer = 0
     Public _idProcuctoCompuesto As Integer = 0
     Public _IdCliente As Integer = 0
-
     Dim G_Lote As Boolean = False
     Dim _Nuevo As Boolean = False
     Dim Modificado As Boolean = False
-
     Dim _Pos, _idProducto, _idOriginal, IdUnidad As Integer
-
     Dim FilaSelectLote As DataRow = Nothing
 
 
@@ -309,7 +306,7 @@ Public Class F0_ProductoCompuesto
             MP_ValidarLote()
             MP_CargarComboLibreriaSucursal(cbSucursal)
             MP_CargarComboLibreria(cb_Tipo, 7, 1)
-            cbSucursal.Value = 1
+            cbSucursal.Value = 2
             MP_MostrarGrillaEncabezado()
             MP_Habilitar()
             MP_IniciarMenu()
@@ -321,8 +318,8 @@ Public Class F0_ProductoCompuesto
             MP_ValidarLote()
             MP_AsignarPermisos()
             MP_CargarComboLibreriaSucursal(cbSucursal)
+            cbSucursal.Value = 2
             MP_CargarComboLibreria(cb_Tipo, 7, 1)
-            cbSucursal.Value = 1
             cb_Tipo.Value = CType(ENEstadoProductoCompuesto.GENERAL, Integer)
             MP_MostrarGrillaEncabezado()
             MP_InHabilitar()
@@ -330,8 +327,6 @@ Public Class F0_ProductoCompuesto
             tb_Fecha.Value = Now.Date
             tb_FechaFabrica.Value = Now.Date
             tb_FechaVencimieto.Value = DateAdd("m", 6, Now.Date)
-            cbSucursal.Value = 1
-
         End If
     End Sub
     Private Sub MP_CargarComboLibreria(mCombo As Janus.Windows.GridEX.EditControls.MultiColumnCombo, cod1 As String, cod2 As String)
@@ -644,8 +639,6 @@ Public Class F0_ProductoCompuesto
         btnModificar.Enabled = False
         btnEliminar.Enabled = False
         btnGrabar.Enabled = True
-
-        sw_ProductoCompuesto.IsReadOnly = False
         tb_Id.ReadOnly = False
         tb_Codigo.ReadOnly = False
         tb_Descripcion.ReadOnly = False
@@ -659,7 +652,6 @@ Public Class F0_ProductoCompuesto
             cbSucursal.ReadOnly = True
         Else
             cbSucursal.ReadOnly = False
-
         End If
         Dgv_Detalle.Enabled = True
     End Sub
@@ -668,7 +660,6 @@ Public Class F0_ProductoCompuesto
         btnModificar.Enabled = True
         btnEliminar.Enabled = True
         btnGrabar.Enabled = False
-        sw_ProductoCompuesto.IsReadOnly = True
         tb_Id.ReadOnly = True
         tb_Codigo.ReadOnly = True
         tb_Descripcion.ReadOnly = True
@@ -687,7 +678,6 @@ Public Class F0_ProductoCompuesto
         Dgv_Detalle.Enabled = False
     End Sub
     Private Sub MP_Limpiar()
-        sw_ProductoCompuesto.IsReadOnly = False
         tb_Id.Clear()
         tb_Codigo.Clear()
         tb_Descripcion.Clear()
@@ -756,7 +746,12 @@ Public Class F0_ProductoCompuesto
             _idOriginal = .GetValue("id")
             Dim _tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneralXId(_idOriginal, cbSucursal.Value)
             If _tablaEncabezado.Rows.Count > 0 Then
-                tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
+                If Tipo = 1 Then
+                    tb_Id.Clear()
+                Else
+                    tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
+                End If
+
                 tb_Codigo.Text = _tablaEncabezado.Rows(0).Item("pccod")
                 tb_Descripcion.Text = _tablaEncabezado.Rows(0).Item("pcdesc").ToString()
                 tb_Observacion.Text = _tablaEncabezado.Rows(0).Item("pcobser").ToString()
@@ -767,6 +762,7 @@ Public Class F0_ProductoCompuesto
                 Tb_Precio4.Value = _tablaEncabezado.Rows(0).Item("pcPrecio").ToString()
                 _idProducto = _tablaEncabezado.Rows(0).Item("pcIdProducto").ToString()
                 cb_Tipo.Value = _tablaEncabezado.Rows(0).Item("pcEst")
+                cbSucursal.Value = _tablaEncabezado.Rows(0).Item("pcAlmacen")
                 'CARGAR DETALLE 
                 MP_MostrarGrillaDetalle(_idOriginal)
             End If
@@ -861,9 +857,9 @@ Public Class F0_ProductoCompuesto
         End If
     End Sub
     Private Sub MP_Nuevo()
-        MP_Habilitar()
         'btnNuevo.Enabled = True
         MP_Limpiar()
+        MP_Habilitar()
         tb_Id.Focus()
     End Sub
     Private Sub MP_Modificar()
@@ -1247,7 +1243,7 @@ Public Class F0_ProductoCompuesto
     Public Sub MP_NuevoRegistro()
         Try
             Dim id As String = ""
-            Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, cb_Tipo.Value, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value)
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, cb_Tipo.Value, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value, cbSucursal.Value)
             If res Then
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                 ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + id.ToString() + " Grabado con Exito.".ToUpper,
@@ -1273,7 +1269,7 @@ Public Class F0_ProductoCompuesto
     Public Sub MP_ModificarRegistro()
         Try
             Dim id As String = ""
-            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, cb_Tipo.Value, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value)
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, cb_Tipo.Value, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value, cbSucursal.Value)
             If res Then
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                 ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + tb_Id.Text.ToString() + " Modificado con Exito.".ToUpper,

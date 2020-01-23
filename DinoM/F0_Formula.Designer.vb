@@ -22,11 +22,13 @@ Partial Class F0_Formula
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim cb_Tipo_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F0_Formula))
-        Dim cbSucursal_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Dim cb_Estado_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F0_Formula))
+        Dim cb_Tipo_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
+        Dim cbSucursal_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Me.PanelSuperior = New System.Windows.Forms.Panel()
+        Me.LabelX3 = New DevComponents.DotNetBar.LabelX()
+        Me.cb_Estado = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
         Me.LabelX2 = New DevComponents.DotNetBar.LabelX()
         Me.cb_Tipo = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
         Me.LabelX1 = New DevComponents.DotNetBar.LabelX()
@@ -43,9 +45,8 @@ Partial Class F0_Formula
         Me.Dgv_Detalle = New Janus.Windows.GridEX.GridEX()
         Me.PanelPedido = New System.Windows.Forms.Panel()
         Me.Dgv_Busqueda = New Janus.Windows.GridEX.GridEX()
-        Me.LabelX3 = New DevComponents.DotNetBar.LabelX()
-        Me.cb_Estado = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
         Me.PanelSuperior.SuspendLayout()
+        CType(Me.cb_Estado, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.cb_Tipo, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tb_FechaHasta, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tb_FechaDe, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -54,7 +55,6 @@ Partial Class F0_Formula
         CType(Me.Dgv_Detalle, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelPedido.SuspendLayout()
         CType(Me.Dgv_Busqueda, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.cb_Estado, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'PanelSuperior
@@ -78,6 +78,37 @@ Partial Class F0_Formula
         Me.PanelSuperior.Name = "PanelSuperior"
         Me.PanelSuperior.Size = New System.Drawing.Size(875, 60)
         Me.PanelSuperior.TabIndex = 1
+        '
+        'LabelX3
+        '
+        Me.LabelX3.BackColor = System.Drawing.Color.Transparent
+        '
+        '
+        '
+        Me.LabelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX3.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.LabelX3.Location = New System.Drawing.Point(196, 31)
+        Me.LabelX3.Name = "LabelX3"
+        Me.LabelX3.SingleLineColor = System.Drawing.SystemColors.Control
+        Me.LabelX3.Size = New System.Drawing.Size(64, 23)
+        Me.LabelX3.TabIndex = 248
+        Me.LabelX3.Text = "Estado:"
+        '
+        'cb_Estado
+        '
+        cb_Estado_DesignTimeLayout.LayoutString = resources.GetString("cb_Estado_DesignTimeLayout.LayoutString")
+        Me.cb_Estado.DesignTimeLayout = cb_Estado_DesignTimeLayout
+        Me.cb_Estado.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_Estado.Location = New System.Drawing.Point(266, 31)
+        Me.cb_Estado.Name = "cb_Estado"
+        Me.cb_Estado.Office2007ColorScheme = Janus.Windows.GridEX.Office2007ColorScheme.Custom
+        Me.cb_Estado.Office2007CustomColor = System.Drawing.Color.DodgerBlue
+        Me.cb_Estado.SelectedIndex = -1
+        Me.cb_Estado.SelectedItem = Nothing
+        Me.cb_Estado.Size = New System.Drawing.Size(110, 23)
+        Me.cb_Estado.TabIndex = 247
+        Me.cb_Estado.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
         'LabelX2
         '
@@ -355,37 +386,6 @@ Partial Class F0_Formula
         Me.Dgv_Busqueda.Size = New System.Drawing.Size(875, 332)
         Me.Dgv_Busqueda.TabIndex = 2
         '
-        'LabelX3
-        '
-        Me.LabelX3.BackColor = System.Drawing.Color.Transparent
-        '
-        '
-        '
-        Me.LabelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX3.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelX3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
-        Me.LabelX3.Location = New System.Drawing.Point(196, 31)
-        Me.LabelX3.Name = "LabelX3"
-        Me.LabelX3.SingleLineColor = System.Drawing.SystemColors.Control
-        Me.LabelX3.Size = New System.Drawing.Size(64, 23)
-        Me.LabelX3.TabIndex = 248
-        Me.LabelX3.Text = "Estado:"
-        '
-        'cb_Estado
-        '
-        cb_Estado_DesignTimeLayout.LayoutString = resources.GetString("cb_Estado_DesignTimeLayout.LayoutString")
-        Me.cb_Estado.DesignTimeLayout = cb_Estado_DesignTimeLayout
-        Me.cb_Estado.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_Estado.Location = New System.Drawing.Point(266, 31)
-        Me.cb_Estado.Name = "cb_Estado"
-        Me.cb_Estado.Office2007ColorScheme = Janus.Windows.GridEX.Office2007ColorScheme.Custom
-        Me.cb_Estado.Office2007CustomColor = System.Drawing.Color.DodgerBlue
-        Me.cb_Estado.SelectedIndex = -1
-        Me.cb_Estado.SelectedItem = Nothing
-        Me.cb_Estado.Size = New System.Drawing.Size(110, 23)
-        Me.cb_Estado.TabIndex = 247
-        Me.cb_Estado.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
-        '
         'F0_Formula
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -398,6 +398,7 @@ Partial Class F0_Formula
         Me.Text = "FORMULAS"
         Me.PanelSuperior.ResumeLayout(False)
         Me.PanelSuperior.PerformLayout()
+        CType(Me.cb_Estado, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.cb_Tipo, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tb_FechaHasta, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tb_FechaDe, System.ComponentModel.ISupportInitialize).EndInit()
@@ -406,7 +407,6 @@ Partial Class F0_Formula
         CType(Me.Dgv_Detalle, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PanelPedido.ResumeLayout(False)
         CType(Me.Dgv_Busqueda, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.cb_Estado, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub

@@ -1763,7 +1763,7 @@ Public Class F0_Ventas
         If reimprimir Then
             _Fecha = _DsFactura.Tables(0).Rows(0).Item("fvafec").ToString
             _Hora = _DsFactura.Tables(0).Rows(0).Item("fvahora").ToString
-            _NumFac = CInt(_DsDosificacion.Tables(0).Rows(0).Item("sbnfac"))
+            _NumFac = CInt(_DsFactura.Tables(0).Rows(0).Item("fvanfac"))
         Else
             _Fecha = Now.Date
             _Hora = Now.Hour.ToString + ":" + Now.Minute.ToString
@@ -1782,8 +1782,10 @@ Public Class F0_Ventas
         _Key = _DsDosificacion.Tables(0).Rows(0).Item("sbkey")
         _FechaAl = _DsDosificacion.Tables(0).Rows(0).Item("sbfal")
 
-        Dim maxNFac As Integer = L_fnObtenerMaxIdTabla("TFV001", "fvanfac", "fvaautoriz = " + _Autorizacion)
-        _NumFac = maxNFac + 1
+        If reimprimir = False Then
+            Dim maxNFac As Integer = L_fnObtenerMaxIdTabla("TFV001", "fvanfac", "fvaautoriz = " + _Autorizacion)
+            _NumFac = maxNFac + 1
+        End If
 
         _TotalCC = Math.Round(CDbl(_Total), MidpointRounding.AwayFromZero)
         _Cod_Control = ControlCode.generateControlCode(_Autorizacion, _NumFac, _Nit, _Fechainv, CStr(_TotalCC), _Key)
