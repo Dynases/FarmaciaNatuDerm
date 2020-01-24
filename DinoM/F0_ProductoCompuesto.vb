@@ -25,7 +25,7 @@ Public Class F0_ProductoCompuesto
     Dim Modificado As Boolean = False
     Dim _Pos, _idProducto, _idOriginal, IdUnidad As Integer
     Dim FilaSelectLote As DataRow = Nothing
-
+    Public _Modificar As Boolean = False
 
 #End Region
 #Region "Eventos del formulario"
@@ -86,6 +86,11 @@ Public Class F0_ProductoCompuesto
         End If
     End Sub
     Private Sub btnModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
+        If L_FnProductoCompuesto_VeridicarEstado(tb_Id.Text, ENEstadoProductoCompuestoVenta.COMPLETADO) Then
+            Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+            ToastNotification.Show(Me, "El producto compuesto se encuentra completado, no se puede modificar".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+            Exit Sub
+        End If
         _Nuevo = False
         MP_Modificar()
     End Sub
@@ -93,46 +98,14 @@ Public Class F0_ProductoCompuesto
         Try
             If e.KeyData = Keys.Enter Then
                 Dim idProducto, Etiqueda, idUnidad, Unidad, costo As String
-                'Dim Bin As New MemoryStream
-                'Dim img As New Bitmap(My.Resources.delete, 28, 28)
-                'img.Save(Bin, Imaging.ImageFormat.Png)
-
                 idProducto = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfnumi").Value)
                 Etiqueda = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfcdprod1").Value)
                 idUnidad = Convert.ToString(Dgv_Productos.CurrentRow.Cells("yfumin").Value)
                 Unidad = Convert.ToString(Dgv_Productos.CurrentRow.Cells("UnidMin").Value)
                 costo = Convert.ToString(Dgv_Productos.CurrentRow.Cells("pcos").Value)
-                'Dim nuevaFila As DataRow = CType(Dgv_Detalle.DataSource, DataTable).NewRow()
-
-                'nuevaFila(0) = 0
-                'nuevaFila(1) = idProducto
-                'nuevaFila(2) = _fnSiguienteNumi() + 1
-                'nuevaFila(3) = Etiqueda
-                'nuevaFila(4) = ""
-                'nuevaFila(5) = idUnidad
-                'nuevaFila(6) = Unidad
-                'nuevaFila(7) = "0.00"
-                'nuevaFila(8) = "0.00"
-                'nuevaFila(9) = "100"
-                'nuevaFila(10) = "1000"
-                'nuevaFila(11) = False
-                'nuevaFila(12) = "0.0000"
-                'nuevaFila(13) = costo
-                'nuevaFila(14) = "0.00"
-                'nuevaFila(15) = 0
-                'nuevaFila(16) = Bin.GetBuffer
-
-
-                'CType(Dgv_Detalle.DataSource, DataTable).Rows.Add(nuevaFila)
-                'GPanelProductos.Height = 80
-                'GPanelProductos.Visible = False
-                'Dgv_Detalle.Focus()
-                'Dgv_Detalle.Row = Dgv_Detalle.Row - 1
                 Dim pos As Integer = -1
-                'Dgv_Detalle.Row = Dgv_Detalle.RowCount - 1
                 _fnObtenerFilaDetalle(pos, Dgv_Detalle.GetValue("id"))
                 If (Not _fnExisteProducto(idProducto)) Then
-                    'b.yfcdprod1, a.iclot, a.icfven, a.iccven
                     CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("idProducto") = idProducto
                     CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("pdeti") = Etiqueda
                     CType(Dgv_Detalle.DataSource, DataTable).Rows(pos).Item("IdUnidad") = idUnidad
@@ -160,17 +133,6 @@ Public Class F0_ProductoCompuesto
             tb_Descripcion.Focus()
         End If
         If e.KeyData = Keys.Enter Then
-            'GPanelProductos.Height = 530
-            'GPanelProductos.Visible = True
-            'If _IdCliente = 0 Then
-            '    _prAddDetalleProductosCompuesntos()
-            '    _HabilitarProductos()
-            '    Dgv_Productos.Focus()
-            'Else
-            '    _HabilitarProductos()
-            '    Dgv_Productos.Focus()
-            'End If
-
             Dim f, c As Integer
             c = Dgv_Detalle.Col
             f = Dgv_Detalle.Row
@@ -184,24 +146,6 @@ Public Class F0_ProductoCompuesto
                 End If
 
             End If
-            'If (Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdPorc").Index) Then
-            '    If (Dgv_Detalle.GetValue("pdeti") <> String.Empty) Then
-            '        _prAddDetalleProductosCompuesntos()
-            '        _HabilitarProductos()
-            '    Else
-            '        ToastNotification.Show(Me, "Seleccione un Producto Por Favor", My.Resources.WARNING, 3000, eToastGlowColor.Red, eToastPosition.TopCenter)
-            '    End If
-
-            'End If
-            'If (Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdcant").Index) Then
-            '    If (Dgv_Detalle.GetValue("pdeti") <> String.Empty) Then
-            '        _prAddDetalleProductosCompuesntos()
-            '        _HabilitarProductos()
-            '    Else
-            '        ToastNotification.Show(Me, "Seleccione un Producto Por Favor", My.Resources.WARNING, 3000, eToastGlowColor.Red, eToastPosition.TopCenter)
-            '    End If
-
-            'End If
         End If
         If (e.KeyData = Keys.Control + Keys.Enter And Dgv_Detalle.Row >= 0 And
             Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdeti").Index) Then
@@ -229,8 +173,6 @@ Public Class F0_ProductoCompuesto
         End If
     End Sub
     Private Sub _prAddDetalleProductosCompuesntos()
-        '   a.tbnumi ,a.tbtv1numi ,a.tbty5prod ,b.yfcdprod1 as producto,a.tbest ,a.tbcmin ,a.tbumin ,Umin .ycdes3 as unidad,a.tbpbas ,a.tbptot ,a.tbobs ,
-        'a.tbpcos,a.tblote ,a.tbfechaVenc , a.tbptot2, a.tbfact ,a.tbhact ,a.tbuact,1 as estado,Cast(null as Image) as img
         Dim Bin As New MemoryStream
         Dim img As New Bitmap(My.Resources.delete, 28, 28)
         img.Save(Bin, Imaging.ImageFormat.Png)
@@ -245,13 +187,14 @@ Public Class F0_ProductoCompuesto
             cantidad = Dgv_Detalle.CurrentRow.Cells("pdcant").Value
             valor1 = Dgv_Detalle.CurrentRow.Cells("pdValor1").Value
             valor2 = Dgv_Detalle.CurrentRow.Cells("pdValor2").Value
-            If Dgv_Detalle.CurrentRow.Cells("Jarabe").Value = False Then
+            'SI UNIDAD DE VENTA ES "UNIDAD" 
+            If Dgv_Detalle.CurrentRow.Cells("IdUnidad").Value = 3 Then
                 If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
-                    valor = (cantidad / valor1) * porcentaje
+                    valor = Convert.ToInt32(cantidad)
                     total = valor * precio
                     Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
                     Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
-                    Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
+                    Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = valor.ToString() + "gr."
                     MP_PonerTotal()
                 Else
                     If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
@@ -261,29 +204,52 @@ Public Class F0_ProductoCompuesto
                     End If
                 End If
             Else
-                ' If (e.Column.Index = Dgv_Detalle.RootTable.Columns("Jarabe").Index And Dgv_Detalle.CurrentRow.Cells("Jarabe").Value) Then
-                If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
-                    valor = (cantidad * 100) / porcentaje
-                    valor = valor / valor2
-                    total = valor * precio
-                    Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
-                    Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
-                    Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
-                    MP_PonerTotal()
+                If Dgv_Detalle.CurrentRow.Cells("Jarabe").Value = False Then
+                    If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
+                        valor = (cantidad / valor1) * porcentaje
+                        total = valor * precio
+                        Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
+                        Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
+                        Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
+                        MP_PonerTotal()
+                    Else
+                        If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
+                            Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
+                        ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
+                            Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
+                        End If
+                    End If
                 Else
-                    If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
-                        Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
-                    ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
-                        Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
+                    ' If (e.Column.Index = Dgv_Detalle.RootTable.Columns("Jarabe").Index And Dgv_Detalle.CurrentRow.Cells("Jarabe").Value) Then
+                    If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
+                        valor = (cantidad * 100) / porcentaje
+                        valor = valor / valor2
+                        total = valor * precio
+                        Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
+                        Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
+                        Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
+                        MP_PonerTotal()
+                    Else
+                        If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
+                            Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
+                        ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
+                            Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
+                        End If
                     End If
                 End If
             End If
+
 
         Catch ex As Exception
             Throw New Exception(ex.Message)
         End Try
     End Sub
     Private Sub btnEliminar_Click(sender As Object, e As EventArgs) Handles btnEliminar.Click
+        If L_FnProductoCompuesto_VeridicarEstado(tb_Id.Text, ENEstadoProductoCompuestoVenta.COMPLETADO) Then
+            Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+            ToastNotification.Show(Me, "El producto compuesto se encuentra completado, no se puede eliminar".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+            Exit Sub
+        End If
         MP_EliminarRegistro()
     End Sub
 #End Region
@@ -310,7 +276,7 @@ Public Class F0_ProductoCompuesto
             MP_MostrarGrillaEncabezado()
             MP_Habilitar()
             MP_IniciarMenu()
-            _Nuevo = True
+            _Nuevo = IIf(_Modificar, False, True)
             cb_Tipo.Value = CType(ENEstadoProductoCompuesto.MAGISTRAL, Integer)
             MP_ActualizaFecha()
         Else
@@ -449,189 +415,194 @@ Public Class F0_ProductoCompuesto
     Private Sub MP_MostrarGrillaDetalle(_N As Integer)
         Dim dt As New DataTable
         If Tipo = 1 Then
-            'Inicia con los estados en 0 para que guarde todo el detalle
-            dt = L_fnProductoCompuestoTraerDetalleXId_Nuevo(_N)
+            If _Modificar Then
+                'Inicia con estados en 1 para su respectiba modificacion
+                dt = L_fnProductoCompuestoTraerDetalleXId(_N)
+            Else
+                'Inicia con los estados en 0 para que guarde todo el detalle
+                dt = L_fnProductoCompuestoTraerDetalleXId_Nuevo(_N)
+            End If
         Else
             'Inicia con estados en 1 para su respectiba modificacion
             dt = L_fnProductoCompuestoTraerDetalleXId(_N)
         End If
 
         Dgv_Detalle.DataSource = dt
-            Dgv_Detalle.RetrieveStructure()
-            Dgv_Detalle.AlternatingColors = True
-            With Dgv_Detalle.RootTable.Columns(0)
-                .Key = "id"
-                .Visible = False
-                .Position = 0
-            End With
-            With Dgv_Detalle.RootTable.Columns(1)
-                .Key = "idProducto"
-                .Caption = "Cod."
-                .Width = 80
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .Visible = True
-                .Position = 1
-            End With
-            With Dgv_Detalle.RootTable.Columns(2)
-                .Key = "idProductoCompuesto"
-                .Visible = False
-                .Position = 2
-            End With
-            With Dgv_Detalle.RootTable.Columns(3)
-                .Key = "pdeti"
-                .Caption = "Etiqueta"
-                .Width = 200
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 3
-            End With
+        Dgv_Detalle.RetrieveStructure()
+        Dgv_Detalle.AlternatingColors = True
+        With Dgv_Detalle.RootTable.Columns(0)
+            .Key = "id"
+            .Visible = False
+            .Position = 0
+        End With
+        With Dgv_Detalle.RootTable.Columns(1)
+            .Key = "idProducto"
+            .Caption = "Cod."
+            .Width = 80
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .Visible = True
+            .Position = 1
+        End With
+        With Dgv_Detalle.RootTable.Columns(2)
+            .Key = "idProductoCompuesto"
+            .Visible = False
+            .Position = 2
+        End With
+        With Dgv_Detalle.RootTable.Columns(3)
+            .Key = "pdeti"
+            .Caption = "Etiqueta"
+            .Width = 200
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 3
+        End With
 
-            With Dgv_Detalle.RootTable.Columns(4)
-                .Key = "pdeticant"
-                .Caption = "Eti"
-                .Visible = False
-                .Position = 4
-            End With
+        With Dgv_Detalle.RootTable.Columns(4)
+            .Key = "pdeticant"
+            .Caption = "Eti"
+            .Visible = False
+            .Position = 4
+        End With
 
-            With Dgv_Detalle.RootTable.Columns(5)
-                .Key = "IdUnidad"
-                .Visible = False
-                .Position = 5
-            End With
-            With Dgv_Detalle.RootTable.Columns(6)
-                .Visible = True
-                .Key = "UnidadMin"
-                .Caption = "Unidad"
-                .Width = 70
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Position = 6
-            End With
-            With Dgv_Detalle.RootTable.Columns(7)
-                .Key = "pdPorc"
-                .Caption = "Porcentaje(%)"
-                .FormatString = "0.00"
-                .Width = 110
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 7
-            End With
-            With Dgv_Detalle.RootTable.Columns(8)
-                .Key = "pdcant"
-                .Caption = "Cantidad"
-                .FormatString = "0.000"
-                .Width = 110
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 8
-            End With
-            With Dgv_Detalle.RootTable.Columns(9)
-                .Key = "pdValor1"
-                .Caption = "Valor1"
-                .FormatString = "0.00"
-                .Width = 90
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 9
-            End With
-            With Dgv_Detalle.RootTable.Columns(10)
-                .Key = "pdValor2"
-                .Caption = "Valor2"
-                .FormatString = "0.00"
-                .Width = 90
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
+        With Dgv_Detalle.RootTable.Columns(5)
+            .Key = "IdUnidad"
+            .Visible = False
+            .Position = 5
+        End With
+        With Dgv_Detalle.RootTable.Columns(6)
+            .Visible = True
+            .Key = "UnidadMin"
+            .Caption = "Unidad"
+            .Width = 70
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Position = 6
+        End With
+        With Dgv_Detalle.RootTable.Columns(7)
+            .Key = "pdPorc"
+            .Caption = "Porcentaje(%)"
+            .FormatString = "0.00"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 7
+        End With
+        With Dgv_Detalle.RootTable.Columns(8)
+            .Key = "pdcant"
+            .Caption = "Cantidad"
+            .FormatString = "0.000"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 8
+        End With
+        With Dgv_Detalle.RootTable.Columns(9)
+            .Key = "pdValor1"
+            .Caption = "Valor1"
+            .FormatString = "0.00"
+            .Width = 90
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 9
+        End With
+        With Dgv_Detalle.RootTable.Columns(10)
+            .Key = "pdValor2"
+            .Caption = "Valor2"
+            .FormatString = "0.00"
+            .Width = 90
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
             .Visible = True
             .Position = 10
-            End With
-            With Dgv_Detalle.RootTable.Columns(11)
-                .Key = "Jarabe"
-                .Caption = "Jarabe"
-                .Width = 80
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 12
-            End With
-            With Dgv_Detalle.RootTable.Columns(12)
-                .Key = "pdvalor"
-                .Caption = "Valor Total"
-                .FormatString = "0.0000"
-                .Width = 110
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 12
-            End With
-            With Dgv_Detalle.RootTable.Columns(13)
-                .Key = "pdprec"
-                .Caption = "Precio"
-                .FormatString = "0.00"
-                .Width = 110
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 13
-            End With
-            With Dgv_Detalle.RootTable.Columns(14)
-                .Key = "pdtotal"
-                .Caption = "Total"
-                .FormatString = "0.00"
-                .Width = 110
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 14
-            End With
-            With Dgv_Detalle.RootTable.Columns(15)
-                .Key = "Estado"
-                .Visible = False
-                .Position = 15
-            End With
-            With Dgv_Detalle.RootTable.Columns(16)
-                .Key = "img"
-                .Width = 80
-                .Caption = "Eliminar".ToUpper
-                .CellStyle.ImageHorizontalAlignment = ImageHorizontalAlignment.Center
-                .Visible = False
+        End With
+        With Dgv_Detalle.RootTable.Columns(11)
+            .Key = "Jarabe"
+            .Caption = "Jarabe"
+            .Width = 80
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 12
+        End With
+        With Dgv_Detalle.RootTable.Columns(12)
+            .Key = "pdvalor"
+            .Caption = "Valor Total"
+            .FormatString = "0.0000"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 12
+        End With
+        With Dgv_Detalle.RootTable.Columns(13)
+            .Key = "pdprec"
+            .Caption = "Precio"
+            .FormatString = "0.00"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 13
+        End With
+        With Dgv_Detalle.RootTable.Columns(14)
+            .Key = "pdtotal"
+            .Caption = "Total"
+            .FormatString = "0.00"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 14
+        End With
+        With Dgv_Detalle.RootTable.Columns(15)
+            .Key = "Estado"
+            .Visible = False
+            .Position = 15
+        End With
+        With Dgv_Detalle.RootTable.Columns(16)
+            .Key = "img"
+            .Width = 80
+            .Caption = "Eliminar".ToUpper
+            .CellStyle.ImageHorizontalAlignment = ImageHorizontalAlignment.Center
+            .Visible = False
             .Position = 16
         End With
-            'Habilitar Filtradores
-            With Dgv_Detalle
-                '.DefaultFilterRowComparison = FilterConditionOperator.Contains
-                ' .FilterMode = FilterMode.Automatic
-                '.FilterRowUpdateMode = FilterRowUpdateMode.WhenValueChanges
-                .GroupByBoxVisible = False
-                '.FilterRowButtonStyle = FilterRowButtonStyle.ConditionOperatorDropDown
-            End With
-            'diseño de la grilla
-            Dgv_Detalle.VisualStyle = VisualStyle.Office2007
+        'Habilitar Filtradores
+        With Dgv_Detalle
+            '.DefaultFilterRowComparison = FilterConditionOperator.Contains
+            ' .FilterMode = FilterMode.Automatic
+            '.FilterRowUpdateMode = FilterRowUpdateMode.WhenValueChanges
+            .GroupByBoxVisible = False
+            '.FilterRowButtonStyle = FilterRowButtonStyle.ConditionOperatorDropDown
+        End With
+        'diseño de la grilla
+        Dgv_Detalle.VisualStyle = VisualStyle.Office2007
 
     End Sub
     Private Sub MP_Habilitar()
@@ -701,6 +672,7 @@ Public Class F0_ProductoCompuesto
         Tb_Precio4.Value = 0
         tb_Descripcion.Focus()
         FilaSelectLote = Nothing
+        _idProducto = 0
         'MP_AddDetalle()
     End Sub
     Private Sub MP_ActualizaFecha()
@@ -747,7 +719,11 @@ Public Class F0_ProductoCompuesto
             Dim _tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneralXId(_idOriginal, cbSucursal.Value)
             If _tablaEncabezado.Rows.Count > 0 Then
                 If Tipo = 1 Then
-                    tb_Id.Clear()
+                    If _Modificar Then
+                        tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
+                    Else
+                        tb_Id.Clear()
+                    End If
                 Else
                     tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
                 End If
@@ -808,6 +784,16 @@ Public Class F0_ProductoCompuesto
     End Sub
     Public Function MP_ValidarCampos() As Boolean
         Dim _ok As Boolean = True
+        If _idProducto = 0 Then
+            tb_Codigo.BackColor = Color.Red
+            MEP.SetError(tb_Codigo, "Selecciona un producto!".ToUpper)
+            _ok = False
+            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+            ToastNotification.Show(Me, "Seleccione un producto terminado para efectuar la grabación".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+        Else
+            tb_Codigo.BackColor = Color.White
+            MEP.SetError(tb_Descripcion, "")
+        End If
         If tb_Descripcion.Text = String.Empty Then
             tb_Descripcion.BackColor = Color.Red
             MEP.SetError(tb_Descripcion, "ingrese el una descripcion!".ToUpper)
@@ -818,15 +804,12 @@ Public Class F0_ProductoCompuesto
             tb_Descripcion.BackColor = Color.White
             MEP.SetError(tb_Descripcion, "")
         End If
-
-        If (Dgv_Detalle.RowCount = 1) Then
-            If (Dgv_Detalle.RowCount > 0) Then
-                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                ToastNotification.Show(Me, "Por Favor ingrese un detalle".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                _ok = False
-            End If
+        If (Dgv_Detalle.RowCount < 0) Then
+            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+            ToastNotification.Show(Me, "Por Favor ingrese un detalle".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+            _ok = False
         End If
-        Return True
+        Return _ok
     End Function
     Public Sub _fnObtenerFilaDetalle(ByRef pos As Integer, numi As Integer)
         For i As Integer = 0 To CType(Dgv_Detalle.DataSource, DataTable).Rows.Count - 1 Step 1
@@ -841,18 +824,20 @@ Public Class F0_ProductoCompuesto
     Private Sub MP_AsignarPermisos()
         If Tipo = 0 Then
             Dim dtRolUsu As DataTable = L_prRolDetalleGeneral(gi_userRol, _nameButton)
-            Dim show As Boolean = dtRolUsu.Rows(0).Item("ycshow")
-            Dim add As Boolean = dtRolUsu.Rows(0).Item("ycadd")
-            Dim modif As Boolean = dtRolUsu.Rows(0).Item("ycmod")
-            Dim del As Boolean = dtRolUsu.Rows(0).Item("ycdel")
-            If add = False Then
-                btnNuevo.Visible = False
-            End If
-            If modif = False Then
-                btnModificar.Visible = False
-            End If
-            If del = False Then
-                btnEliminar.Visible = False
+            If dtRolUsu.Rows.Count > 0 Then
+                Dim show As Boolean = dtRolUsu.Rows(0).Item("ycshow")
+                Dim add As Boolean = dtRolUsu.Rows(0).Item("ycadd")
+                Dim modif As Boolean = dtRolUsu.Rows(0).Item("ycmod")
+                Dim del As Boolean = dtRolUsu.Rows(0).Item("ycdel")
+                If add = False Then
+                    btnNuevo.Visible = False
+                End If
+                If modif = False Then
+                    btnModificar.Visible = False
+                End If
+                If del = False Then
+                    btnEliminar.Visible = False
+                End If
             End If
         End If
     End Sub
@@ -864,13 +849,7 @@ Public Class F0_ProductoCompuesto
     End Sub
     Private Sub MP_Modificar()
         MP_Habilitar()
-        'btnNuevo.Enabled = False
-        'btnModificar.Enabled = False
-        'btnEliminar.Enabled = False
-        'btnGrabar.Enabled = True
-        '_Nuevo = False
         tb_Descripcion.Focus()
-        'PanelNavegacion.Enabled = False
         _prCargarIconELiminar()
     End Sub
     Public Sub _prCargarIconELiminar()

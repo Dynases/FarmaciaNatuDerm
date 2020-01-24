@@ -36,6 +36,9 @@ Public Class F0_Formula
             MP_MostrarMensajeError(ex.Message)
         End Try
     End Sub
+    Private Sub Dgv_Detalle_EditingCell(sender As Object, e As EditingCellEventArgs) Handles Dgv_Detalle.EditingCell
+        e.Cancel = True
+    End Sub
 
     Private Sub Dgv_Busqueda_SelectionChanged(sender As Object, e As EventArgs) Handles Dgv_Busqueda.SelectionChanged
         Try
@@ -123,68 +126,64 @@ Public Class F0_Formula
         Dim dt As New DataTable
         dt = L_fnProductoCompuesto_Buscar(cbSucursal.Value, tb_FechaDe.Value.ToString("yyyy/MM/dd"), tb_FechaHasta.Value.ToString("yyyy/MM/dd"), cb_Tipo.Value, cb_Estado.Value)
         Dgv_Busqueda.DataSource = dt
-            Dgv_Busqueda.RetrieveStructure()
-            Dgv_Busqueda.AlternatingColors = True
-            With Dgv_Busqueda.RootTable.Columns("IdVenta")
-                .Caption = "Id Venta"
-                .Width = 150
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-            End With
-            With Dgv_Busqueda.RootTable.Columns("cliente")
-                .Caption = "Cliente"
-                .Width = 300
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-            End With
+        Dgv_Busqueda.RetrieveStructure()
+        Dgv_Busqueda.AlternatingColors = True
+        With Dgv_Busqueda.RootTable.Columns("IdVenta")
+            .Caption = "Id Venta"
+            .Width = 100
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+        End With
+        With Dgv_Busqueda.RootTable.Columns("cliente")
+            .Caption = "Cliente"
+            .Width = 300
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+        End With
 
-            With Dgv_Busqueda.RootTable.Columns("IdFormula")
-                .Caption = "IdFormula"
-                .Visible = False
-            End With
+        With Dgv_Busqueda.RootTable.Columns("IdFormula")
+            .Caption = "Id Formula"
+            .Width = 100
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+        End With
 
-            With Dgv_Busqueda.RootTable.Columns("Producto")
-                .Caption = "Producto"
-                .Width = 200
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-            End With
-            With Dgv_Busqueda.RootTable.Columns("Cantidad")
-                .Caption = "Cantidad"
-                .Width = 200
-                .FormatString = "0.00"
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-            End With
-            With Dgv_Busqueda.RootTable.Columns("Fecha")
-                .Caption = "Fecha"
-                .Width = 200
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-            End With
-            With Dgv_Busqueda.RootTable.Columns("Selecionar")
-                .Caption = "Selecionar"
-                .Width = 150
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-            End With
+        With Dgv_Busqueda.RootTable.Columns("Producto")
+            .Caption = "Producto"
+            .Width = 200
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+        End With
+        With Dgv_Busqueda.RootTable.Columns("Cantidad")
+            .Caption = "Cantidad"
+            .Width = 200
+            .FormatString = "0.00"
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+        End With
+        With Dgv_Busqueda.RootTable.Columns("Fecha")
+            .Caption = "Fecha"
+            .Width = 200
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+        End With
         With Dgv_Busqueda.RootTable.Columns("Estado")
             .Caption = "Estado"
             .Width = 150
@@ -194,9 +193,9 @@ Public Class F0_Formula
             .AllowSort = False
             .Visible = True
         End With
-        Dgv_Busqueda.RootTable.Columns.Add(New GridEXColumn("Check"))
-        With Dgv_Busqueda.RootTable.Columns("Check")
-            .Caption = "N.Estado"
+        Dgv_Busqueda.RootTable.Columns.Add(New GridEXColumn("Seleccionar"))
+        With Dgv_Busqueda.RootTable.Columns("Seleccionar")
+            .Caption = "Seleccionar"
             .Width = 80
             .ShowRowSelector = True
             .UseHeaderSelector = True
@@ -204,17 +203,17 @@ Public Class F0_Formula
         End With
         'Habilitar Filtradores
         With Dgv_Busqueda
-                .DefaultFilterRowComparison = FilterConditionOperator.Contains
-                .FilterMode = FilterMode.Automatic
-                .FilterRowUpdateMode = FilterRowUpdateMode.WhenValueChanges
-                .GroupByBoxVisible = False
-                '.FilterRowButtonStyle = FilterRowButtonStyle.ConditionOperatorDropDown
-            End With
-            'diseño de la grilla
-            Dgv_Busqueda.VisualStyle = VisualStyle.Office2007
-            If (dt.Rows.Count <= 0) Then
-                MP_MostrarGrillaDetalle(-1)
-            End If
+            .DefaultFilterRowComparison = FilterConditionOperator.Contains
+            .FilterMode = FilterMode.Automatic
+            .FilterRowUpdateMode = FilterRowUpdateMode.WhenValueChanges
+            .GroupByBoxVisible = False
+            '.FilterRowButtonStyle = FilterRowButtonStyle.ConditionOperatorDropDown
+        End With
+        'diseño de la grilla
+        Dgv_Busqueda.VisualStyle = VisualStyle.Office2007
+        If (dt.Rows.Count <= 0) Then
+            MP_MostrarGrillaDetalle(-1)
+        End If
     End Sub
     Private Sub MP_MostrarGrillaDetalle(_N As Integer)
         Dim dt As New DataTable
@@ -411,6 +410,21 @@ Public Class F0_Formula
                                eToastGlowColor.Green,
                                eToastPosition.TopCenter)
     End Sub
+
+    Private Sub btn_Modificar_Click(sender As Object, e As EventArgs) Handles btn_Modificar.Click
+        If L_FnProductoCompuesto_VeridicarEstado(Dgv_Busqueda.GetValue("IdFormula"), ENEstadoProductoCompuestoVenta.COMPLETADO) Then
+            Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+            ToastNotification.Show(Me, "El producto compuesto se encuentra completado, no se puede modificar".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+            Exit Sub
+        End If
+        Dim frm As F0_ProductoCompuesto = New F0_ProductoCompuesto()
+        frm.Tipo = 1
+        frm._Modificar = True
+        frm._idProcuctoCompuesto = Dgv_Busqueda.GetValue("IdFormula")
+        frm.ShowDialog()
+    End Sub
+
+
 
 
 

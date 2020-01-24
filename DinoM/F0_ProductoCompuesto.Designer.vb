@@ -62,6 +62,7 @@ Partial Class F0_ProductoCompuesto
         Me.GPanelProductos = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.Dgv_Productos = New Janus.Windows.GridEX.GridEX()
+        Me.LabelX9 = New DevComponents.DotNetBar.LabelX()
         Me.PanelSuperior.SuspendLayout()
         Me.PanelInferior.SuspendLayout()
         CType(Me.BubbleBarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -279,6 +280,7 @@ Partial Class F0_ProductoCompuesto
         '
         Me.Panel2.AutoScroll = True
         Me.Panel2.BackColor = System.Drawing.Color.White
+        Me.Panel2.Controls.Add(Me.LabelX9)
         Me.Panel2.Controls.Add(Me.LabelX8)
         Me.Panel2.Controls.Add(Me.cb_Tipo)
         Me.Panel2.Controls.Add(Me.Tb_Precio4)
@@ -986,6 +988,23 @@ Partial Class F0_ProductoCompuesto
         Me.Dgv_Productos.TabIndex = 0
         Me.Dgv_Productos.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
+        'LabelX9
+        '
+        Me.LabelX9.AutoSize = True
+        Me.LabelX9.BackColor = System.Drawing.Color.Transparent
+        '
+        '
+        '
+        Me.LabelX9.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX9.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.LabelX9.Location = New System.Drawing.Point(251, 46)
+        Me.LabelX9.Name = "LabelX9"
+        Me.LabelX9.SingleLineColor = System.Drawing.SystemColors.Control
+        Me.LabelX9.Size = New System.Drawing.Size(99, 16)
+        Me.LabelX9.TabIndex = 379
+        Me.LabelX9.Text = "Control + Enter"
+        '
         'F0_ProductoCompuesto
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1075,4 +1094,5 @@ Partial Class F0_ProductoCompuesto
     Friend WithEvents Dgv_Productos As Janus.Windows.GridEX.GridEX
     Friend WithEvents LabelX8 As DevComponents.DotNetBar.LabelX
     Friend WithEvents cb_Tipo As Janus.Windows.GridEX.EditControls.MultiColumnCombo
+    Friend WithEvents LabelX9 As DevComponents.DotNetBar.LabelX
 End Class

@@ -5360,6 +5360,23 @@ Public Class AccesoLogica
         End If
         Return resultado
     End Function
+
+    Public Shared Function L_FnProductoCompuesto_VeridicarEstado(_IdFormula As Integer, _Estado As Integer) As Boolean
+        Dim _Tabla As DataTable
+        Dim resultado As Boolean
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 14))
+        _listParam.Add(New Datos.DParametro("@pcnumi", _IdFormula))
+        _listParam.Add(New Datos.DParametro("@pcEstado", _Estado))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        If _Tabla.Rows(0).Item("resultado") <> 0 Then
+            resultado = True
+        Else
+            resultado = False
+        End If
+        Return resultado
+    End Function
 #End Region
 
 End Class

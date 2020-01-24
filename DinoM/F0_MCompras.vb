@@ -937,6 +937,12 @@ Public Class F0_MCompras
             tbProveedor.Focus()
             Return False
         End If
+        If (swTipoVenta.Value = True) Then
+            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+            ToastNotification.Show(Me, "Por Favor Seleccione el tipo de venta a Credito".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+            tbProveedor.Focus()
+            Return False
+        End If
         If swEmision.Value = True Then
             If (tbNFactura.Text = String.Empty) Then
                 Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)

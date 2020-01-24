@@ -301,6 +301,7 @@ Partial Class F0_Formula
         Me.btn_Buscar.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
         Me.btn_Buscar.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
         Me.btn_Buscar.Dock = System.Windows.Forms.DockStyle.Right
+        Me.btn_Buscar.Image = Global.DinoM.My.Resources.Resources.search
         Me.btn_Buscar.ImageFixedSize = New System.Drawing.Size(30, 30)
         Me.btn_Buscar.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top
         Me.btn_Buscar.Location = New System.Drawing.Point(575, 0)
@@ -315,6 +316,7 @@ Partial Class F0_Formula
         Me.btn_Modificar.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
         Me.btn_Modificar.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
         Me.btn_Modificar.Dock = System.Windows.Forms.DockStyle.Right
+        Me.btn_Modificar.Image = Global.DinoM.My.Resources.Resources.edit
         Me.btn_Modificar.ImageFixedSize = New System.Drawing.Size(30, 30)
         Me.btn_Modificar.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top
         Me.btn_Modificar.Location = New System.Drawing.Point(650, 0)
@@ -329,6 +331,7 @@ Partial Class F0_Formula
         Me.btn_Confirmar.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
         Me.btn_Confirmar.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
         Me.btn_Confirmar.Dock = System.Windows.Forms.DockStyle.Right
+        Me.btn_Confirmar.Image = Global.DinoM.My.Resources.Resources.checked
         Me.btn_Confirmar.ImageFixedSize = New System.Drawing.Size(30, 30)
         Me.btn_Confirmar.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top
         Me.btn_Confirmar.Location = New System.Drawing.Point(725, 0)
@@ -343,6 +346,7 @@ Partial Class F0_Formula
         Me.Btn_Imprimir.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
         Me.Btn_Imprimir.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground
         Me.Btn_Imprimir.Dock = System.Windows.Forms.DockStyle.Right
+        Me.Btn_Imprimir.Image = Global.DinoM.My.Resources.Resources.printee
         Me.Btn_Imprimir.ImageFixedSize = New System.Drawing.Size(30, 30)
         Me.Btn_Imprimir.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top
         Me.Btn_Imprimir.Location = New System.Drawing.Point(800, 0)
