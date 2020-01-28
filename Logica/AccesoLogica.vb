@@ -5294,8 +5294,7 @@ Public Class AccesoLogica
 	                    b.tbty5prod as IdFormula,
 	                    d.pcdesc as Producto,
 	                    b.tbcmin as Cantidad,
-	                    a.tafdoc as Fecha,
-	                    CAST(0 as bit) as Selecionar,
+	                    a.tafdoc as Fecha,	                   
                         CASE d.pcEstado  WHEN 1 THEN 'PENDIENTE'
 							WHEN 2 THEN 'COMPLETADO' END AS Estado
                     FROM  
@@ -5376,6 +5375,17 @@ Public Class AccesoLogica
             resultado = False
         End If
         Return resultado
+    End Function
+    Public Shared Function L_fnProductoCompuestoTraerDetalleXId_Stock(_id As String, _almacen As String) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 15))
+        _listParam.Add(New Datos.DParametro("@pcnumi", _id))
+        _listParam.Add(New Datos.DParametro("@almacen", _almacen))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        Return _Tabla
     End Function
 #End Region
 

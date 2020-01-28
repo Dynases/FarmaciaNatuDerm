@@ -63,6 +63,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="enum\ENAlmacen.vb" />
     <Compile Include="enum\ENEstadoProductoCompuesto.vb" />
     <Compile Include="enum\ENEstadoProductoCompuestoVenta.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

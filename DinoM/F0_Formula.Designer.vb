@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class F0_Formula
     Inherits System.Windows.Forms.Form
 
     'Form reemplaza a Dispose para limpiar la lista de componentes.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class F0_Formula
     'NOTA: el Diseñador de Windows Forms necesita el siguiente procedimiento
     'Se puede modificar usando el Diseñador de Windows Forms.  
     'No lo modifique con el editor de código.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim cb_Estado_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F0_Formula))
@@ -76,7 +76,7 @@ Partial Class F0_Formula
         Me.PanelSuperior.Dock = System.Windows.Forms.DockStyle.Top
         Me.PanelSuperior.Location = New System.Drawing.Point(0, 0)
         Me.PanelSuperior.Name = "PanelSuperior"
-        Me.PanelSuperior.Size = New System.Drawing.Size(875, 60)
+        Me.PanelSuperior.Size = New System.Drawing.Size(991, 60)
         Me.PanelSuperior.TabIndex = 1
         '
         'LabelX3
@@ -168,7 +168,7 @@ Partial Class F0_Formula
         Me.tb_FechaHasta.ButtonDropDown.Visible = True
         Me.tb_FechaHasta.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tb_FechaHasta.IsPopupCalendarOpen = False
-        Me.tb_FechaHasta.Location = New System.Drawing.Point(424, 3)
+        Me.tb_FechaHasta.Location = New System.Drawing.Point(532, 3)
         '
         '
         '
@@ -279,7 +279,7 @@ Partial Class F0_Formula
         Me.LabelX17.SingleLineColor = System.Drawing.SystemColors.Control
         Me.LabelX17.Size = New System.Drawing.Size(64, 23)
         Me.LabelX17.TabIndex = 240
-        Me.LabelX17.Text = "Sucursal:"
+        Me.LabelX17.Text = "Deposito:"
         '
         'cbSucursal
         '
@@ -304,7 +304,7 @@ Partial Class F0_Formula
         Me.btn_Buscar.Image = Global.DinoM.My.Resources.Resources.search
         Me.btn_Buscar.ImageFixedSize = New System.Drawing.Size(30, 30)
         Me.btn_Buscar.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top
-        Me.btn_Buscar.Location = New System.Drawing.Point(575, 0)
+        Me.btn_Buscar.Location = New System.Drawing.Point(691, 0)
         Me.btn_Buscar.Name = "btn_Buscar"
         Me.btn_Buscar.Size = New System.Drawing.Size(75, 60)
         Me.btn_Buscar.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
@@ -319,7 +319,7 @@ Partial Class F0_Formula
         Me.btn_Modificar.Image = Global.DinoM.My.Resources.Resources.edit
         Me.btn_Modificar.ImageFixedSize = New System.Drawing.Size(30, 30)
         Me.btn_Modificar.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top
-        Me.btn_Modificar.Location = New System.Drawing.Point(650, 0)
+        Me.btn_Modificar.Location = New System.Drawing.Point(766, 0)
         Me.btn_Modificar.Name = "btn_Modificar"
         Me.btn_Modificar.Size = New System.Drawing.Size(75, 60)
         Me.btn_Modificar.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
@@ -334,7 +334,7 @@ Partial Class F0_Formula
         Me.btn_Confirmar.Image = Global.DinoM.My.Resources.Resources.checked
         Me.btn_Confirmar.ImageFixedSize = New System.Drawing.Size(30, 30)
         Me.btn_Confirmar.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top
-        Me.btn_Confirmar.Location = New System.Drawing.Point(725, 0)
+        Me.btn_Confirmar.Location = New System.Drawing.Point(841, 0)
         Me.btn_Confirmar.Name = "btn_Confirmar"
         Me.btn_Confirmar.Size = New System.Drawing.Size(75, 60)
         Me.btn_Confirmar.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
@@ -349,7 +349,7 @@ Partial Class F0_Formula
         Me.Btn_Imprimir.Image = Global.DinoM.My.Resources.Resources.printee
         Me.Btn_Imprimir.ImageFixedSize = New System.Drawing.Size(30, 30)
         Me.Btn_Imprimir.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top
-        Me.Btn_Imprimir.Location = New System.Drawing.Point(800, 0)
+        Me.Btn_Imprimir.Location = New System.Drawing.Point(916, 0)
         Me.Btn_Imprimir.Name = "Btn_Imprimir"
         Me.Btn_Imprimir.Size = New System.Drawing.Size(75, 60)
         Me.Btn_Imprimir.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
@@ -362,7 +362,7 @@ Partial Class F0_Formula
         Me.PanelProducto.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.PanelProducto.Location = New System.Drawing.Point(0, 392)
         Me.PanelProducto.Name = "PanelProducto"
-        Me.PanelProducto.Size = New System.Drawing.Size(875, 100)
+        Me.PanelProducto.Size = New System.Drawing.Size(991, 100)
         Me.PanelProducto.TabIndex = 2
         '
         'Dgv_Detalle
@@ -370,7 +370,7 @@ Partial Class F0_Formula
         Me.Dgv_Detalle.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Dgv_Detalle.Location = New System.Drawing.Point(0, 0)
         Me.Dgv_Detalle.Name = "Dgv_Detalle"
-        Me.Dgv_Detalle.Size = New System.Drawing.Size(875, 100)
+        Me.Dgv_Detalle.Size = New System.Drawing.Size(991, 100)
         Me.Dgv_Detalle.TabIndex = 3
         '
         'PanelPedido
@@ -379,7 +379,7 @@ Partial Class F0_Formula
         Me.PanelPedido.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelPedido.Location = New System.Drawing.Point(0, 60)
         Me.PanelPedido.Name = "PanelPedido"
-        Me.PanelPedido.Size = New System.Drawing.Size(875, 332)
+        Me.PanelPedido.Size = New System.Drawing.Size(991, 332)
         Me.PanelPedido.TabIndex = 3
         '
         'Dgv_Busqueda
@@ -387,14 +387,14 @@ Partial Class F0_Formula
         Me.Dgv_Busqueda.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Dgv_Busqueda.Location = New System.Drawing.Point(0, 0)
         Me.Dgv_Busqueda.Name = "Dgv_Busqueda"
-        Me.Dgv_Busqueda.Size = New System.Drawing.Size(875, 332)
+        Me.Dgv_Busqueda.Size = New System.Drawing.Size(991, 332)
         Me.Dgv_Busqueda.TabIndex = 2
         '
         'F0_Formula
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(875, 492)
+        Me.ClientSize = New System.Drawing.Size(991, 492)
         Me.Controls.Add(Me.PanelPedido)
         Me.Controls.Add(Me.PanelProducto)
         Me.Controls.Add(Me.PanelSuperior)

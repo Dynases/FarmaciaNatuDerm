@@ -27,7 +27,7 @@ Public Class F0_Formula
 
     Private Sub Dgv_Busqueda_EditingCell(sender As Object, e As EditingCellEventArgs) Handles Dgv_Busqueda.EditingCell
         Try
-            If (e.Column.Index = Dgv_Busqueda.RootTable.Columns("Selecionar").Index) Then
+            If (e.Column.Index = Dgv_Busqueda.RootTable.Columns("Seleccionar").Index) Then
                 e.Cancel = False
             Else
                 e.Cancel = True
@@ -54,23 +54,32 @@ Public Class F0_Formula
 
     Private Sub btn_Confirmar_Click(sender As Object, e As EventArgs) Handles btn_Confirmar.Click
         Try
+            Dim listResult As Boolean = False
             If Dgv_Busqueda.RowCount < 0 Then
                 Throw New Exception("No se encontraron registros")
             End If
             Dim checks = Me.Dgv_Busqueda.GetCheckedRows()
             Dim listIdFormula = checks.Select(Function(a) Convert.ToInt32(a.Cells("IdFormula").Value)).ToList()
-            For Each idFormula As Integer In listIdFormula
-                Dim listResult = L_FnProductoCompuesto_ModificarEstado(idFormula, ENEstadoProductoCompuestoVenta.COMPLETADO)
-                If (listResult = False) Then
-                    Throw New Exception("No registros para generar el reporte.")
-                End If
-                Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
-                ToastNotification.Show(Me, "Estado de la Formula ".ToUpper + idFormula.ToString() + " Modificado con Exito.".ToUpper,
-                                          img, 2000,
-                                          eToastGlowColor.Green,
-                                          eToastPosition.TopCenter
-                                          )
-            Next
+            If listIdFormula.Count = 1 Then
+                For Each idFormula As Integer In listIdFormula
+                    'Verificar existencia de stock de los productos
+                    If MP_ExisteStockProducto() Then
+                        listResult = L_FnProductoCompuesto_ModificarEstado(idFormula, ENEstadoProductoCompuestoVenta.COMPLETADO)
+                    End If
+                    If (listResult = False) Then
+                        Throw New Exception("No existe Stock para algun producto.")
+                    End If
+                    Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
+                    ToastNotification.Show(Me, "Estado de la Formula ".ToUpper + idFormula.ToString() + " Modificado con Exito.".ToUpper,
+                                              img, 2000,
+                                              eToastGlowColor.Green,
+                                              eToastPosition.TopCenter
+                                              )
+                Next
+            Else
+                Throw New Exception("Debe seleccionar 1 registro.")
+            End If
+
         Catch ex As Exception
             MP_MostrarMensajeError(ex.Message)
         End Try
@@ -122,6 +131,18 @@ Public Class F0_Formula
     Private Sub MP_MostrarGrillaEncabezado()
         MP_Busqueda()
     End Sub
+    Private Function MP_ExisteStockProducto() As Boolean
+        Dim cantidadDetalle, stock As Decimal
+        Dim cantidadEncabezado = Convert.ToDecimal(Dgv_Busqueda.GetValue("Cantidad"))
+        For Each fila As GridEXRow In Dgv_Detalle.GetRows()
+            cantidadDetalle = fila.Cells("pdValor").Value * cantidadEncabezado
+            stock = fila.Cells("stock").Value
+            If (cantidadDetalle > stock) Then
+                Return False
+            End If
+        Next
+        Return True
+    End Function
     Private Sub MP_Busqueda()
         Dim dt As New DataTable
         dt = L_fnProductoCompuesto_Buscar(cbSucursal.Value, tb_FechaDe.Value.ToString("yyyy/MM/dd"), tb_FechaHasta.Value.ToString("yyyy/MM/dd"), cb_Tipo.Value, cb_Estado.Value)
@@ -217,182 +238,182 @@ Public Class F0_Formula
     End Sub
     Private Sub MP_MostrarGrillaDetalle(_N As Integer)
         Dim dt As New DataTable
-        dt = L_fnProductoCompuestoTraerDetalleXId(_N)
-
+        dt = L_fnProductoCompuestoTraerDetalleXId_Stock(_N, ENAlmacen.Almacen_MateriPrima)
         Dgv_Detalle.DataSource = dt
-            Dgv_Detalle.RetrieveStructure()
-            Dgv_Detalle.AlternatingColors = True
-            With Dgv_Detalle.RootTable.Columns(0)
-                .Key = "id"
-                .Visible = False
-                .Position = 0
-            End With
-            With Dgv_Detalle.RootTable.Columns(1)
-                .Key = "idProducto"
-                .Caption = "Cod."
-                .Width = 80
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .Visible = True
-                .Position = 1
-            End With
-            With Dgv_Detalle.RootTable.Columns(2)
-                .Key = "idProductoCompuesto"
-                .Visible = False
-                .Position = 2
-            End With
-            With Dgv_Detalle.RootTable.Columns(3)
-                .Key = "pdeti"
-                .Caption = "Etiqueta"
-                .Width = 200
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 3
-            End With
+        Dgv_Detalle.RetrieveStructure()
+        Dgv_Detalle.AlternatingColors = True
+        With Dgv_Detalle.RootTable.Columns(0)
+            .Key = "id"
+            .Visible = False
+            .Position = 0
+        End With
+        With Dgv_Detalle.RootTable.Columns(1)
+            .Key = "idProducto"
+            .Caption = "Cod."
+            .Width = 80
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .Visible = True
+            .Position = 1
+        End With
+        With Dgv_Detalle.RootTable.Columns(2)
+            .Key = "idProductoCompuesto"
+            .Visible = False
+            .Position = 2
+        End With
+        With Dgv_Detalle.RootTable.Columns(3)
+            .Key = "pdeti"
+            .Caption = "Etiqueta"
+            .Width = 200
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 3
+        End With
 
-            With Dgv_Detalle.RootTable.Columns(4)
-                .Key = "pdeticant"
-                .Caption = "Eti"
-                .Visible = False
-                .Position = 4
-            End With
+        With Dgv_Detalle.RootTable.Columns(4)
+            .Key = "pdeticant"
+            .Caption = "Eti"
+            .Visible = False
+            .Position = 4
+        End With
 
-            With Dgv_Detalle.RootTable.Columns(5)
-                .Key = "IdUnidad"
-                .Visible = False
-                .Position = 5
-            End With
-            With Dgv_Detalle.RootTable.Columns(6)
-                .Visible = True
-                .Key = "UnidadMin"
-                .Caption = "Unidad"
-                .Width = 70
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Position = 6
-            End With
-            With Dgv_Detalle.RootTable.Columns(7)
-                .Key = "pdPorc"
-                .Caption = "Porcentaje(%)"
-                .FormatString = "0.00"
-                .Width = 110
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 7
-            End With
-            With Dgv_Detalle.RootTable.Columns(8)
-                .Key = "pdcant"
-                .Caption = "Cantidad"
-                .FormatString = "0.000"
-                .Width = 110
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 8
-            End With
-            With Dgv_Detalle.RootTable.Columns(9)
-                .Key = "pdValor1"
-                .Caption = "Valor1"
-                .FormatString = "0.00"
-                .Width = 90
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 9
-            End With
-            With Dgv_Detalle.RootTable.Columns(10)
-                .Key = "pdValor2"
-                .Caption = "Valor2"
-                .FormatString = "0.00"
-                .Width = 90
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 10
-            End With
-            With Dgv_Detalle.RootTable.Columns(11)
-                .Key = "Jarabe"
-                .Caption = "Jarabe"
-                .Width = 80
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 12
-            End With
-            With Dgv_Detalle.RootTable.Columns(12)
-                .Key = "pdvalor"
-                .Caption = "Valor Total"
-                .FormatString = "0.0000"
-                .Width = 110
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 12
-            End With
-            With Dgv_Detalle.RootTable.Columns(13)
-                .Key = "pdprec"
-                .Caption = "Precio"
-                .FormatString = "0.00"
-                .Width = 110
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 13
-            End With
-            With Dgv_Detalle.RootTable.Columns(14)
-                .Key = "pdtotal"
-                .Caption = "Total"
-                .FormatString = "0.00"
-                .Width = 110
-                .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
-                .CellStyle.FontSize = gi_fuenteTamano
-                .AllowSort = False
-                .Visible = True
-                .Position = 14
-            End With
-            With Dgv_Detalle.RootTable.Columns(15)
-                .Key = "estado"
-                .Visible = False
-                .Position = 0
-            End With
-            With Dgv_Detalle.RootTable.Columns(16)
-                .Key = "img"
-                .Visible = False
-                .Position = 0
-            End With
-            'Habilitar Filtradores
-            With Dgv_Detalle
-                .GroupByBoxVisible = False
-            End With
-            'diseño de la grilla
-            Dgv_Detalle.VisualStyle = VisualStyle.Office2007
+        With Dgv_Detalle.RootTable.Columns(5)
+            .Key = "IdUnidad"
+            .Visible = False
+            .Position = 5
+        End With
+        With Dgv_Detalle.RootTable.Columns(6)
+            .Visible = True
+            .Key = "UnidadMin"
+            .Caption = "Unidad"
+            .Width = 70
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Position = 6
+        End With
+        With Dgv_Detalle.RootTable.Columns(7)
+            .Key = "pdPorc"
+            .Caption = "Porcentaje(%)"
+            .FormatString = "0.00"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 7
+        End With
+        With Dgv_Detalle.RootTable.Columns(8)
+            .Key = "pdcant"
+            .Caption = "Cantidad"
+            .FormatString = "0.000"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 8
+        End With
+        With Dgv_Detalle.RootTable.Columns(9)
+            .Key = "pdValor1"
+            .Caption = "Valor1"
+            .FormatString = "0.00"
+            .Width = 90
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 9
+        End With
+        With Dgv_Detalle.RootTable.Columns(10)
+            .Key = "pdValor2"
+            .Caption = "Valor2"
+            .FormatString = "0.00"
+            .Width = 90
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 10
+        End With
+        With Dgv_Detalle.RootTable.Columns(11)
+            .Key = "Jarabe"
+            .Caption = "Jarabe"
+            .Width = 80
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 12
+        End With
+        With Dgv_Detalle.RootTable.Columns(12)
+            .Key = "pdvalor"
+            .Caption = "Valor Total"
+            .FormatString = "0.0000"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 12
+        End With
+        With Dgv_Detalle.RootTable.Columns(13)
+            .Key = "pdprec"
+            .Caption = "Precio"
+            .FormatString = "0.00"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 13
+        End With
+        With Dgv_Detalle.RootTable.Columns(14)
+            .Key = "pdtotal"
+            .Caption = "Total"
+            .FormatString = "0.00"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 14
+        End With
+        With Dgv_Detalle.RootTable.Columns(15)
+            .Key = "stock"
+            .Caption = "Stock"
+            .FormatString = "0.00"
+            .Width = 110
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
+            .Visible = True
+            .Position = 15
+        End With
+        'Habilitar Filtradores
+        With Dgv_Detalle
+            .GroupByBoxVisible = False
+        End With
+        'diseño de la grilla
+        Dgv_Detalle.VisualStyle = VisualStyle.Office2007
 
 
 
     End Sub
-
     Private Sub MP_MostrarMensajeError(mensaje As String)
         ToastNotification.Show(Me,
                                mensaje.ToUpper,
@@ -423,11 +444,6 @@ Public Class F0_Formula
         frm._idProcuctoCompuesto = Dgv_Busqueda.GetValue("IdFormula")
         frm.ShowDialog()
     End Sub
-
-
-
-
-
 #End Region
 
 #Region "Metodos Heredados"
