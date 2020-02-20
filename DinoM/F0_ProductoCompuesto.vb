@@ -181,20 +181,33 @@ Public Class F0_ProductoCompuesto
 
     Private Sub Dgv_Detalle_CellEdited(sender As Object, e As ColumnActionEventArgs) Handles Dgv_Detalle.CellEdited
         Try
+#Region "Declaraciones"
             Dim cantidad, porcentaje, valor, precio, total, valor1, valor2 As Double
+            Dim idProducto, idPresentacion As Integer
+            Dim presenctacion, unidad As String
+            idProducto = Dgv_Detalle.CurrentRow.Cells("idProducto").Value
             porcentaje = Dgv_Detalle.CurrentRow.Cells("pdPorc").Value
             precio = Dgv_Detalle.CurrentRow.Cells("pdprec").Value
             cantidad = Dgv_Detalle.CurrentRow.Cells("pdcant").Value
             valor1 = Dgv_Detalle.CurrentRow.Cells("pdValor1").Value
             valor2 = Dgv_Detalle.CurrentRow.Cells("pdValor2").Value
-            'SI UNIDAD DE VENTA ES "UNIDAD" 
-            If Dgv_Detalle.CurrentRow.Cells("IdUnidad").Value = 3 Then
+            unidad = Dgv_Detalle.CurrentRow.Cells("UnidadMin").Value
+            presenctacion = ""
+#End Region
+
+            Dim tProductoUnidad = L_fnProductoCompuesto_TraerUnidadPresentacion(idProducto)
+            If tProductoUnidad.Rows.Count > 0 Then
+                idPresentacion = tProductoUnidad.Rows(0).Item("IdPresentacion")
+                presenctacion = tProductoUnidad.Rows(0).Item("Presentacion")
+            End If
+            If presenctacion = "BASE" Then
                 If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
                     valor = Convert.ToInt32(cantidad)
                     total = valor * precio
                     Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
+                    Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
                     Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
-                    Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = valor.ToString() + "gr."
+                    Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = valor.ToString() + unidad + "."
                     MP_PonerTotal()
                 Else
                     If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
@@ -204,13 +217,15 @@ Public Class F0_ProductoCompuesto
                     End If
                 End If
             Else
-                If Dgv_Detalle.CurrentRow.Cells("Jarabe").Value = False Then
+                'SI UNIDAD DE VENTA ES "UNIDAD" 
+                If Dgv_Detalle.CurrentRow.Cells("IdUnidad").Value = 3 Then
                     If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
-                        valor = (cantidad / valor1) * porcentaje
+                        valor = Convert.ToInt32(cantidad)
                         total = valor * precio
                         Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
+                        Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
                         Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
-                        Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
+                        Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = valor.ToString() + unidad + "."
                         MP_PonerTotal()
                     Else
                         If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
@@ -220,26 +235,41 @@ Public Class F0_ProductoCompuesto
                         End If
                     End If
                 Else
-                    ' If (e.Column.Index = Dgv_Detalle.RootTable.Columns("Jarabe").Index And Dgv_Detalle.CurrentRow.Cells("Jarabe").Value) Then
-                    If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
-                        valor = (cantidad * 100) / porcentaje
-                        valor = valor / valor2
-                        total = valor * precio
-                        Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
-                        Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
-                        Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
-                        MP_PonerTotal()
+                    If Dgv_Detalle.CurrentRow.Cells("Jarabe").Value = False Then
+                        If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
+                            valor = (cantidad / valor1) * porcentaje
+                            total = valor * precio
+                            Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
+                            Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
+                            Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
+                            MP_PonerTotal()
+                        Else
+                            If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
+                                Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
+                            ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
+                                Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
+                            End If
+                        End If
                     Else
-                        If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
-                            Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
-                        ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
-                            Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
+                        ' If (e.Column.Index = Dgv_Detalle.RootTable.Columns("Jarabe").Index And Dgv_Detalle.CurrentRow.Cells("Jarabe").Value) Then
+                        If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
+                            valor = (cantidad * 100) / porcentaje
+                            valor = valor / valor2
+                            total = valor * precio
+                            Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
+                            Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
+                            Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
+                            MP_PonerTotal()
+                        Else
+                            If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
+                                Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
+                            ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
+                                Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
+                            End If
                         End If
                     End If
                 End If
             End If
-
-
         Catch ex As Exception
             Throw New Exception(ex.Message)
         End Try
@@ -330,7 +360,9 @@ Public Class F0_ProductoCompuesto
         Dgv_Busqueda.AlternatingColors = True
         With Dgv_Busqueda.RootTable.Columns(0)
             .Key = "id"
-            .Visible = False
+            .Caption = "Codigo"
+            .Width = 80
+            .Visible = True
         End With
         With Dgv_Busqueda.RootTable.Columns(1)
             .Key = "pccod"
@@ -949,25 +981,25 @@ Public Class F0_ProductoCompuesto
                     .Width = 120
                     .Caption = "Grupo 1"
                     .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                    .Visible = True
+                    .Visible = False
                 End With
                 With Dgv_Productos.RootTable.Columns("grupo2")
                     .Width = 120
                     .Caption = "Grupo 2"
                     .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                    .Visible = True
+                    .Visible = False
                 End With
                 With Dgv_Productos.RootTable.Columns("grupo3")
                     .Width = 120
                     .Caption = "Grupo 3"
-                    .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                    .Visible = False
+                    .CellStyle.TextAlignment = TextAlignment.Near
+                    .Visible = True
                 End With
                 With Dgv_Productos.RootTable.Columns("grupo4")
                     .Width = 120
                     .Caption = "Grupo 4"
                     .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                    .Visible = False
+                    .Visible = True
                 End With
             End If
 

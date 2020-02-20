@@ -718,7 +718,7 @@ Public Class F0_Ventas
         With grProductos.RootTable.Columns(2)
             .Key = "pcfech"
             .Caption = "Fecha"
-            .Width = 150
+            .Width = 100
             .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
             .CellStyle.FontSize = gi_fuenteTamano
@@ -729,7 +729,7 @@ Public Class F0_Ventas
         With grProductos.RootTable.Columns(3)
             .Key = "pcdesc"
             .Caption = "Descripción"
-            .Width = 250
+            .Width = 400
             .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
             .CellStyle.FontSize = gi_fuenteTamano
             .AllowSort = False
@@ -739,7 +739,7 @@ Public Class F0_Ventas
         With grProductos.RootTable.Columns(4)
             .Key = "pcobser"
             .Caption = "Observación"
-            .Width = 250
+            .Width = 150
             .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
             .CellStyle.FontSize = gi_fuenteTamano
             .AllowSort = False
@@ -1486,37 +1486,39 @@ Public Class F0_Ventas
     End Function
 
     Public Sub _GuardarNuevo()
-        Dim numi As String = ""
-        Dim res As Boolean = L_fnGrabarVenta(numi, "", tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), _CodCliente, IIf(swMoneda.Value = True, 1, 0), tbObservacion.Text, tbMdesc.Value, tbIce.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), IIf(swEmision.Value = True, 1, 0))
+        Try
+            Dim numi As String = ""
+            Dim res As Boolean = L_fnGrabarVenta(numi, "", tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), _CodCliente, IIf(swMoneda.Value = True, 1, 0), tbObservacion.Text, tbMdesc.Value, tbIce.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), IIf(swEmision.Value = True, 1, 0))
 
-        If res Then
-            ' res = P_fnGrabarFacturarTFV001(numi)
-            If (gb_FacturaEmite) Then
-                P_fnGenerarFactura(numi)
+            If res Then
+                ' res = P_fnGrabarFacturarTFV001(numi)
+                If (gb_FacturaEmite) Then
+                    P_fnGenerarFactura(numi)
+                End If
+                Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
+                ToastNotification.Show(Me, "Código de Venta ".ToUpper + tbCodigo.Text + " Grabado con Exito.".ToUpper,
+                                          img, 2000,
+                                          eToastGlowColor.Green,
+                                          eToastPosition.TopCenter
+                                          )
+                _prImiprimirNotaVenta(numi)
+                MP_VerificarFormulas_Eliminadas()
+                _prCargarVenta()
+                _Limpiar()
+                Table_Producto = Nothing
+                _FormulaGrabada = True
+            Else
+                Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                ToastNotification.Show(Me, "La Venta no pudo ser insertado".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                _FormulaGrabada = False
             End If
-            Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
-            ToastNotification.Show(Me, "Código de Venta ".ToUpper + tbCodigo.Text + " Grabado con Exito.".ToUpper,
-                                      img, 2000,
-                                      eToastGlowColor.Green,
-                                      eToastPosition.TopCenter
-                                      )
-            _prImiprimirNotaVenta(numi)
-            MP_VerificarFormulas_Eliminadas()
-            _prCargarVenta()
-            _Limpiar()
-            Table_Producto = Nothing
-            _FormulaGrabada = True
-        Else
-            Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
-            ToastNotification.Show(Me, "La Venta no pudo ser insertado".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            _FormulaGrabada = False
-        End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
 
     End Sub
     Public Sub _prImiprimirNotaVenta(numi As String)
         Dim ef = New Efecto
-
-
         ef.tipo = 2
         ef.Context = "MENSAJE PRINCIPAL".ToUpper
         ef.Header = "¿desea imprimir la nota de venta?".ToUpper
@@ -1911,7 +1913,7 @@ Public Class F0_Ventas
 
     Private Function P_fnValidarFacturaVigente() As Boolean
         Dim est As String = L_fnObtenerDatoTabla("TFV001", "fvaest", "fvanumi=" + tbCodigo.Text.Trim)
-        Return (est.Equals("True") Or est = String.Empty)
+        Return (est.Equals("True"))
     End Function
 
     Private Sub P_prCargarVariablesIndispensables()
@@ -3338,6 +3340,10 @@ salirIf:
 
             Next
         End If
+    End Sub
+
+    Private Sub TbNombre1_TextChanged(sender As Object, e As EventArgs) Handles TbNombre1.TextChanged
+
     End Sub
 #End Region
 End Class

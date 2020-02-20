@@ -1350,12 +1350,13 @@ Partial Class F0_Ventas
         '
         Me.TbNombre2.Border.Class = "TextBoxBorder"
         Me.TbNombre2.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.TbNombre2.Location = New System.Drawing.Point(105, 61)
+        Me.TbNombre2.Location = New System.Drawing.Point(9, 64)
         Me.TbNombre2.MaxLength = 30
         Me.TbNombre2.Name = "TbNombre2"
         Me.TbNombre2.PreventEnterBeep = True
-        Me.TbNombre2.Size = New System.Drawing.Size(270, 22)
+        Me.TbNombre2.Size = New System.Drawing.Size(50, 22)
         Me.TbNombre2.TabIndex = 2
+        Me.TbNombre2.Visible = False
         '
         'LabelX12
         '
@@ -1380,10 +1381,11 @@ Partial Class F0_Ventas
         Me.TbNombre1.Border.Class = "TextBoxBorder"
         Me.TbNombre1.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.TbNombre1.Location = New System.Drawing.Point(105, 34)
-        Me.TbNombre1.MaxLength = 20
+        Me.TbNombre1.MaxLength = 100
+        Me.TbNombre1.Multiline = True
         Me.TbNombre1.Name = "TbNombre1"
         Me.TbNombre1.PreventEnterBeep = True
-        Me.TbNombre1.Size = New System.Drawing.Size(270, 22)
+        Me.TbNombre1.Size = New System.Drawing.Size(270, 60)
         Me.TbNombre1.TabIndex = 1
         '
         'LabelX6

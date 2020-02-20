@@ -5,6 +5,8 @@ Imports System.IO
 Imports DevComponents.DotNetBar.SuperGrid
 Imports DevComponents.DotNetBar.Controls
 Imports UTILITIES
+Imports System.Drawing.Printing
+
 Public Class F0_Formula
 #Region "Variables"
     Public _nameButton As String
@@ -18,7 +20,39 @@ Public Class F0_Formula
         MP_Iniciar()
     End Sub
     Private Sub Btn_Imprimir_Click(sender As Object, e As EventArgs) Handles Btn_Imprimir.Click
+        Try
+            Dim ef = New Efecto
+            ef.tipo = 2
+            ef.Context = "MENSAJE PRINCIPAL".ToUpper
+            ef.Header = "¿desea imprimir la etiqueta?".ToUpper
+            ef.ShowDialog()
+            Dim bandera As Boolean = False
+            bandera = ef.band
+            If (bandera = True) Then
+                If Not IsNothing(P_Global.Visualizador) Then
+                    P_Global.Visualizador.Close()
+                End If
+                P_Global.Visualizador = New Visualizador
 
+                Dim idVenta = Dgv_Busqueda.GetValue("IdVenta")
+                    Dim tEtiqueta = L_fnProductoCompuesto_Etiqueta(idVenta)
+                Dim objrep As New R_EtiquetaFormula
+                objrep.SetDataSource(tEtiqueta)
+                Dim pd As New PrintDocument()
+                pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
+                    If (Not pd.PrinterSettings.IsValid) Then
+                        ToastNotification.Show(Me, "La Impresora ".ToUpper + "EPSON LX-350 ESC/P" + "No Existe".ToUpper,
+                                       My.Resources.WARNING, 5 * 1000,
+                                       eToastGlowColor.Blue, eToastPosition.BottomRight)
+                    Else
+                        objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString '"EPSON TM-T20II Receipt5 (1)"
+                        objrep.PrintToPrinter(1, False, 1, 1)
+                    End If
+
+            End If
+        Catch ex As Exception
+            MP_MostrarMensajeError(ex.Message)
+        End Try
     End Sub
 
     Private Sub btn_Buscar_Click(sender As Object, e As EventArgs) Handles btn_Buscar.Click
