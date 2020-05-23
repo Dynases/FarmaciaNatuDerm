@@ -1939,104 +1939,82 @@ Public Class F0_Ventas
 
     End Sub
     Private Sub P_GenerarReporte(numi As String)
-        Dim dt As DataTable = L_fnVentaNotaDeVenta(numi)
-        If (gb_DetalleProducto) Then
-            ponerDescripcionProducto(dt)
-        End If
-        Dim total As Decimal = dt.Compute("SUM(Total)", "") - dt.Rows(0).Item("Descuento")
-        Dim totald As Double = (total / 6.96)
-        Dim fechaven As String = dt.Rows(0).Item("fechaventa")
-        If Not IsNothing(P_Global.Visualizador) Then
-            P_Global.Visualizador.Close()
-        End If
-        Dim ParteEntera As Long
-        Dim ParteDecimal As Decimal
-        ParteEntera = Int(total)
-        ParteDecimal = Math.Round(total - ParteEntera, 2)
-        Dim li As String = Facturacion.ConvertirLiteral.A_fnConvertirLiteral(CDbl(ParteEntera)) + " con " +
-        IIf(ParteDecimal.ToString.Equals("0"), "00", ParteDecimal.ToString) + "/100 Bolivianos"
-
-        ParteEntera = Int(totald)
-        ParteDecimal = Math.Round(totald - ParteEntera, 2)
-        Dim lid As String = Facturacion.ConvertirLiteral.A_fnConvertirLiteral(CDbl(ParteEntera)) + " con " +
-        IIf(ParteDecimal.ToString.Equals("0"), "00", ParteDecimal.ToString) + "/100 Dolares"
-
-        Dim dt2 As DataTable = L_fnNameReporte()
-        Dim ParEmp1 As String = ""
-        Dim ParEmp2 As String = ""
-        Dim ParEmp3 As String = ""
-        Dim ParEmp4 As String = ""
-        If (dt2.Rows.Count > 0) Then
-            ParEmp1 = dt2.Rows(0).Item("Empresa1").ToString
-            ParEmp2 = dt2.Rows(0).Item("Empresa2").ToString
-            ParEmp3 = dt2.Rows(0).Item("Empresa3").ToString
-            ParEmp4 = dt2.Rows(0).Item("Empresa4").ToString
-        End If
-
-        P_Global.Visualizador = New Visualizador
-        Dim _FechaAct As String
-        Dim _FechaPar As String
-        Dim _Fecha() As String
-        Dim _Meses() As String = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"}
-        _FechaAct = fechaven
-        _Fecha = Split(_FechaAct, "-")
-        _FechaPar = "Cochabamba, " + _Fecha(0).Trim + " De " + _Meses(_Fecha(1) - 1).Trim + " Del " + _Fecha(2).Trim
-        If (G_Lote = False) Then
-            Dim objrep As New R_NotaDeVenta
-            '' GenerarNro(_dt)
-            ''objrep.SetDataSource(Dt1Kardex)
-            objrep.SetDataSource(dt)
-            objrep.SetParameterValue("TotalBs", li)
-            objrep.SetParameterValue("TotalDo", lid)
-            objrep.SetParameterValue("TotalDoN", totald)
-            objrep.SetParameterValue("usuario", gs_user)
-            objrep.SetParameterValue("estado", 1)
-
-            Dim pd As New PrintDocument()
-            pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
-            If (Not pd.PrinterSettings.IsValid) Then
-                ToastNotification.Show(Me, "La Impresora ".ToUpper + "EPSON LX-350 ESC/P" + "No Existe".ToUpper,
-                                       My.Resources.WARNING, 5 * 1000,
-                                       eToastGlowColor.Blue, eToastPosition.BottomRight)
-            Else
-                objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString '"EPSON TM-T20II Receipt5 (1)"
-                objrep.PrintToPrinter(1, False, 1, 1)
+        Try
+            Dim dt As DataTable = L_fnVentaNotaDeVenta(numi)
+            If (gb_DetalleProducto) Then
+                ponerDescripcionProducto(dt)
             End If
-        Else
+
+            Dim total As Decimal = dt.Compute("SUM(Total)", "") - dt.Rows(0).Item("Descuento")
+            Dim totald As Double = (total / 6.96)
+            Dim fechaven As String = dt.Rows(0).Item("fechaventa")
+
+            If Not IsNothing(P_Global.Visualizador) Then
+                P_Global.Visualizador.Close()
+            End If
+
+            Dim ParteEntera As Long
+            Dim ParteDecimal As Decimal
+            ParteEntera = Int(total)
+            ParteDecimal = Math.Round(total - ParteEntera, 2)
+            Dim li As String = Facturacion.ConvertirLiteral.A_fnConvertirLiteral(CDbl(ParteEntera)) + " con " +
+            IIf(ParteDecimal.ToString.Equals("0"), "00", ParteDecimal.ToString) + "/100 Bolivianos"
+
+            ParteEntera = Int(totald)
+            ParteDecimal = Math.Round(totald - ParteEntera, 2)
+            Dim lid As String = Facturacion.ConvertirLiteral.A_fnConvertirLiteral(CDbl(ParteEntera)) + " con " +
+            IIf(ParteDecimal.ToString.Equals("0"), "00", ParteDecimal.ToString) + "/100 Dolares"
+
+            Dim dt2 As DataTable = L_fnNameReporte()
+            Dim ParEmp1 As String = ""
+            Dim ParEmp2 As String = ""
+            Dim ParEmp3 As String = ""
+            Dim ParEmp4 As String = ""
+            If (dt2.Rows.Count > 0) Then
+                ParEmp1 = dt2.Rows(0).Item("Empresa1").ToString
+                ParEmp2 = dt2.Rows(0).Item("Empresa2").ToString
+                ParEmp3 = dt2.Rows(0).Item("Empresa3").ToString
+                ParEmp4 = dt2.Rows(0).Item("Empresa4").ToString
+            End If
+
+
+            Dim _FechaAct As String
+            Dim _FechaPar As String
+            Dim _Fecha() As String
+            Dim _Meses() As String = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"}
+            _FechaAct = fechaven
+            _Fecha = Split(_FechaAct, "-")
+            _FechaPar = "Cochabamba, " + _Fecha(0).Trim + " De " + _Meses(_Fecha(1) - 1).Trim + " Del " + _Fecha(2).Trim
+
             Dim objrep As New R_NotaDeVenta
-            'Dim objrep As New R_NotaDeVentaSinLote
-            'GenerarNro(_dt)
-            'objrep.SetDataSource(Dt1Kardex)
-            'totald = Math.Round(totald, 2)
             objrep.SetDataSource(dt)
             objrep.SetParameterValue("Total", total)
             objrep.SetParameterValue("TotalBs", li)
             objrep.SetParameterValue("TotalDo", lid)
             objrep.SetParameterValue("TotalDoN", totald)
-            'objrep.SetParameterValue("P_Fecha", _FechaPar)
-            'objrep.SetParameterValue("P_Empresa", ParEmp1)
-            'objrep.SetParameterValue("P_Empresa1", ParEmp2)
-            'objrep.SetParameterValue("P_Empresa2", ParEmp3)
-            'objrep.SetParameterValue("P_Empresa3", ParEmp4)
             objrep.SetParameterValue("usuario", gs_user)
             objrep.SetParameterValue("estado", 1)
-            'P_Global.Visualizador.CrGeneral.ReportSource = objrep 'Comentar
-            'P_Global.Visualizador.Show() 'Comentar
-            '.Visualizador.BringToFront() 'Comentar
 
-
-            Dim pd As New PrintDocument()
-            pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
-            If (Not pd.PrinterSettings.IsValid) Then
-                ToastNotification.Show(Me, "La Impresora ".ToUpper + "EPSON LX-350 ESC/P" + "No Existe".ToUpper,
-                                       My.Resources.WARNING, 5 * 1000,
-                                       eToastGlowColor.Blue, eToastPosition.BottomRight)
+            Dim _DsRutaImpresora = L_ObtenerRutaImpresora("1") ' Datos de Impresion de Facturación
+            If (_DsRutaImpresora.Tables(0).Rows(0).Item("cbvp")) Then 'Vista Previa de la Ventana de Vizualización 1 = True 0 = False
+                P_Global.Visualizador = New Visualizador
+                P_Global.Visualizador.CrGeneral.ReportSource = objrep
+                P_Global.Visualizador.ShowDialog()
+                P_Global.Visualizador.BringToFront()
             Else
-                objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString '"EPSON TM-T20II Receipt5 (1)"
-                objrep.PrintToPrinter(1, False, 1, 1)
+                Dim pd As New PrintDocument()
+                pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
+                If (Not pd.PrinterSettings.IsValid) Then
+                    ToastNotification.Show(Me, "La Impresora ".ToUpper + "EPSON LX-350 ESC/P" + "No Existe".ToUpper,
+                                           My.Resources.WARNING, 5 * 1000,
+                                           eToastGlowColor.Blue, eToastPosition.BottomRight)
+                Else
+                    objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString 
+                End If
             End If
-        End If
-
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
     End Sub
 
     Private Sub ponerDescripcionProducto(ByRef dt As DataTable)
@@ -2061,11 +2039,6 @@ Public Class F0_Ventas
         ParteDecimal = total - ParteEntera
         Dim li As String = Facturacion.ConvertirLiteral.A_fnConvertirLiteral(CDbl(ParteEntera)) + " con " +
         IIf(ParteDecimal.ToString.Equals("0"), "00", ParteDecimal.ToString) + "/100 Bolivianos"
-
-
-
-
-
         Dim objrep As New R_FacturaFarmacia
         '' GenerarNro(_dt)
         ''objrep.SetDataSource(Dt1Kardex)

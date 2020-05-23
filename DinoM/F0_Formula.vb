@@ -60,6 +60,7 @@ Public Class F0_Formula
     End Sub
 
     Private Sub Dgv_Busqueda_EditingCell(sender As Object, e As EditingCellEventArgs) Handles Dgv_Busqueda.EditingCell
+
         Try
             If (e.Column.Index = Dgv_Busqueda.RootTable.Columns("Seleccionar").Index) Then
                 e.Cancel = False
