@@ -1439,6 +1439,9 @@ Public Class F0_Ventas
 
     End Sub
     Public Function _ValidarCampos() As Boolean
+        Dim fecha As String = Now.Date
+        Dim dtDosificacion As DataSet = L_Dosificacion("1", "1", fecha)
+
         If (_CodCliente <= 0) Then
             Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
             ToastNotification.Show(Me, "Por Favor Seleccione un Cliente con Ctrl+Enter".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
@@ -1480,8 +1483,14 @@ Public Class F0_Ventas
                 ToastNotification.Show(Me, "Por Favor Seleccione  un detalle de producto".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
                 Return False
             End If
-
         End If
+        If dtDosificacion.Tables(0).Rows.Count = 0 Then
+            'dtDosificacion.Tables.Cast(Of DataTable)().Any(Function(x) x.DefaultView.Count = 0)
+            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+            ToastNotification.Show(Me, "La Dosificación para las facturas ya caducó, ingrese nueva dosificación".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.BottomCenter)
+            Return False
+        End If
+
         Return True
     End Function
 
