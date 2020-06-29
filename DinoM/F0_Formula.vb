@@ -32,24 +32,32 @@ Public Class F0_Formula
                 If Not IsNothing(P_Global.Visualizador) Then
                     P_Global.Visualizador.Close()
                 End If
-                P_Global.Visualizador = New Visualizador
 
                 Dim idVenta = Dgv_Busqueda.GetValue("IdVenta")
-                    Dim tEtiqueta = L_fnProductoCompuesto_Etiqueta(idVenta)
+                Dim tEtiqueta = L_fnProductoCompuesto_Etiqueta(idVenta)
                 Dim objrep As New R_EtiquetaFormula
                 objrep.SetDataSource(tEtiqueta)
-                Dim pd As New PrintDocument()
-                pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
+                Dim _DsRutaImpresora = L_ObtenerRutaImpresora("1") ' Datos de Impresion de Facturación
+                If (_DsRutaImpresora.Tables(0).Rows(0).Item("cbvp")) Then 'Vista Previa de la Ventana de Vizualización 1 = True 0 = False
+                    P_Global.Visualizador = New Visualizador
+                    P_Global.Visualizador.CrGeneral.ReportSource = objrep
+                    P_Global.Visualizador.ShowDialog()
+                    P_Global.Visualizador.BringToFront()
+                Else
+                    Dim pd As New PrintDocument()
+                    pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
                     If (Not pd.PrinterSettings.IsValid) Then
                         ToastNotification.Show(Me, "La Impresora ".ToUpper + "EPSON LX-350 ESC/P" + "No Existe".ToUpper,
-                                       My.Resources.WARNING, 5 * 1000,
-                                       eToastGlowColor.Blue, eToastPosition.BottomRight)
+                                               My.Resources.WARNING, 5 * 1000,
+                                               eToastGlowColor.Blue, eToastPosition.BottomRight)
                     Else
-                        objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString '"EPSON TM-T20II Receipt5 (1)"
+                        objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString 
                         objrep.PrintToPrinter(1, False, 1, 1)
                     End If
+                End If
 
             End If
+
         Catch ex As Exception
             MP_MostrarMensajeError(ex.Message)
         End Try

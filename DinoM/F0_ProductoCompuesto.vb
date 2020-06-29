@@ -127,50 +127,62 @@ Public Class F0_ProductoCompuesto
         End Try
     End Sub
     Private Sub Dgv_Detalle_KeyDown_1(sender As Object, e As KeyEventArgs) Handles Dgv_Detalle.KeyDown
-        If tb_Descripcion.Text = String.Empty Then
-            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-            ToastNotification.Show(Me, "Por Favor intrudusca una descripcion".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            tb_Descripcion.Focus()
-        End If
-        If e.KeyData = Keys.Enter Then
-            Dim f, c As Integer
-            c = Dgv_Detalle.Col
-            f = Dgv_Detalle.Row
-
-            If (Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdeti").Index Or Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdPorc").Index Or Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdcant").Index) Then
-                If (Dgv_Detalle.GetValue("pdeti") <> String.Empty) Then
-                    _prAddDetalleProductosCompuesntos()
-                    _HabilitarProductos()
-                Else
-                    ToastNotification.Show(Me, "Seleccione un Producto Por Favor", My.Resources.WARNING, 3000, eToastGlowColor.Red, eToastPosition.TopCenter)
-                End If
-
+        Try
+            If tb_Descripcion.Text = String.Empty Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por Favor intrudusca una descripcion".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tb_Descripcion.Focus()
             End If
-        End If
-        If (e.KeyData = Keys.Control + Keys.Enter And Dgv_Detalle.Row >= 0 And
-            Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdeti").Index) Then
-            Dim indexfil As Integer = Dgv_Detalle.Row
-            Dim indexcol As Integer = Dgv_Detalle.Col
-            _HabilitarProductos()
-        End If
-        If (e.KeyData = Keys.Escape And Dgv_Detalle.Row >= 0) Then
-            _prEliminarFila()
-        End If
+            If e.KeyData = Keys.Enter Then
+                Dim f, c As Integer
+                c = Dgv_Detalle.Col
+                f = Dgv_Detalle.Row
+
+                If (Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdeti").Index Or Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdPorc").Index Or Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdcant").Index) Then
+                    If (Dgv_Detalle.GetValue("pdeti") <> String.Empty) Then
+                        _prAddDetalleProductosCompuesntos()
+                        _HabilitarProductos()
+                    Else
+                        ToastNotification.Show(Me, "Seleccione un Producto Por Favor", My.Resources.WARNING, 3000, eToastGlowColor.Red, eToastPosition.TopCenter)
+                    End If
+
+                End If
+            End If
+            If (e.KeyData = Keys.Control + Keys.Enter And Dgv_Detalle.Row >= 0 And
+                Dgv_Detalle.Col = Dgv_Detalle.RootTable.Columns("pdeti").Index) Then
+                Dim indexfil As Integer = Dgv_Detalle.Row
+                Dim indexcol As Integer = Dgv_Detalle.Col
+                _HabilitarProductos()
+            End If
+            If (e.KeyData = Keys.Escape And Dgv_Detalle.Row >= 0) Then
+                _prEliminarFila()
+            End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+
     End Sub
 
     Private Sub Dgv_Detalle_EditingCell(sender As Object, e As EditingCellEventArgs) Handles Dgv_Detalle.EditingCell
-        If (tb_Id.ReadOnly = False) Then
-            If (e.Column.Index = Dgv_Detalle.RootTable.Columns("pdeti").Index Or
-                e.Column.Index = Dgv_Detalle.RootTable.Columns("pdcant").Index Or
-                e.Column.Index = Dgv_Detalle.RootTable.Columns("pdPorc").Index Or
-                e.Column.Index = Dgv_Detalle.RootTable.Columns("Jarabe").Index) Then
-                e.Cancel = False
+        Try
+            If (tb_Id.ReadOnly = False) Then
+                If (e.Column.Index = Dgv_Detalle.RootTable.Columns("pdeti").Index Or
+                    e.Column.Index = Dgv_Detalle.RootTable.Columns("pdcant").Index Or
+                    e.Column.Index = Dgv_Detalle.RootTable.Columns("pdPorc").Index Or
+                    e.Column.Index = Dgv_Detalle.RootTable.Columns("pdValor1").Index Or
+                    e.Column.Index = Dgv_Detalle.RootTable.Columns("pdValor2").Index Or
+                    e.Column.Index = Dgv_Detalle.RootTable.Columns("Jarabe").Index) Then
+                    e.Cancel = False
+                Else
+                    e.Cancel = True
+                End If
             Else
                 e.Cancel = True
             End If
-        Else
-            e.Cancel = True
-        End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+
     End Sub
     Private Sub _prAddDetalleProductosCompuesntos()
         Dim Bin As New MemoryStream
@@ -910,47 +922,26 @@ Public Class F0_ProductoCompuesto
     End Sub
 
     Private Sub MP_CargarProductos()
-        Dim dtname As DataTable = L_fnNameLabel()
-        Dim dt As New DataTable
-        dt = L_fnListarProductosCompuestos(cbSucursal.Value)  ''1=Almacen
-        If dt.Rows.Count > 0 Then
-            Dgv_Productos.DataSource = dt
-            Dgv_Productos.RetrieveStructure()
-            Dgv_Productos.AlternatingColors = True        '    
-            With Dgv_Productos.RootTable.Columns("yfnumi")
-                .Width = 100
-                .Caption = "CODIGO"
-                .Visible = False
+        Try
+            Dim dtname As DataTable = L_fnNameLabel()
+            Dim dt As New DataTable
+            dt = L_fnListarProductosCompuestos(cbSucursal.Value)  ''1=Almacen
+            If dt.Rows.Count > 0 Then
+                Dgv_Productos.DataSource = dt
+                Dgv_Productos.RetrieveStructure()
+                Dgv_Productos.AlternatingColors = True        '    
+                With Dgv_Productos.RootTable.Columns("yfnumi")
+                    .Width = 100
+                    .Caption = "CÓDIGO"
+                    .Visible = True
+                    .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+                End With
 
-            End With
-            With Dgv_Productos.RootTable.Columns("yfcprod")
-                .Width = 120
-                .Caption = "CÓDIGO"
-                .Visible = True
-            End With
-            With Dgv_Productos.RootTable.Columns("yfcbarra")
-                .Width = 100
-                .Caption = "COD. BARRA"
-                .Visible = gb_CodigoBarra
-            End With
-            With Dgv_Productos.RootTable.Columns("yfcdprod1")
-                .Width = 270
-                .Visible = True
-                .Caption = "DESCRIPCIÓN"
-            End With
-            With Dgv_Productos.RootTable.Columns("yfcdprod2")
-                .Width = 150
-                .Visible = False
-                .Caption = "Descripcion Corta"
-            End With
-
-
-            With Dgv_Productos.RootTable.Columns("yfgr1")
-                .Width = 160
-                .Visible = False
-            End With
-            If (dtname.Rows.Count > 0) Then
-
+                With Dgv_Productos.RootTable.Columns("yfcdprod1")
+                    .Width = 210
+                    .Visible = True
+                    .Caption = "DESCRIPCIÓN"
+                End With
                 With Dgv_Productos.RootTable.Columns("grupo1")
                     .Width = 150
                     .Caption = dtname.Rows(0).Item("Grupo 1").ToString
@@ -976,100 +967,80 @@ Public Class F0_ProductoCompuesto
                     .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
                     .Visible = False
                 End With
-            Else
-                With Dgv_Productos.RootTable.Columns("grupo1")
-                    .Width = 120
-                    .Caption = "Grupo 1"
+                With Dgv_Productos.RootTable.Columns("yfgr1")
+                    .Width = 160
+                    .Visible = False
+                End With
+                With Dgv_Productos.RootTable.Columns("yfgr2")
+                    .Width = 50
                     .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
                     .Visible = False
                 End With
-                With Dgv_Productos.RootTable.Columns("grupo2")
-                    .Width = 120
-                    .Caption = "Grupo 2"
+
+                With Dgv_Productos.RootTable.Columns("yfgr3")
+                    .Width = 50
                     .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
                     .Visible = False
                 End With
-                With Dgv_Productos.RootTable.Columns("grupo3")
-                    .Width = 120
-                    .Caption = "Grupo 3"
-                    .CellStyle.TextAlignment = TextAlignment.Near
-                    .Visible = True
-                End With
-                With Dgv_Productos.RootTable.Columns("grupo4")
-                    .Width = 120
-                    .Caption = "Grupo 4"
+
+                With Dgv_Productos.RootTable.Columns("yfgr4")
+                    .Width = 50
                     .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
+                    .Visible = False
+                End With
+
+
+                With Dgv_Productos.RootTable.Columns("yfumin")
+                    .Width = 50
+                    .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
+                    .Visible = False
+                End With
+                With Dgv_Productos.RootTable.Columns("UnidMin")
+                    .Width = 120
+                    .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
+                    .Visible = False
+                    .Caption = "Unidad Min."
+                End With
+
+                With Dgv_Productos.RootTable.Columns("pcos")
+                    .Width = 150
+                    .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
+                    .Visible = False
+                    .Caption = "Precio Costo"
+                    .FormatString = "0.00"
+                End With
+                With Dgv_Productos.RootTable.Columns("stock")
+                    .Width = 90
+                    .FormatString = "0.00"
                     .Visible = True
+                    .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
+                    .Caption = "STOCK"
+                End With
+
+                With Dgv_Productos
+                    .DefaultFilterRowComparison = FilterConditionOperator.Contains
+                    .FilterMode = FilterMode.Automatic
+                    .FilterRowUpdateMode = FilterRowUpdateMode.WhenValueChanges
+                    .GroupByBoxVisible = False
+                    'diseño de la grilla
+                    .VisualStyle = VisualStyle.Office2007
                 End With
             End If
-
-
-            With Dgv_Productos.RootTable.Columns("yfgr2")
-                .Width = 50
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                .Visible = False
-            End With
-
-            With Dgv_Productos.RootTable.Columns("yfgr3")
-                .Width = 50
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                .Visible = False
-            End With
-
-            With Dgv_Productos.RootTable.Columns("yfgr4")
-                .Width = 50
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                .Visible = False
-            End With
-
-
-            With Dgv_Productos.RootTable.Columns("yfumin")
-                .Width = 50
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                .Visible = False
-            End With
-            With Dgv_Productos.RootTable.Columns("UnidMin")
-                .Width = 120
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                .Visible = False
-                .Caption = "Unidad Min."
-            End With
-
-            With Dgv_Productos.RootTable.Columns("pcos")
-                .Width = 150
-                .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
-                .Visible = False
-                .Caption = "Precio Costo"
-                .FormatString = "0.00"
-            End With
-            With Dgv_Productos.RootTable.Columns("stock")
-                .Width = 90
-                .FormatString = "0.00"
-                .Visible = False
-                .Caption = "STOCK"
-            End With
-
-            With Dgv_Productos
-                .DefaultFilterRowComparison = FilterConditionOperator.Contains
-                .FilterMode = FilterMode.Automatic
-                .FilterRowUpdateMode = FilterRowUpdateMode.WhenValueChanges
-                .GroupByBoxVisible = False
-                'diseño de la grilla
-                .VisualStyle = VisualStyle.Office2007
-            End With
-        End If
-        'MP_AplicarCondiccionJanusSinLote()
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+        MP_ValidarStockMinimo()
     End Sub
-    'Public Sub MP_AplicarCondiccionJanusSinLote()
-    '    Dim fc As GridEXFormatCondition
-    '    fc = New GridEXFormatCondition(Dgv_Productos.RootTable.Columns("stock"), ConditionOperator.Between, -9998 And 0)
-    '    fc.FormatStyle.ForeColor = Color.Red    '
-    '    Dgv_Productos.RootTable.FormatConditions.Add(fc)
-    '    Dim fr As GridEXFormatCondition
-    '    fr = New GridEXFormatCondition(Dgv_Productos.RootTable.Columns("stock"), ConditionOperator.Equal, -9999)
-    '    fr.FormatStyle.ForeColor = Color.BlueViolet
-    '    Dgv_Productos.RootTable.FormatConditions.Add(fr)
-    'End Sub
+    Public Sub MP_ValidarStockMinimo()
+        Dim fc As GridEXFormatCondition
+        fc = New GridEXFormatCondition(Dgv_Productos.RootTable.Columns("stock"), ConditionOperator.Between, -9998 And 0)
+        fc.FormatStyle.ForeColor = Color.Red    '
+        Dgv_Productos.RootTable.FormatConditions.Add(fc)
+        Dim fr As GridEXFormatCondition
+        fr = New GridEXFormatCondition(Dgv_Productos.RootTable.Columns("stock"), ConditionOperator.Equal, -9999)
+        fr.FormatStyle.ForeColor = Color.BlueViolet
+        Dgv_Productos.RootTable.FormatConditions.Add(fr)
+    End Sub
     Public Sub MP_ActualizarSaldo(ByRef dt As DataTable, CodProducto As Integer)
         Dim _detalle As DataTable = CType(Dgv_Detalle.DataSource, DataTable)
         For i As Integer = 0 To dt.Rows.Count - 1 Step 1

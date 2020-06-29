@@ -360,9 +360,9 @@ Partial Class F0_Formula
         '
         Me.PanelProducto.Controls.Add(Me.Dgv_Detalle)
         Me.PanelProducto.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.PanelProducto.Location = New System.Drawing.Point(0, 392)
+        Me.PanelProducto.Location = New System.Drawing.Point(0, 334)
         Me.PanelProducto.Name = "PanelProducto"
-        Me.PanelProducto.Size = New System.Drawing.Size(991, 100)
+        Me.PanelProducto.Size = New System.Drawing.Size(991, 158)
         Me.PanelProducto.TabIndex = 2
         '
         'Dgv_Detalle
@@ -370,7 +370,7 @@ Partial Class F0_Formula
         Me.Dgv_Detalle.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Dgv_Detalle.Location = New System.Drawing.Point(0, 0)
         Me.Dgv_Detalle.Name = "Dgv_Detalle"
-        Me.Dgv_Detalle.Size = New System.Drawing.Size(991, 100)
+        Me.Dgv_Detalle.Size = New System.Drawing.Size(991, 158)
         Me.Dgv_Detalle.TabIndex = 3
         '
         'PanelPedido
@@ -379,7 +379,7 @@ Partial Class F0_Formula
         Me.PanelPedido.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelPedido.Location = New System.Drawing.Point(0, 60)
         Me.PanelPedido.Name = "PanelPedido"
-        Me.PanelPedido.Size = New System.Drawing.Size(991, 332)
+        Me.PanelPedido.Size = New System.Drawing.Size(991, 274)
         Me.PanelPedido.TabIndex = 3
         '
         'Dgv_Busqueda
@@ -387,7 +387,7 @@ Partial Class F0_Formula
         Me.Dgv_Busqueda.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Dgv_Busqueda.Location = New System.Drawing.Point(0, 0)
         Me.Dgv_Busqueda.Name = "Dgv_Busqueda"
-        Me.Dgv_Busqueda.Size = New System.Drawing.Size(991, 332)
+        Me.Dgv_Busqueda.Size = New System.Drawing.Size(991, 274)
         Me.Dgv_Busqueda.TabIndex = 2
         '
         'F0_Formula
