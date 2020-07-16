@@ -5124,7 +5124,11 @@ Public Class AccesoLogica
         Sql = "'" + _cod + "'," + _estado + ",'" + _fecha + "','" + _fechaFab + "','" + _fechaVen + "','" + _descrip + "','" + _observa + "'," + _total + "," + _Actualizacion
         _Err = D_Insertar_Datos("TP002", Sql)
     End Sub
-    Public Shared Function L_ProductoCompuestoCabecera_Grabar(ByRef _id As String, _pcIdProducto As String, _pcIdDetalleFormula As String, _cod As String, _estado As String, _descrip As String, _observa As String, _fecha As String, _fechaFab As String, _fechaVen As String, _total As Double, _detalle As DataTable, _pcPrecio As String, _pcAlmacen As String) As Boolean
+    Public Shared Function L_ProductoCompuestoCabecera_Grabar(ByRef _id As String, _pcIdProducto As String, _pcIdDetalleFormula As String,
+                                                              _cod As String, _estado As String, _descrip As String, _observa As String,
+                                                              _fecha As String, _fechaFab As String, _fechaVen As String,
+                                                              _total As Double, _detalle As DataTable, _pcPrecio As String,
+                                                              _pcAlmacen As String, _pcCantidad As String) As Boolean
         Dim _Tabla As DataTable
         Dim _resultado As Boolean
         Dim _listParam As New List(Of Datos.DParametro)
@@ -5143,6 +5147,7 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@pctotal", _total))
         _listParam.Add(New Datos.DParametro("@pcPrecio", _pcPrecio))
         _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _listParam.Add(New Datos.DParametro("@pcCantidad", _pcCantidad))
         _listParam.Add(New Datos.DParametro("@pcAlmacen", _pcAlmacen))
         _listParam.Add(New Datos.DParametro("@TP0021", "", _detalle))
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
@@ -5155,7 +5160,10 @@ Public Class AccesoLogica
 
         Return _resultado
     End Function
-    Public Shared Function L_ProductoCompuestoCabecera_Modificar(ByRef _id As String, _pcIdProducto As String, _pcIdDetalleFormula As String, _cod As String, _estado As String, _descrip As String, _observa As String, _fecha As String, _fechaFab As String, _fechaVen As String, _total As Double, _detalle As DataTable, _pcPrecio As String, _pcAlmacen As String) As Boolean
+    Public Shared Function L_ProductoCompuestoCabecera_Modificar(ByRef _id As String, _pcIdProducto As String, _pcIdDetalleFormula As String,
+                                                                 _cod As String, _estado As String, _descrip As String, _observa As String,
+                                                                 _fecha As String, _fechaFab As String, _fechaVen As String, _total As Double,
+                                                                 _detalle As DataTable, _pcPrecio As String, _pcAlmacen As String, _pcCantidad As String) As Boolean
         Dim _Tabla As DataTable
         Dim _resultado As Boolean
         Dim _listParam As New List(Of Datos.DParametro)
@@ -5174,6 +5182,7 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@pcPrecio", _pcPrecio))
         _listParam.Add(New Datos.DParametro("@pctotal", _total))
         _listParam.Add(New Datos.DParametro("@pcAlmacen", _pcAlmacen))
+        _listParam.Add(New Datos.DParametro("@pcCantidad", _pcCantidad))
         _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
         _listParam.Add(New Datos.DParametro("@TP0021", "", _detalle))
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
@@ -5323,6 +5332,40 @@ Public Class AccesoLogica
         _Tabla = D_Datos_EjecutarConulta(sb.ToString())
         Return _Tabla
     End Function
+
+    Public Shared Function L_FormulaProduccion_Buscar(_idAlmacen As String, _fechaIni As String, _fechaFinal As String, _Estado As String) As DataTable
+        Dim _Tabla As DataTable
+        Dim sb As New StringBuilder
+        sb.Append("
+                    SELECT 
+	                    a.pcnumi  as Id,
+	                    a.pccod as Codigo,
+	                    a.pcdesc as ProductoTerminado,
+	                    a.pcCantidad  as Cantidad,
+	                    a.pcfech as Fecha,
+	                     CASE a.pcEstado  WHEN 1 THEN 'PENDIENTE'
+							                    WHEN 2 THEN 'COMPLETADO' END AS Estado
+                    FROM
+	                    TP002  A
+                    where
+	                    a.pcest = 2 and a.pcEstado > 0 AND  ")
+        If _idAlmacen > 0 Then
+            sb.Append(String.Format(" a.pcAlmacen = {0} AND   ", _idAlmacen))
+        End If
+        If _fechaIni <> String.Empty Then
+            sb.Append(String.Format(" a.pcfech>= '{0}'   and a.pcfech <= '{1}'  AND   ", _fechaIni, _fechaFinal))
+        End If
+        If _Estado = 1 Or _Estado = 2 Then
+            sb.Append(String.Format(" A.pcEstado = {0} AND   ", _Estado))
+        End If
+        If _Estado = 3 Then
+            sb.Append(" A.pcEstado IN (1,2) AND   ")
+        End If
+        sb.Length = sb.Length - 7
+        sb.Append(" ORDER BY  a.pcnumi DESC")
+        _Tabla = D_Datos_EjecutarConulta(sb.ToString())
+        Return _Tabla
+    End Function
     Public Shared Function L_fnProductoCompuestoTraerDetalleX_IdVenta(_idVenta As String) As DataTable
         Dim _Tabla As DataTable
 
@@ -5403,6 +5446,16 @@ Public Class AccesoLogica
         Dim _listParam As New List(Of Datos.DParametro)
         _listParam.Add(New Datos.DParametro("@tipo", 17))
         _listParam.Add(New Datos.DParametro("@idVenta", _idVenta))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_fnProductoCompuesto_Produccion_Etiqueta(_idFormula As String) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 18))
+        _listParam.Add(New Datos.DParametro("@pcnumi", _idFormula))
         _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
         Return _Tabla

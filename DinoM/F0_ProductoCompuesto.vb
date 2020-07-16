@@ -6,6 +6,7 @@ Imports DevComponents.DotNetBar.SuperGrid
 Imports DevComponents.DotNetBar.Controls
 Imports UTILITIES
 Public Class F0_ProductoCompuesto
+
 #Region "Variables"
 
     Dim OcultarFact As Integer = 0
@@ -126,6 +127,48 @@ Public Class F0_ProductoCompuesto
             MostrarMensajeError(ex.Message)
         End Try
     End Sub
+
+    Private Sub tb_Codigo_KeyDown(sender As Object, e As KeyEventArgs) Handles tb_Codigo.KeyDown
+        Try
+            If cbSucursal.SelectedIndex <> -1 Then
+                If (tb_Fecha.IsInputReadOnly = False) Then
+                    If e.KeyData = Keys.Control + Keys.Enter Then
+                        Dim dt As DataTable
+                        dt = L_fnProductoCompuesto_Formula(cbSucursal.Value)
+                        Dim listEstCeldas As New List(Of Modelo.Celda)
+                        listEstCeldas.Add(New Modelo.Celda("yfnumi,", False, "CÓDIGO UNICO", 50))
+                        listEstCeldas.Add(New Modelo.Celda("yfcprod", True, "CÓDIGO PROD.", 100))
+                        listEstCeldas.Add(New Modelo.Celda("tfcdprod1", True, "DESCRIPCIÓN", 180))
+                        listEstCeldas.Add(New Modelo.Celda("grupo1", True, "GRUPO 1", 280))
+                        listEstCeldas.Add(New Modelo.Celda("yfumin", False, "ID UNIDAD".ToUpper, 150))
+                        listEstCeldas.Add(New Modelo.Celda("UnidMin", True, "UNIDAD", 220))
+                        listEstCeldas.Add(New Modelo.Celda("Stock", True, "STOCK".ToUpper, 200))
+                        Dim ef = New Efecto
+                        ef.tipo = 3
+                        ef.dt = dt
+                        ef.SeleclCol = 2
+                        ef.listEstCeldas = listEstCeldas
+                        ef.alto = 50
+                        ef.ancho = 350
+                        ef.Context = "Seleccione una Formula".ToUpper
+                        ef.ShowDialog()
+                        Dim bandera As Boolean = False
+                        bandera = ef.band
+                        If (bandera = True) Then
+                            Dim Row As Janus.Windows.GridEX.GridEXRow = ef.Row
+                            _idProducto = Row.Cells("yfnumi").Value
+                            tb_Codigo.Text = Row.Cells("yfcprod").Value
+                            tb_Descripcion.Text = Row.Cells("yfcdprod1").Value
+                            IdUnidad = Row.Cells("yfumin").Value
+                        End If
+
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
     Private Sub Dgv_Detalle_KeyDown_1(sender As Object, e As KeyEventArgs) Handles Dgv_Detalle.KeyDown
         Try
             If tb_Descripcion.Text = String.Empty Then
@@ -183,12 +226,6 @@ Public Class F0_ProductoCompuesto
             MostrarMensajeError(ex.Message)
         End Try
 
-    End Sub
-    Private Sub _prAddDetalleProductosCompuesntos()
-        Dim Bin As New MemoryStream
-        Dim img As New Bitmap(My.Resources.delete, 28, 28)
-        img.Save(Bin, Imaging.ImageFormat.Png)
-        CType(Dgv_Detalle.DataSource, DataTable).Rows.Add(_fnSiguienteNumi() + 1, 0, 0, "", "", 0, "", 0.00, 0.000, 100, 1000, False, 0, 0, 0, 0, Bin.GetBuffer)
     End Sub
 
     Private Sub Dgv_Detalle_CellEdited(sender As Object, e As ColumnActionEventArgs) Handles Dgv_Detalle.CellEdited
@@ -337,6 +374,12 @@ Public Class F0_ProductoCompuesto
             tb_FechaVencimieto.Value = DateAdd("m", 6, Now.Date)
         End If
     End Sub
+    Private Sub _prAddDetalleProductosCompuesntos()
+        Dim Bin As New MemoryStream
+        Dim img As New Bitmap(My.Resources.delete, 28, 28)
+        img.Save(Bin, Imaging.ImageFormat.Png)
+        CType(Dgv_Detalle.DataSource, DataTable).Rows.Add(_fnSiguienteNumi() + 1, 0, 0, "", "", 0, "", 0.00, 0.000, 100, 1000, False, 0, 0, 0, 0, Bin.GetBuffer)
+    End Sub
     Private Sub MP_CargarComboLibreria(mCombo As Janus.Windows.GridEX.EditControls.MultiColumnCombo, cod1 As String, cod2 As String)
         Dim dt As New DataTable
         dt = L_prLibreriaClienteLGeneral(cod1, cod2)
@@ -440,8 +483,20 @@ Public Class F0_ProductoCompuesto
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
             .CellStyle.FontSize = gi_fuenteTamano
             .AllowSort = False
+            .Visible = False
+        End With
+        With Dgv_Busqueda.RootTable.Columns(8)
+            .Key = "pcCatidad"
+            .Caption = "Catidad"
+            .FormatString = "0.00"
+            .Width = 100
+            .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
+            .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
+            .CellStyle.FontSize = gi_fuenteTamano
+            .AllowSort = False
             .Visible = True
         End With
+
         'Habilitar Filtradores
         With Dgv_Busqueda
             .DefaultFilterRowComparison = FilterConditionOperator.Contains
@@ -662,6 +717,7 @@ Public Class F0_ProductoCompuesto
         tb_FechaFabrica.IsInputReadOnly = False
         tb_FechaVencimieto.IsInputReadOnly = False
         tb_Total.IsInputReadOnly = False
+        tb_Cantidad.IsInputReadOnly = False
         Tb_Precio4.IsInputReadOnly = False
         If (tb_Id.Text.Length > 0) Then
             cbSucursal.ReadOnly = True
@@ -684,6 +740,8 @@ Public Class F0_ProductoCompuesto
         tb_FechaVencimieto.IsInputReadOnly = True
         tb_Total.IsInputReadOnly = True
         Tb_Precio4.IsInputReadOnly = True
+        tb_Cantidad.IsInputReadOnly = True
+
         If Dgv_Detalle.RowCount > 0 Then
             Dgv_Detalle.RootTable.Columns("img").Visible = False
         End If
@@ -711,7 +769,7 @@ Public Class F0_ProductoCompuesto
             PanelTotal.Visible = True
             PanelInferior.Visible = True
         End If
-
+        tb_Cantidad.Value = 0
         tb_Total.Value = 0
         Tb_Precio4.Value = 0
         tb_Descripcion.Focus()
@@ -757,37 +815,43 @@ Public Class F0_ProductoCompuesto
     End Sub
 
     Private Sub MP_MostrarRegistros(_N As Integer)
-        Dgv_Busqueda.Row = _N
-        With Dgv_Busqueda
-            _idOriginal = .GetValue("id")
-            Dim _tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneralXId(_idOriginal, cbSucursal.Value)
-            If _tablaEncabezado.Rows.Count > 0 Then
-                If Tipo = 1 Then
-                    If _Modificar Then
-                        tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
+        Try
+            Dgv_Busqueda.Row = _N
+            With Dgv_Busqueda
+                _idOriginal = .GetValue("id")
+                Dim _tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneralXId(_idOriginal, cbSucursal.Value)
+                If _tablaEncabezado.Rows.Count > 0 Then
+                    If Tipo = 1 Then
+                        If _Modificar Then
+                            tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
+                        Else
+                            tb_Id.Clear()
+                        End If
                     Else
-                        tb_Id.Clear()
+                        tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
                     End If
-                Else
-                    tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
-                End If
 
-                tb_Codigo.Text = _tablaEncabezado.Rows(0).Item("pccod")
-                tb_Descripcion.Text = _tablaEncabezado.Rows(0).Item("pcdesc").ToString()
-                tb_Observacion.Text = _tablaEncabezado.Rows(0).Item("pcobser").ToString()
-                tb_Fecha.Value = _tablaEncabezado.Rows(0).Item("pcfech").ToString()
-                tb_FechaFabrica.Value = _tablaEncabezado.Rows(0).Item("pcffab").ToString()
-                tb_FechaVencimieto.Value = _tablaEncabezado.Rows(0).Item("pcfven").ToString()
-                tb_Total.Value = _tablaEncabezado.Rows(0).Item("pctotal").ToString()
-                Tb_Precio4.Value = _tablaEncabezado.Rows(0).Item("pcPrecio").ToString()
-                _idProducto = _tablaEncabezado.Rows(0).Item("pcIdProducto").ToString()
-                cb_Tipo.Value = _tablaEncabezado.Rows(0).Item("pcEst")
-                cbSucursal.Value = _tablaEncabezado.Rows(0).Item("pcAlmacen")
-                'CARGAR DETALLE 
-                MP_MostrarGrillaDetalle(_idOriginal)
-            End If
-        End With
-        LblPaginacion.Text = Str(_N + 1) + "/" + Dgv_Busqueda.RowCount.ToString
+                    tb_Codigo.Text = _tablaEncabezado.Rows(0).Item("pccod")
+                    tb_Descripcion.Text = _tablaEncabezado.Rows(0).Item("pcdesc").ToString()
+                    tb_Observacion.Text = _tablaEncabezado.Rows(0).Item("pcobser").ToString()
+                    tb_Fecha.Value = _tablaEncabezado.Rows(0).Item("pcfech").ToString()
+                    tb_FechaFabrica.Value = _tablaEncabezado.Rows(0).Item("pcffab").ToString()
+                    tb_FechaVencimieto.Value = _tablaEncabezado.Rows(0).Item("pcfven").ToString()
+                    tb_Total.Value = _tablaEncabezado.Rows(0).Item("pctotal").ToString()
+                    Tb_Precio4.Value = _tablaEncabezado.Rows(0).Item("pcPrecio").ToString()
+                    _idProducto = _tablaEncabezado.Rows(0).Item("pcIdProducto").ToString()
+                    cb_Tipo.Value = _tablaEncabezado.Rows(0).Item("pcEst")
+                    cbSucursal.Value = _tablaEncabezado.Rows(0).Item("pcAlmacen")
+                    tb_Cantidad.Value = _tablaEncabezado.Rows(0).Item("pcCantidad").ToString()
+                    'CARGAR DETALLE 
+                    MP_MostrarGrillaDetalle(_idOriginal)
+                End If
+            End With
+            LblPaginacion.Text = Str(_N + 1) + "/" + Dgv_Busqueda.RowCount.ToString
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+
     End Sub
     Private Sub MP_PrimerRegistro()
         If Dgv_Busqueda.RowCount > 0 Then
@@ -1222,11 +1286,31 @@ Public Class F0_ProductoCompuesto
         End Try
 
     End Sub
+
+    Private Sub cb_Tipo_ValueChanged(sender As Object, e As EventArgs) Handles cb_Tipo.ValueChanged
+        If cb_Tipo.Text = "PRODUCCION" Then
+            lblCantidad.Visible = True
+            tb_Cantidad.Visible = True
+            lblPrecio.Visible = False
+            Tb_Precio4.Visible = False
+        Else
+            lblCantidad.Visible = False
+            tb_Cantidad.Visible = False
+            lblPrecio.Visible = True
+            Tb_Precio4.Visible = True
+        End If
+    End Sub
+
     Public Sub MP_NuevoRegistro()
         Try
             Dim id As String = ""
-            Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, cb_Tipo.Value, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value, cbSucursal.Value)
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, cb_Tipo.Value,
+                                                                    tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value,
+                                                                    tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value,
+                                                                    CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value, cbSucursal.Value,
+                                                                    tb_Cantidad.Value)
             If res Then
+
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                 ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + id.ToString() + " Grabado con Exito.".ToUpper,
                                           img, 2000,
@@ -1251,7 +1335,11 @@ Public Class F0_ProductoCompuesto
     Public Sub MP_ModificarRegistro()
         Try
             Dim id As String = ""
-            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, cb_Tipo.Value, tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value, cbSucursal.Value)
+            Dim res As Boolean = L_ProductoCompuestoCabecera_Modificar(tb_Id.Text, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text,
+                                                                       cb_Tipo.Value, tb_Descripcion.Text, tb_Observacion.Text,
+                                                                       tb_Fecha.Value, tb_FechaFabrica.Value, tb_FechaVencimieto.Value,
+                                                                       tb_Total.Value, CType(Dgv_Detalle.DataSource, DataTable),
+                                                                       Tb_Precio4.Value, cbSucursal.Value, tb_Cantidad.Value)
             If res Then
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                 ToastNotification.Show(Me, "Código de producto compuesto ".ToUpper + tb_Id.Text.ToString() + " Modificado con Exito.".ToUpper,
@@ -1301,47 +1389,7 @@ Public Class F0_ProductoCompuesto
             MostrarMensajeError(ex.Message)
         End Try
     End Sub
-    Private Sub tb_Codigo_KeyDown(sender As Object, e As KeyEventArgs) Handles tb_Codigo.KeyDown
-        Try
-            If cbSucursal.SelectedIndex <> -1 Then
-                If (tb_Fecha.IsInputReadOnly = False) Then
-                    If e.KeyData = Keys.Control + Keys.Enter Then
-                        Dim dt As DataTable
-                        dt = L_fnProductoCompuesto_Formula(cbSucursal.Value)
-                        Dim listEstCeldas As New List(Of Modelo.Celda)
-                        listEstCeldas.Add(New Modelo.Celda("yfnumi,", False, "CÓDIGO UNICO", 50))
-                        listEstCeldas.Add(New Modelo.Celda("yfcprod", True, "CÓDIGO PROD.", 100))
-                        listEstCeldas.Add(New Modelo.Celda("tfcdprod1", True, "DESCRIPCIÓN", 180))
-                        listEstCeldas.Add(New Modelo.Celda("grupo1", True, "GRUPO 1", 280))
-                        listEstCeldas.Add(New Modelo.Celda("yfumin", False, "ID UNIDAD".ToUpper, 150))
-                        listEstCeldas.Add(New Modelo.Celda("UnidMin", True, "UNIDAD", 220))
-                        listEstCeldas.Add(New Modelo.Celda("Stock", True, "STOCK".ToUpper, 200))
-                        Dim ef = New Efecto
-                        ef.tipo = 3
-                        ef.dt = dt
-                        ef.SeleclCol = 2
-                        ef.listEstCeldas = listEstCeldas
-                        ef.alto = 50
-                        ef.ancho = 350
-                        ef.Context = "Seleccione una Formula".ToUpper
-                        ef.ShowDialog()
-                        Dim bandera As Boolean = False
-                        bandera = ef.band
-                        If (bandera = True) Then
-                            Dim Row As Janus.Windows.GridEX.GridEXRow = ef.Row
-                            _idProducto = Row.Cells("yfnumi").Value
-                            tb_Codigo.Text = Row.Cells("yfcprod").Value
-                            tb_Descripcion.Text = Row.Cells("yfcdprod1").Value
-                            IdUnidad = Row.Cells("yfumin").Value
-                        End If
 
-                    End If
-                End If
-            End If
-        Catch ex As Exception
-            MostrarMensajeError(ex.Message)
-        End Try
-    End Sub
 
 #End Region
 End Class

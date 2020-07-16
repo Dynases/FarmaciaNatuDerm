@@ -19,7 +19,7 @@ Public Class F0_Formula
     Private Sub F0_Formula_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         MP_Iniciar()
     End Sub
-    Private Sub Btn_Imprimir_Click(sender As Object, e As EventArgs) Handles Btn_Imprimir.Click
+    Private Sub Imprimir()
         Try
             Dim ef = New Efecto
             ef.tipo = 2
@@ -35,6 +35,9 @@ Public Class F0_Formula
 
                 Dim idVenta = Dgv_Busqueda.GetValue("IdVenta")
                 Dim tEtiqueta = L_fnProductoCompuesto_Etiqueta(idVenta)
+                If tEtiqueta.Rows.Count = 0 Then
+                    Throw New Exception("Formula no completada")
+                End If
                 Dim objrep As New R_EtiquetaFormula
                 objrep.SetDataSource(tEtiqueta)
                 Dim _DsRutaImpresora = L_ObtenerRutaImpresora("1") ' Datos de Impresion de Facturación
@@ -58,6 +61,13 @@ Public Class F0_Formula
 
             End If
 
+        Catch ex As Exception
+            MP_MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
+    Private Sub Btn_Imprimir_Click(sender As Object, e As EventArgs) Handles Btn_Imprimir.Click
+        Try
+            Imprimir()
         Catch ex As Exception
             MP_MostrarMensajeError(ex.Message)
         End Try
@@ -105,19 +115,22 @@ Public Class F0_Formula
             Dim listIdFormula = checks.Select(Function(a) Convert.ToInt32(a.Cells("IdFormula").Value)).ToList()
             If listIdFormula.Count = 1 Then
                 For Each idFormula As Integer In listIdFormula
+                    listResult = L_FnProductoCompuesto_ModificarEstado(idFormula, ENEstadoProductoCompuestoVenta.COMPLETADO)
                     'Verificar existencia de stock de los productos
-                    If MP_ExisteStockProducto() Then
-                        listResult = L_FnProductoCompuesto_ModificarEstado(idFormula, ENEstadoProductoCompuestoVenta.COMPLETADO)
-                    End If
-                    If (listResult = False) Then
-                        Throw New Exception("No existe Stock para algun producto.")
-                    End If
+                    'If MP_ExisteStockProducto() Then
+                    '    listResult = L_FnProductoCompuesto_ModificarEstado(idFormula, ENEstadoProductoCompuestoVenta.COMPLETADO)
+                    'End If
+                    'If (listResult = False) Then
+                    '    Throw New Exception("No existe Stock para algun producto.")
+                    'End If
                     Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                     ToastNotification.Show(Me, "Estado de la Formula ".ToUpper + idFormula.ToString() + " Modificado con Exito.".ToUpper,
                                               img, 2000,
                                               eToastGlowColor.Green,
                                               eToastPosition.TopCenter
                                               )
+                    Imprimir()
+                    MP_MostrarGrillaEncabezado()
                 Next
             Else
                 Throw New Exception("Debe seleccionar 1 registro.")

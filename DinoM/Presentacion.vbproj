@@ -211,6 +211,12 @@
     <Compile Include="F0_Formula.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="F0_FormulaProduccion.Designer.vb">
+      <DependentUpon>F0_FormulaProduccion.vb</DependentUpon>
+    </Compile>
+    <Compile Include="F0_FormulaProduccion.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="F0_KardexMovimiento.Designer.vb">
       <DependentUpon>F0_KardexMovimiento.vb</DependentUpon>
     </Compile>
@@ -469,6 +475,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>R_Clientes.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reporte\R_EtiquetaFormula_4.5x1.3.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>R_EtiquetaFormula_4.5x1.3.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reporte\R_Factura_7_5x100.vb">
@@ -791,6 +803,9 @@
     <EmbeddedResource Include="F0_Formula.resx">
       <DependentUpon>F0_Formula.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="F0_FormulaProduccion.resx">
+      <DependentUpon>F0_FormulaProduccion.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="F0_KardexMovimiento.resx">
       <DependentUpon>F0_KardexMovimiento.vb</DependentUpon>
     </EmbeddedResource>
@@ -921,6 +936,10 @@
     <EmbeddedResource Include="Reporte\R_Clientes.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>R_Clientes.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporte\R_EtiquetaFormula_4.5x1.3.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>R_EtiquetaFormula_4.5x1.3.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reporte\R_Factura_7_5x100.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

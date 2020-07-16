@@ -28,11 +28,13 @@ Partial Class F0_ProductoCompuesto
         Me.PanelContentSup = New System.Windows.Forms.Panel()
         Me.GroupPanel1 = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.tb_Cantidad = New DevComponents.Editors.DoubleInput()
+        Me.lblCantidad = New DevComponents.DotNetBar.LabelX()
         Me.LabelX9 = New DevComponents.DotNetBar.LabelX()
         Me.LabelX8 = New DevComponents.DotNetBar.LabelX()
         Me.cb_Tipo = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
         Me.Tb_Precio4 = New DevComponents.Editors.DoubleInput()
-        Me.LabelX5 = New DevComponents.DotNetBar.LabelX()
+        Me.lblPrecio = New DevComponents.DotNetBar.LabelX()
         Me.LabelX17 = New DevComponents.DotNetBar.LabelX()
         Me.cbSucursal = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
         Me.LabelX18 = New DevComponents.DotNetBar.LabelX()
@@ -82,6 +84,7 @@ Partial Class F0_ProductoCompuesto
         Me.PanelContentSup.SuspendLayout()
         Me.GroupPanel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        CType(Me.tb_Cantidad, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.cb_Tipo, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Tb_Precio4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.cbSucursal, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -280,11 +283,13 @@ Partial Class F0_ProductoCompuesto
         '
         Me.Panel2.AutoScroll = True
         Me.Panel2.BackColor = System.Drawing.Color.White
+        Me.Panel2.Controls.Add(Me.tb_Cantidad)
+        Me.Panel2.Controls.Add(Me.lblCantidad)
         Me.Panel2.Controls.Add(Me.LabelX9)
         Me.Panel2.Controls.Add(Me.LabelX8)
         Me.Panel2.Controls.Add(Me.cb_Tipo)
         Me.Panel2.Controls.Add(Me.Tb_Precio4)
-        Me.Panel2.Controls.Add(Me.LabelX5)
+        Me.Panel2.Controls.Add(Me.lblPrecio)
         Me.Panel2.Controls.Add(Me.LabelX17)
         Me.Panel2.Controls.Add(Me.cbSucursal)
         Me.Panel2.Controls.Add(Me.LabelX18)
@@ -306,6 +311,40 @@ Partial Class F0_ProductoCompuesto
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(945, 188)
         Me.Panel2.TabIndex = 234
+        '
+        'tb_Cantidad
+        '
+        '
+        '
+        '
+        Me.tb_Cantidad.BackgroundStyle.Class = "DateTimeInputBackground"
+        Me.tb_Cantidad.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.tb_Cantidad.ButtonFreeText.Shortcut = DevComponents.DotNetBar.eShortcut.F2
+        Me.tb_Cantidad.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tb_Cantidad.Increment = 1.0R
+        Me.tb_Cantidad.Location = New System.Drawing.Point(808, 107)
+        Me.tb_Cantidad.MinValue = 0R
+        Me.tb_Cantidad.Name = "tb_Cantidad"
+        Me.tb_Cantidad.Size = New System.Drawing.Size(120, 21)
+        Me.tb_Cantidad.TabIndex = 380
+        Me.tb_Cantidad.WatermarkAlignment = DevComponents.Editors.eTextAlignment.Right
+        '
+        'lblCantidad
+        '
+        Me.lblCantidad.AutoSize = True
+        Me.lblCantidad.BackColor = System.Drawing.Color.Transparent
+        '
+        '
+        '
+        Me.lblCantidad.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.lblCantidad.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCantidad.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.lblCantidad.Location = New System.Drawing.Point(737, 111)
+        Me.lblCantidad.Name = "lblCantidad"
+        Me.lblCantidad.SingleLineColor = System.Drawing.SystemColors.Control
+        Me.lblCantidad.Size = New System.Drawing.Size(63, 16)
+        Me.lblCantidad.TabIndex = 381
+        Me.lblCantidad.Text = "Cantidad:"
         '
         'LabelX9
         '
@@ -372,22 +411,22 @@ Partial Class F0_ProductoCompuesto
         Me.Tb_Precio4.TabIndex = 5
         Me.Tb_Precio4.WatermarkAlignment = DevComponents.Editors.eTextAlignment.Right
         '
-        'LabelX5
+        'lblPrecio
         '
-        Me.LabelX5.AutoSize = True
-        Me.LabelX5.BackColor = System.Drawing.Color.Transparent
+        Me.lblPrecio.AutoSize = True
+        Me.lblPrecio.BackColor = System.Drawing.Color.Transparent
         '
         '
         '
-        Me.LabelX5.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.LabelX5.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelX5.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
-        Me.LabelX5.Location = New System.Drawing.Point(416, 111)
-        Me.LabelX5.Name = "LabelX5"
-        Me.LabelX5.SingleLineColor = System.Drawing.SystemColors.Control
-        Me.LabelX5.Size = New System.Drawing.Size(47, 16)
-        Me.LabelX5.TabIndex = 376
-        Me.LabelX5.Text = "Precio:"
+        Me.lblPrecio.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.lblPrecio.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblPrecio.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.lblPrecio.Location = New System.Drawing.Point(416, 111)
+        Me.lblPrecio.Name = "lblPrecio"
+        Me.lblPrecio.SingleLineColor = System.Drawing.SystemColors.Control
+        Me.lblPrecio.Size = New System.Drawing.Size(47, 16)
+        Me.lblPrecio.TabIndex = 376
+        Me.lblPrecio.Text = "Precio:"
         '
         'LabelX17
         '
@@ -1011,7 +1050,7 @@ Partial Class F0_ProductoCompuesto
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(984, 561)
         Me.Name = "F0_ProductoCompuesto"
-        Me.Text = "PRODUCTOS COMPUESTOS"
+        Me.Text = "FORMULA"
         Me.Controls.SetChildIndex(Me.PanelPrincipal, 0)
         Me.PanelSuperior.ResumeLayout(False)
         Me.PanelInferior.ResumeLayout(False)
@@ -1035,6 +1074,7 @@ Partial Class F0_ProductoCompuesto
         Me.GroupPanel1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        CType(Me.tb_Cantidad, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.cb_Tipo, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Tb_Precio4, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.cbSucursal, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1088,11 +1128,13 @@ Partial Class F0_ProductoCompuesto
     Friend WithEvents LabelX17 As DevComponents.DotNetBar.LabelX
     Friend WithEvents cbSucursal As Janus.Windows.GridEX.EditControls.MultiColumnCombo
     Friend WithEvents Tb_Precio4 As DevComponents.Editors.DoubleInput
-    Friend WithEvents LabelX5 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents lblPrecio As DevComponents.DotNetBar.LabelX
     Friend WithEvents GPanelProductos As DevComponents.DotNetBar.Controls.GroupPanel
     Friend WithEvents Panel7 As Panel
     Friend WithEvents Dgv_Productos As Janus.Windows.GridEX.GridEX
     Friend WithEvents LabelX8 As DevComponents.DotNetBar.LabelX
     Friend WithEvents cb_Tipo As Janus.Windows.GridEX.EditControls.MultiColumnCombo
     Friend WithEvents LabelX9 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents tb_Cantidad As DevComponents.Editors.DoubleInput
+    Friend WithEvents lblCantidad As DevComponents.DotNetBar.LabelX
 End Class

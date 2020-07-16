@@ -2019,6 +2019,7 @@ Public Class F0_Ventas
                                            eToastGlowColor.Blue, eToastPosition.BottomRight)
                 Else
                     objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString 
+                    objrep.PrintToPrinter(1, False, 1, 1)
                 End If
             End If
         Catch ex As Exception
@@ -2469,6 +2470,30 @@ Public Class F0_Ventas
                 'End If
 salirIf:
             End If
+            If (e.KeyData = Keys.E) Then
+                Dim f, c As Integer
+                c = grdetalle.Col
+                f = grdetalle.Row
+                _tipo = 0
+                If (grdetalle.Col = grdetalle.RootTable.Columns("tbcmin").Index) Then
+                    If (grdetalle.GetValue("producto") <> String.Empty) Then
+                        _prAddDetalleVenta()
+                        _HabilitarProductosCompuestos()
+                    Else
+                        ToastNotification.Show(Me, "Seleccione un Producto Por Favor", My.Resources.WARNING, 3000, eToastGlowColor.Red, eToastPosition.TopCenter)
+                    End If
+
+                End If
+                If (grdetalle.Col = grdetalle.RootTable.Columns("producto").Index) Then
+                    If (grdetalle.GetValue("producto") <> String.Empty) Then
+                        _prAddDetalleVenta()
+                        _HabilitarProductosCompuestos()
+                    Else
+                        ToastNotification.Show(Me, "Seleccione un Producto Por Favor", My.Resources.WARNING, 3000, eToastGlowColor.Red, eToastPosition.TopCenter)
+                    End If
+
+                End If
+            End If
 
             If (e.KeyData = Keys.Control + Keys.Enter And grdetalle.Row >= 0 And
                 grdetalle.Col = grdetalle.RootTable.Columns("producto").Index) Then
@@ -2726,7 +2751,8 @@ salirIf:
             pcffab = _tProductoCompuesto.Rows(0).Item("pcffab")
             pcdesc = _tProductoCompuesto.Rows(0).Item("pcdesc")
             Unidad = _tProductoCompuesto.Rows(0).Item("Unidad")
-            lote = "20200101"
+            lote = "20170101"
+            pcfven = _tProductoCompuesto.Rows(0).Item("pcfven")
 
             pccosto = _tProductoCompuesto.Rows(0).Item("pctotal")
             pcPrecio = _tProductoCompuesto.Rows(0).Item("pcPrecio")
