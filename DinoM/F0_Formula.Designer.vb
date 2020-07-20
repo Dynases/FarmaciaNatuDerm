@@ -22,6 +22,7 @@ Partial Class F0_Formula
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim cb_Estado_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F0_Formula))
         Dim cb_Tipo_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
@@ -45,6 +46,7 @@ Partial Class F0_Formula
         Me.Dgv_Detalle = New Janus.Windows.GridEX.GridEX()
         Me.PanelPedido = New System.Windows.Forms.Panel()
         Me.Dgv_Busqueda = New Janus.Windows.GridEX.GridEX()
+        Me.TimerActualizar = New System.Windows.Forms.Timer(Me.components)
         Me.PanelSuperior.SuspendLayout()
         CType(Me.cb_Estado, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.cb_Tipo, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -125,6 +127,7 @@ Partial Class F0_Formula
         Me.LabelX2.Size = New System.Drawing.Size(64, 23)
         Me.LabelX2.TabIndex = 246
         Me.LabelX2.Text = "Tipo:"
+        Me.LabelX2.Visible = False
         '
         'cb_Tipo
         '
@@ -139,6 +142,7 @@ Partial Class F0_Formula
         Me.cb_Tipo.SelectedItem = Nothing
         Me.cb_Tipo.Size = New System.Drawing.Size(112, 23)
         Me.cb_Tipo.TabIndex = 245
+        Me.cb_Tipo.Visible = False
         Me.cb_Tipo.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
         'LabelX1
@@ -390,6 +394,10 @@ Partial Class F0_Formula
         Me.Dgv_Busqueda.Size = New System.Drawing.Size(991, 274)
         Me.Dgv_Busqueda.TabIndex = 2
         '
+        'TimerActualizar
+        '
+        Me.TimerActualizar.Interval = 3000
+        '
         'F0_Formula
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -434,4 +442,5 @@ Partial Class F0_Formula
     Friend WithEvents tb_FechaDe As DevComponents.Editors.DateTimeAdv.DateTimeInput
     Friend WithEvents LabelX3 As DevComponents.DotNetBar.LabelX
     Friend WithEvents cb_Estado As Janus.Windows.GridEX.EditControls.MultiColumnCombo
+    Friend WithEvents TimerActualizar As Timer
 End Class

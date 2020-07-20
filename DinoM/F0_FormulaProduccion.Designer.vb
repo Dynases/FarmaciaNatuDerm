@@ -22,6 +22,7 @@ Partial Class F0_FormulaProduccion
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim cb_Estado_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F0_FormulaProduccion))
         Dim cbSucursal_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
@@ -42,6 +43,7 @@ Partial Class F0_FormulaProduccion
         Me.Dgv_Detalle = New Janus.Windows.GridEX.GridEX()
         Me.PanelPedido = New System.Windows.Forms.Panel()
         Me.Dgv_Busqueda = New Janus.Windows.GridEX.GridEX()
+        Me.TimerActualizar = New System.Windows.Forms.Timer(Me.components)
         Me.PanelSuperior.SuspendLayout()
         CType(Me.cb_Estado, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tb_FechaHasta, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -320,6 +322,7 @@ Partial Class F0_FormulaProduccion
         Me.Btn_Imprimir.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.Btn_Imprimir.TabIndex = 5
         Me.Btn_Imprimir.Text = "Imprimir"
+        Me.Btn_Imprimir.Visible = False
         '
         'PanelProducto
         '
@@ -354,6 +357,10 @@ Partial Class F0_FormulaProduccion
         Me.Dgv_Busqueda.Name = "Dgv_Busqueda"
         Me.Dgv_Busqueda.Size = New System.Drawing.Size(1087, 232)
         Me.Dgv_Busqueda.TabIndex = 2
+        '
+        'TimerActualizar
+        '
+        Me.TimerActualizar.Interval = 3000
         '
         'F0_FormulaProduccion
         '
@@ -396,4 +403,5 @@ Partial Class F0_FormulaProduccion
     Friend WithEvents cb_Estado As Janus.Windows.GridEX.EditControls.MultiColumnCombo
     Friend WithEvents PanelPedido As Panel
     Friend WithEvents Dgv_Busqueda As Janus.Windows.GridEX.GridEX
+    Friend WithEvents TimerActualizar As Timer
 End Class

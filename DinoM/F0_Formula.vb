@@ -111,6 +111,11 @@ Public Class F0_Formula
             If Dgv_Busqueda.RowCount < 0 Then
                 Throw New Exception("No se encontraron registros")
             End If
+            If L_FnProductoCompuesto_VeridicarEstado(Dgv_Busqueda.GetValue("IdFormula"), ENEstadoProductoCompuestoVenta.COMPLETADO) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                ToastNotification.Show(Me, "Producto completado".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                Exit Sub
+            End If
             Dim checks = Me.Dgv_Busqueda.GetCheckedRows()
             Dim listIdFormula = checks.Select(Function(a) Convert.ToInt32(a.Cells("IdFormula").Value)).ToList()
             If listIdFormula.Count = 1 Then
@@ -451,7 +456,7 @@ Public Class F0_Formula
         With Dgv_Detalle.RootTable.Columns(15)
             .Key = "stock"
             .Caption = "Stock"
-            .FormatString = "0.00"
+            .FormatString = "0.0000"
             .Width = 110
             .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
@@ -499,6 +504,10 @@ Public Class F0_Formula
         frm._Modificar = True
         frm._idProcuctoCompuesto = Dgv_Busqueda.GetValue("IdFormula")
         frm.ShowDialog()
+    End Sub
+
+    Private Sub TimerActualizar_Tick(sender As Object, e As EventArgs) Handles TimerActualizar.Tick
+        MP_MostrarGrillaEncabezado()
     End Sub
 #End Region
 

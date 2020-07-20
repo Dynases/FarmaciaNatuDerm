@@ -475,6 +475,11 @@ Public Class F0_FormulaProduccion
             If Dgv_Busqueda.RowCount < 0 Then
                 Throw New Exception("No se encontraron registros")
             End If
+            If L_FnProductoCompuesto_VeridicarEstado(Dgv_Busqueda.GetValue("Id"), ENEstadoProductoCompuestoVenta.COMPLETADO) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                ToastNotification.Show(Me, "Producto completado".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                Exit Sub
+            End If
             Dim checks = Me.Dgv_Busqueda.GetCheckedRows()
             Dim listIdFormula = checks.Select(Function(a) Convert.ToInt32(a.Cells("Id").Value)).ToList()
             If listIdFormula.Count = 1 Then
@@ -504,6 +509,10 @@ Public Class F0_FormulaProduccion
         Catch ex As Exception
             MP_MostrarMensajeError(ex.Message)
         End Try
+    End Sub
+
+    Private Sub TimerActualizar_Tick(sender As Object, e As EventArgs) Handles TimerActualizar.Tick
+        MP_MostrarGrillaEncabezado()
     End Sub
 #End Region
 
