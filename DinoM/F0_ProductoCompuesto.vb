@@ -27,6 +27,8 @@ Public Class F0_ProductoCompuesto
     Dim _Pos, _idProducto, _idOriginal, IdUnidad As Integer
     Dim FilaSelectLote As DataRow = Nothing
     Public _Modificar As Boolean = False
+    Dim _detalle As DataTable
+    Dim _EsCopiar As Boolean = False
 
 #End Region
 #Region "Eventos del formulario"
@@ -249,80 +251,102 @@ Public Class F0_ProductoCompuesto
                 idPresentacion = tProductoUnidad.Rows(0).Item("IdPresentacion")
                 presenctacion = tProductoUnidad.Rows(0).Item("Presentacion")
             End If
-            If presenctacion = "BASE" Then
-                If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
-                    valor = Convert.ToInt32(cantidad)
+            If porcentaje = 0 Then
+                If (MP_EsPorcentajeOCantidad()) Then
+                    valor = cantidad
                     total = valor * precio
-                    Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
-                    Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
-                    Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
-                    Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = valor.ToString() + unidad + "."
-                    MP_PonerTotal()
+                    MP_AgregarValorFilaDetalle(valor, total, unidad)
+
                 Else
-                    If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
-                        Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
-                    ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
-                        Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
-                    End If
+                    MP_EsNumerico()
                 End If
             Else
-                'SI UNIDAD DE VENTA ES "UNIDAD" 
-                If Dgv_Detalle.CurrentRow.Cells("IdUnidad").Value = 3 Then
-                    If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
-                        valor = Convert.ToInt32(cantidad)
-                        total = valor * precio
-                        Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
-                        Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
-                        Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
-                        Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = valor.ToString() + unidad + "."
-                        MP_PonerTotal()
-                    Else
-                        If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
-                            Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
-                        ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
-                            Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
+                If Dgv_Detalle.CurrentRow.Cells("Jarabe").Value = False Then
+                    If (MP_EsPorcentajeOCantidad()) Then
+                        valor = (cantidad / valor1) * porcentaje
+                        If valor = 0 Then
+                            valor = cantidad
                         End If
+                        MP_AgregarValorFilaDetalleJarabe(porcentaje, valor, precio)
+                    Else
+                        MP_EsNumerico()
                     End If
                 Else
-                    If Dgv_Detalle.CurrentRow.Cells("Jarabe").Value = False Then
-                        If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
-                            valor = (cantidad / valor1) * porcentaje
-                            total = valor * precio
-                            Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
-                            Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
-                            Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
-                            MP_PonerTotal()
-                        Else
-                            If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
-                                Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
-                            ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
-                                Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
-                            End If
-                        End If
+                    ' If (e.Column.Index = Dgv_Detalle.RootTable.Columns("Jarabe").Index And Dgv_Detalle.CurrentRow.Cells("Jarabe").Value) Then
+                    If (MP_EsPorcentajeOCantidad()) Then
+                        valor = (cantidad * valor1) / porcentaje
+                        valor = valor / valor2
+                        MP_AgregarValorFilaDetalleJarabe(porcentaje, valor, precio)
                     Else
-                        ' If (e.Column.Index = Dgv_Detalle.RootTable.Columns("Jarabe").Index And Dgv_Detalle.CurrentRow.Cells("Jarabe").Value) Then
-                        If (IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant"))) Then
-                            valor = (cantidad * 100) / porcentaje
-                            valor = valor / valor2
-                            total = valor * precio
-                            Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
-                            Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
-                            Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
-                            MP_PonerTotal()
-                        Else
-                            If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
-                                Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
-                            ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
-                                Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
-                            End If
-                        End If
+                        MP_EsNumerico()
                     End If
                 End If
             End If
+            ''SI UNIDAD DE VENTA ES "UNIDAD" = 3
+            'If presenctacion = "BASE" Or Dgv_Detalle.CurrentRow.Cells("IdUnidad").Value = 3 Then
+            '    If (MP_EsPorcentajeOCantidad()) Then
+            '        valor = Convert.ToInt32(cantidad)
+            '        total = valor * precio
+            '        MP_AgregarValorFilaDetalle(valor, total, unidad)
+
+            '    Else
+            '        MP_EsNumerico()
+            '    End If
+            'Else
+            '    If Dgv_Detalle.CurrentRow.Cells("Jarabe").Value = False Then
+            '        If (MP_EsPorcentajeOCantidad()) Then
+            '            valor = (cantidad / valor1) * porcentaje
+            '            If valor = 0 Then
+            '                valor = cantidad
+            '            End If
+            '            MP_AgregarValorFilaDetalleJarabe(porcentaje, valor, precio)
+            '        Else
+            '            MP_EsNumerico()
+            '        End If
+            '    Else
+            '        ' If (e.Column.Index = Dgv_Detalle.RootTable.Columns("Jarabe").Index And Dgv_Detalle.CurrentRow.Cells("Jarabe").Value) Then
+            '        If (MP_EsPorcentajeOCantidad()) Then
+            '            valor = (cantidad * valor1) / porcentaje
+            '            valor = valor / valor2
+            '            MP_AgregarValorFilaDetalleJarabe(porcentaje, valor, precio)
+            '        Else
+            '            MP_EsNumerico()
+            '        End If
+            '    End If
+            'End If
+            Dgv_Detalle.UpdateData()
+            MP_PonerTotal()
         Catch ex As Exception
             Throw New Exception(ex.Message)
         End Try
     End Sub
+
+    Private Sub MP_AgregarValorFilaDetalleJarabe(porcentaje As Double, valor As Double, precio As Double)
+        Dim total As Double = valor * precio
+        Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
+        Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
+        Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = porcentaje.ToString() + "%"
+    End Sub
+
+    Private Function MP_EsPorcentajeOCantidad() As Boolean
+        Return IsNumeric(Dgv_Detalle.GetValue("pdPorc")) And IsNumeric(Dgv_Detalle.GetValue("pdcant") And IsNumeric(Dgv_Detalle.GetValue("pdvalor1")))
+    End Function
+
+    Private Sub MP_EsNumerico()
+        If Not IsNumeric(Dgv_Detalle.GetValue("pdcant")) Then
+            Dgv_Detalle.CurrentRow.Cells("pdcant").Value = 0
+        ElseIf Not IsNumeric(Dgv_Detalle.GetValue("pdPorc")) Then
+            Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
+        End If
+    End Sub
+
+    Private Sub MP_AgregarValorFilaDetalle(valor As Double, total As Double, unidad As String)
+        Dgv_Detalle.CurrentRow.Cells("pdvalor").Value = valor
+        Dgv_Detalle.CurrentRow.Cells("pdPorc").Value = 0
+        Dgv_Detalle.CurrentRow.Cells("pdtotal").Value = total
+        Dgv_Detalle.CurrentRow.Cells("pdeticant").Value = valor.ToString() + unidad + "."
+    End Sub
+
     Private Sub btnEliminar_Click(sender As Object, e As EventArgs) Handles btnEliminar.Click
         If L_FnProductoCompuesto_VeridicarEstado(tb_Id.Text, ENEstadoProductoCompuestoVenta.COMPLETADO) Then
             Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
@@ -356,7 +380,7 @@ Public Class F0_ProductoCompuesto
             MP_Habilitar()
             MP_IniciarMenu()
             _Nuevo = IIf(_Modificar, False, True)
-            cb_Tipo.Value = CType(ENEstadoProductoCompuesto.MAGISTRAL, Integer)
+            'cb_Tipo.Value = CType(ENEstadoProductoCompuesto.MAGISTRAL, Integer)
             MP_ActualizaFecha()
         Else
             Me.Text = NombreFormulario
@@ -396,6 +420,7 @@ Public Class F0_ProductoCompuesto
         End With
     End Sub
     Private Sub MP_IniciarMenu()
+        btnNuevo.Visible = False
         btnModificar.Visible = False
         btnEliminar.Visible = False
         btnNuevo.Enabled = False
@@ -953,7 +978,7 @@ Public Class F0_ProductoCompuesto
         'btnNuevo.Enabled = True
         MP_Limpiar()
         MP_Habilitar()
-        tb_Id.Focus()
+        tb_Codigo.Focus()
     End Sub
     Private Sub MP_Modificar()
         MP_Habilitar()
@@ -1301,13 +1326,61 @@ Public Class F0_ProductoCompuesto
         End If
     End Sub
 
+    Private Sub btnHabilitar_Click(sender As Object, e As EventArgs) Handles btnHabilitar.Click
+        Try
+            If Dgv_Busqueda.GetValue("Tipo") <> "PRODUCCION" Then
+                Throw New Exception("La formula debe ser de tipo Producción")
+            End If
+            _Nuevo = True
+            tb_Id.Clear()
+            MP_ActualizaFecha()
+            MP_Modificar()
+            _EsCopiar = True
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+
+    End Sub
+    Private Function MP_CambiarEstadoDetalle(_Estado As Integer) As DataTable
+        _detalle = CType(Dgv_Detalle.DataSource, DataTable)
+        For i As Integer = 0 To _detalle.Rows.Count - 1 Step 1
+            If _detalle.Rows(i).Item("Estado").ToString <> "-1" Then
+                _detalle.Rows(i).Item("Estado") = 0
+            End If
+        Next
+        Return _detalle
+    End Function
+    Private Sub btnImprimir_Click(sender As Object, e As EventArgs) Handles btnImprimir.Click
+
+    End Sub
+
+    Private Sub Dgv_Detalle_MouseClick(sender As Object, e As MouseEventArgs) Handles Dgv_Detalle.MouseClick
+        Try
+            If (tb_Codigo.ReadOnly) Then
+                Return
+            End If
+            If (Dgv_Detalle.RowCount >= 2) Then
+                If (Dgv_Detalle.CurrentColumn.Index = Dgv_Detalle.RootTable.Columns("img").Index) Then
+                    _prEliminarFila()
+                End If
+            End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
+
     Public Sub MP_NuevoRegistro()
         Try
             Dim id As String = ""
+            If _EsCopiar Then
+                MP_CambiarEstadoDetalle(0)
+            Else
+                _detalle = CType(Dgv_Detalle.DataSource, DataTable)
+            End If
             Dim res As Boolean = L_ProductoCompuestoCabecera_Grabar(id, _idProducto, _idProcuctoCompuesto, tb_Codigo.Text, cb_Tipo.Value,
                                                                     tb_Descripcion.Text, tb_Observacion.Text, tb_Fecha.Value,
                                                                     tb_FechaFabrica.Value, tb_FechaVencimieto.Value, tb_Total.Value,
-                                                                    CType(Dgv_Detalle.DataSource, DataTable), Tb_Precio4.Value, cbSucursal.Value,
+                                                                    _detalle, Tb_Precio4.Value, cbSucursal.Value,
                                                                     tb_Cantidad.Value)
             If res Then
 
@@ -1348,6 +1421,9 @@ Public Class F0_ProductoCompuesto
                                           eToastPosition.TopCenter
                                           )
                 MP_InHabilitar()
+                If Tipo = 1 Then
+                    Me.Close()
+                End If
                 MP_Filtrar(1)
             Else
                 Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)

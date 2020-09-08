@@ -120,14 +120,14 @@ Public Class F0_Formula
             Dim listIdFormula = checks.Select(Function(a) Convert.ToInt32(a.Cells("IdFormula").Value)).ToList()
             If listIdFormula.Count = 1 Then
                 For Each idFormula As Integer In listIdFormula
-                    listResult = L_FnProductoCompuesto_ModificarEstado(idFormula, ENEstadoProductoCompuestoVenta.COMPLETADO)
+                    'listResult = L_FnProductoCompuesto_ModificarEstado(idFormula, ENEstadoProductoCompuestoVenta.COMPLETADO)
                     'Verificar existencia de stock de los productos
-                    'If MP_ExisteStockProducto() Then
-                    '    listResult = L_FnProductoCompuesto_ModificarEstado(idFormula, ENEstadoProductoCompuestoVenta.COMPLETADO)
-                    'End If
-                    'If (listResult = False) Then
-                    '    Throw New Exception("No existe Stock para algun producto.")
-                    'End If
+                    If MP_ExisteStockProducto() Then
+                        listResult = L_FnProductoCompuesto_ModificarEstado(idFormula, ENEstadoProductoCompuestoVenta.COMPLETADO)
+                    End If
+                    If (listResult = False) Then
+                        Throw New Exception("No existe Stock para algun producto.")
+                    End If
                     Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                     ToastNotification.Show(Me, "Estado de la Formula ".ToUpper + idFormula.ToString() + " Modificado con Exito.".ToUpper,
                                               img, 2000,

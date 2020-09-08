@@ -65,6 +65,7 @@ Partial Class F0_ProductoCompuesto
         Me.GPanelProductos = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.Dgv_Productos = New Janus.Windows.GridEX.GridEX()
+        Me.btnHabilitar = New DevComponents.DotNetBar.ButtonX()
         Me.PanelSuperior.SuspendLayout()
         Me.PanelInferior.SuspendLayout()
         CType(Me.BubbleBarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -107,6 +108,7 @@ Partial Class F0_ProductoCompuesto
         '
         'PanelSuperior
         '
+        Me.PanelSuperior.Controls.Add(Me.btnHabilitar)
         Me.PanelSuperior.Style.Alignment = System.Drawing.StringAlignment.Center
         Me.PanelSuperior.Style.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(150, Byte), Integer))
         Me.PanelSuperior.Style.BackColor2.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(150, Byte), Integer))
@@ -120,6 +122,11 @@ Partial Class F0_ProductoCompuesto
         Me.PanelSuperior.StyleMouseOver.BackColor1.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(150, Byte), Integer))
         Me.PanelSuperior.StyleMouseOver.BackColor2.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(150, Byte), Integer))
         Me.PanelSuperior.StyleMouseOver.BackgroundImage = CType(resources.GetObject("PanelSuperior.StyleMouseOver.BackgroundImage"), System.Drawing.Image)
+        Me.PanelSuperior.Controls.SetChildIndex(Me.PanelToolBar1, 0)
+        Me.PanelSuperior.Controls.SetChildIndex(Me.PanelToolBar2, 0)
+        Me.PanelSuperior.Controls.SetChildIndex(Me.MRlAccion, 0)
+        Me.PanelSuperior.Controls.SetChildIndex(Me.PictureBox1, 0)
+        Me.PanelSuperior.Controls.SetChildIndex(Me.btnHabilitar, 0)
         '
         'PanelInferior
         '
@@ -178,6 +185,10 @@ Partial Class F0_ProductoCompuesto
         Me.PanelPrincipal.Controls.SetChildIndex(Me.PanelUsuario, 0)
         Me.PanelPrincipal.Controls.SetChildIndex(Me.PanelSuperior, 0)
         Me.PanelPrincipal.Controls.SetChildIndex(Me.Panel1, 0)
+        '
+        'btnImprimir
+        '
+        Me.btnImprimir.Visible = False
         '
         'btnUltimo
         '
@@ -1044,6 +1055,23 @@ Partial Class F0_ProductoCompuesto
         Me.Dgv_Productos.TabIndex = 0
         Me.Dgv_Productos.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
+        'btnHabilitar
+        '
+        Me.btnHabilitar.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton
+        Me.btnHabilitar.ColorTable = DevComponents.DotNetBar.eButtonColor.Orange
+        Me.btnHabilitar.Dock = System.Windows.Forms.DockStyle.Right
+        Me.btnHabilitar.Font = New System.Drawing.Font("Arial", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnHabilitar.Image = Global.DinoM.My.Resources.Resources._14
+        Me.btnHabilitar.ImageFixedSize = New System.Drawing.Size(48, 48)
+        Me.btnHabilitar.ImagePosition = DevComponents.DotNetBar.eImagePosition.Top
+        Me.btnHabilitar.Location = New System.Drawing.Point(560, 0)
+        Me.btnHabilitar.Name = "btnHabilitar"
+        Me.btnHabilitar.Size = New System.Drawing.Size(80, 72)
+        Me.btnHabilitar.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.btnHabilitar.TabIndex = 13
+        Me.btnHabilitar.Text = "HABILITAR"
+        Me.btnHabilitar.TextColor = System.Drawing.Color.White
+        '
         'F0_ProductoCompuesto
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1137,4 +1165,5 @@ Partial Class F0_ProductoCompuesto
     Friend WithEvents LabelX9 As DevComponents.DotNetBar.LabelX
     Friend WithEvents tb_Cantidad As DevComponents.Editors.DoubleInput
     Friend WithEvents lblCantidad As DevComponents.DotNetBar.LabelX
+    Protected WithEvents btnHabilitar As DevComponents.DotNetBar.ButtonX
 End Class

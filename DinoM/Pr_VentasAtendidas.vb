@@ -170,7 +170,6 @@ Public Class Pr_VentasAtendidas
                 MReportViewer.Show()
                 MReportViewer.BringToFront()
             End If
-
         Else
             ToastNotification.Show(Me, "NO HAY DATOS PARA LOS PARAMETROS SELECCIONADOS..!!!",
                                        My.Resources.INFORMATION, 2000,
@@ -178,11 +177,6 @@ Public Class Pr_VentasAtendidas
                                        eToastPosition.BottomLeft)
             MReportViewer.ReportSource = Nothing
         End If
-
-
-
-
-
     End Sub
     Private Sub btnGenerar_Click(sender As Object, e As EventArgs) Handles btnGenerar.Click
         _prCargarReporte()
