@@ -60,9 +60,8 @@ Public Class F0_FormulaProduccion
     End Sub
     Private Function MP_ExisteStockProducto() As Boolean
         Dim cantidadDetalle, stock As Decimal
-        Dim cantidadEncabezado = Convert.ToDecimal(Dgv_Busqueda.GetValue("Cantidad"))
         For Each fila As GridEXRow In Dgv_Detalle.GetRows()
-            cantidadDetalle = fila.Cells("pdValor").Value * cantidadEncabezado
+            cantidadDetalle = fila.Cells("pdValor").Value
             stock = fila.Cells("stock").Value
             If (cantidadDetalle > stock) Then
                 Return False
@@ -352,16 +351,12 @@ Public Class F0_FormulaProduccion
                                eToastGlowColor.Green,
                                eToastPosition.TopCenter)
     End Sub
-
-
 #End Region
 
 #Region "Eventos"
     Private Sub F0_Formula_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         MP_Iniciar()
     End Sub
-
-
     Private Sub btn_Modificar_Click(sender As Object, e As EventArgs) Handles btn_Modificar.Click
         Try
             If L_FnProductoCompuesto_VeridicarEstado(Dgv_Busqueda.GetValue("Id"), ENEstadoProductoCompuestoVenta.COMPLETADO) Then
