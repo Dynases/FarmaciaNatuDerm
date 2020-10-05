@@ -1044,6 +1044,19 @@ Public Class AccesoLogica
 
         Return _Tabla
     End Function
+    Public Shared Function L_fnObteniendoSaldosTI001(producto As Integer, deposito As Integer) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+
+        _listParam.Add(New Datos.DParametro("@tipo", 41))
+        _listParam.Add(New Datos.DParametro("@cbty5prod", producto))
+        _listParam.Add(New Datos.DParametro("@depositoInventario", deposito))
+        _listParam.Add(New Datos.DParametro("@ibuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TI002", _listParam)
+
+        Return _Tabla
+    End Function
     Public Shared Function L_fnListarCategorias() As DataTable
         Dim _Tabla As DataTable
 
@@ -1405,41 +1418,48 @@ Public Class AccesoLogica
                                            _tamon As Integer, _taobs As String,
                                            _tadesc As Double, _taice As Double,
                                            _tatotal As Double, detalle As DataTable, _almacen As Integer, _taprforma As Integer, _emision As Integer) As Boolean
-        Dim _Tabla As DataTable
-        Dim _resultado As Boolean
-        Dim _listParam As New List(Of Datos.DParametro)
-        '    @tanumi ,@taalm,@tafdoc ,@taven  ,@tatven,
-        '@tafvcr ,@taclpr,@tamon ,@taest  ,@taobs ,@tadesc ,@newFecha,@newHora,@tauact,@taproforma
-        _listParam.Add(New Datos.DParametro("@tipo", 1))
-        _listParam.Add(New Datos.DParametro("@tanumi", _tanumi))
-        _listParam.Add(New Datos.DParametro("@taproforma", _taprforma))
-        _listParam.Add(New Datos.DParametro("@taidCore", _taidCorelativo))
-        _listParam.Add(New Datos.DParametro("@taalm", _almacen))
-        _listParam.Add(New Datos.DParametro("@tafdoc", _tafdoc))
-        _listParam.Add(New Datos.DParametro("@taven", _taven))
-        _listParam.Add(New Datos.DParametro("@tatven", _tatven))
-        _listParam.Add(New Datos.DParametro("@tafvcr", _tafvcr))
-        _listParam.Add(New Datos.DParametro("@taclpr", _taclpr))
-        _listParam.Add(New Datos.DParametro("@tamon", _tamon))
-        _listParam.Add(New Datos.DParametro("@taest", 1))
-        _listParam.Add(New Datos.DParametro("@taobs", _taobs))
-        _listParam.Add(New Datos.DParametro("@tadesc", _tadesc))
-        _listParam.Add(New Datos.DParametro("@taice", _taice))
-        _listParam.Add(New Datos.DParametro("@tatotal", _tatotal))
-        _listParam.Add(New Datos.DParametro("@tauact", L_Usuario))
-        _listParam.Add(New Datos.DParametro("@taemision", _emision))
-        _listParam.Add(New Datos.DParametro("@TV0011", "", detalle))
-        _Tabla = D_ProcedimientoConParam("sp_Mam_TV001", _listParam)
+        Dim _resultado As Boolean = False
+        Try
+            Dim _Tabla As DataTable
+
+            Dim _listParam As New List(Of Datos.DParametro)
+            '    @tanumi ,@taalm,@tafdoc ,@taven  ,@tatven,
+            '@tafvcr ,@taclpr,@tamon ,@taest  ,@taobs ,@tadesc ,@newFecha,@newHora,@tauact,@taproforma
+            _listParam.Add(New Datos.DParametro("@tipo", 1))
+            _listParam.Add(New Datos.DParametro("@tanumi", _tanumi))
+            _listParam.Add(New Datos.DParametro("@taproforma", _taprforma))
+            _listParam.Add(New Datos.DParametro("@taidCore", _taidCorelativo))
+            _listParam.Add(New Datos.DParametro("@taalm", _almacen))
+            _listParam.Add(New Datos.DParametro("@tafdoc", _tafdoc))
+            _listParam.Add(New Datos.DParametro("@taven", _taven))
+            _listParam.Add(New Datos.DParametro("@tatven", _tatven))
+            _listParam.Add(New Datos.DParametro("@tafvcr", _tafvcr))
+            _listParam.Add(New Datos.DParametro("@taclpr", _taclpr))
+            _listParam.Add(New Datos.DParametro("@tamon", _tamon))
+            _listParam.Add(New Datos.DParametro("@taest", 1))
+            _listParam.Add(New Datos.DParametro("@taobs", _taobs))
+            _listParam.Add(New Datos.DParametro("@tadesc", _tadesc))
+            _listParam.Add(New Datos.DParametro("@taice", _taice))
+            _listParam.Add(New Datos.DParametro("@tatotal", _tatotal))
+            _listParam.Add(New Datos.DParametro("@tauact", L_Usuario))
+            _listParam.Add(New Datos.DParametro("@taemision", _emision))
+            _listParam.Add(New Datos.DParametro("@TV0011", "", detalle))
+            _Tabla = D_ProcedimientoConParam("sp_Mam_TV001", _listParam)
 
 
-        If _Tabla.Rows.Count > 0 Then
-            _tanumi = _Tabla.Rows(0).Item(0)
-            _resultado = True
-        Else
-            _resultado = False
-        End If
+            If _Tabla.Rows.Count > 0 Then
+                _tanumi = _Tabla.Rows(0).Item(0)
+                _resultado = True
+            Else
+                _resultado = False
+            End If
 
-        Return _resultado
+            Return _resultado
+        Catch ex As Exception
+            Throw New Exception(ex.Message)
+            Return _resultado
+        End Try
+
     End Function
 
     Public Shared Function L_fnModificarVenta(_tanumi As String, _tafdoc As String, _taven As Integer, _tatven As Integer, _tafvcr As String, _taclpr As Integer,
@@ -5430,6 +5450,18 @@ Public Class AccesoLogica
         _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
         Return _Tabla
     End Function
+    Public Shared Function L_fnProductoCompuestoTraerDetalleXId_StockVenta(_id As String, _almacen As String) As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 19))
+        _listParam.Add(New Datos.DParametro("@pcnumi", _id))
+        _listParam.Add(New Datos.DParametro("@almacen", _almacen))
+        _listParam.Add(New Datos.DParametro("@pcuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TP002", _listParam)
+        Return _Tabla
+    End Function
+
     Public Shared Function L_fnProductoCompuesto_TraerUnidadPresentacion(_idProducto As String) As DataTable
         Dim _Tabla As DataTable
 

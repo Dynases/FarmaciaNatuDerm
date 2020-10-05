@@ -365,7 +365,7 @@ Public Class F0_FormulaProduccion
                 Exit Sub
             End If
             Dim frm As F0_ProductoCompuesto = New F0_ProductoCompuesto()
-            frm.Tipo = 1
+            frm.Tipo = 3
             frm._Modificar = True
             frm._idProcuctoCompuesto = Dgv_Busqueda.GetValue("Id")
             frm.ShowDialog()

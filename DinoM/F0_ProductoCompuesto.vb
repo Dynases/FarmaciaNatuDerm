@@ -371,7 +371,7 @@ Public Class F0_ProductoCompuesto
     End Sub
     Private Sub MP_Iniciar()
 
-        If Tipo = 1 Then ' Inicia desde la venta
+        If Tipo = 1 Or Tipo = 3 Then ' Inicia desde la venta
             MP_ValidarLote()
             MP_CargarComboLibreriaSucursal(cbSucursal)
             MP_CargarComboLibreria(cb_Tipo, 7, 1)
@@ -380,7 +380,7 @@ Public Class F0_ProductoCompuesto
             MP_Habilitar()
             MP_IniciarMenu()
             _Nuevo = IIf(_Modificar, False, True)
-            'cb_Tipo.Value = CType(ENEstadoProductoCompuesto.MAGISTRAL, Integer)
+            cb_Tipo.Value = IIf(Tipo = 1, CType(ENEstadoProductoCompuesto.MAGISTRAL, Integer), CType(ENEstadoProductoCompuesto.PRODUCCION, Integer))
             MP_ActualizaFecha()
         Else
             Me.Text = NombreFormulario
@@ -428,8 +428,8 @@ Public Class F0_ProductoCompuesto
     End Sub
     Private Sub MP_MostrarGrillaEncabezado()
         Dim dt As New DataTable
-        If Tipo = 1 Then
-            'Cuando se incia desde venta
+        If Tipo = 1 Or Tipo = 3 Then
+            'Cuando se incia desde venta o desde Formula de produccion
             dt = L_fnProductoCompuestoTraerGeneral2(_idProcuctoCompuesto)
         Else
             dt = L_fnProductoCompuestoTraerGeneral()
@@ -538,7 +538,7 @@ Public Class F0_ProductoCompuesto
     End Sub
     Private Sub MP_MostrarGrillaDetalle(_N As Integer)
         Dim dt As New DataTable
-        If Tipo = 1 Then
+        If Tipo = 1 Or Tipo = 3 Then
             If _Modificar Then
                 'Inicia con estados en 1 para su respectiba modificacion
                 dt = L_fnProductoCompuestoTraerDetalleXId(_N)
@@ -846,7 +846,7 @@ Public Class F0_ProductoCompuesto
                 _idOriginal = .GetValue("id")
                 Dim _tablaEncabezado As DataTable = L_fnProductoCompuestoTraerGeneralXId(_idOriginal, cbSucursal.Value)
                 If _tablaEncabezado.Rows.Count > 0 Then
-                    If Tipo = 1 Then
+                    If Tipo = 1 Or Tipo = 3 Then
                         If _Modificar Then
                             tb_Id.Text = _tablaEncabezado.Rows(0).Item("id")
                         Else
@@ -1421,7 +1421,7 @@ Public Class F0_ProductoCompuesto
                                           eToastPosition.TopCenter
                                           )
                 MP_InHabilitar()
-                If Tipo = 1 Then
+                If Tipo = 1 Or Tipo = 3 Then
                     Me.Close()
                 End If
                 MP_Filtrar(1)
