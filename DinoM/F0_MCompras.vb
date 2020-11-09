@@ -914,64 +914,73 @@ Public Class F0_MCompras
 
     End Sub
     Public Function _ValidarCampos() As Boolean
-        If (_CodProveedor <= 0) Then
-            Dim img As Bitmap = New Bitmap(My.Resources.Mensaje, 50, 50)
-            ToastNotification.Show(Me, "Por Favor Seleccione un Proveedor con Ctrl+Enter".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            tbProveedor.Focus()
+        Try
+            If VerificarCierreMes(tbFechaVenta.Value.Year.ToString(), tbFechaVenta.Value.Month.ToString()) Then
+                Throw New Exception("SE CERRO EL MES DE LA FECHA ESPECÍFICADA")
+            End If
+            If (_CodProveedor <= 0) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por Favor Seleccione un Proveedor con Ctrl+Enter".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbProveedor.Focus()
+                Return False
+
+            End If
+
+            If (grdetalle.RowCount = 1) Then
+                grdetalle.Row = grdetalle.RowCount - 1
+                If (grdetalle.GetValue("cbty5prod") = 0) Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "Por Favor Seleccione  un detalle de producto".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                    Return False
+                End If
+
+            End If
+            If (cbSucursal.SelectedIndex < 0) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por Favor Seleccione una Sucursal".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbProveedor.Focus()
+                Return False
+            End If
+            If (swTipoVenta.Value = True) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por Favor Seleccione el tipo de venta a Credito".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbProveedor.Focus()
+                Return False
+            End If
+            If swEmision.Value = True Then
+                If (tbNFactura.Text = String.Empty) Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "Por favor debe llenar el ".ToUpper + lbNFactura.Text.ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                    tbNFactura.Focus()
+                    Return False
+                End If
+                If (tbNAutorizacion.Text = String.Empty) Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "Por Favor debe llenar el número de autorización".ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                    tbNAutorizacion.Focus()
+                    Return False
+                End If
+                If (tbCodControl.Text = String.Empty) Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "Por Favor debe llenar el código de control".ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                    tbCodControl.Focus()
+                    Return False
+                End If
+            Else
+                If (tbNFactura.Text = String.Empty) Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "Por favor debe llenar el ".ToUpper + lbNFactura.Text.ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                    tbNFactura.Focus()
+                    Return False
+                End If
+            End If
+
+            Return True
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
             Return False
+        End Try
 
-        End If
-
-        If (grdetalle.RowCount = 1) Then
-            grdetalle.Row = grdetalle.RowCount - 1
-            If (grdetalle.GetValue("cbty5prod") = 0) Then
-                Dim img As Bitmap = New Bitmap(My.Resources.Mensaje, 50, 50)
-                ToastNotification.Show(Me, "Por Favor Seleccione  un detalle de producto".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                Return False
-            End If
-
-        End If
-        If (cbSucursal.SelectedIndex < 0) Then
-            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-            ToastNotification.Show(Me, "Por Favor Seleccione una Sucursal".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            tbProveedor.Focus()
-            Return False
-        End If
-        If (swTipoVenta.Value = True) Then
-            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-            ToastNotification.Show(Me, "Por Favor Seleccione el tipo de venta a Credito".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            tbProveedor.Focus()
-            Return False
-        End If
-        If swEmision.Value = True Then
-            If (tbNFactura.Text = String.Empty) Then
-                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                ToastNotification.Show(Me, "Por favor debe llenar el ".ToUpper + lbNFactura.Text.ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                tbNFactura.Focus()
-                Return False
-            End If
-            If (tbNAutorizacion.Text = String.Empty) Then
-                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                ToastNotification.Show(Me, "Por Favor debe llenar el número de autorización".ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                tbNAutorizacion.Focus()
-                Return False
-            End If
-            If (tbCodControl.Text = String.Empty) Then
-                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                ToastNotification.Show(Me, "Por Favor debe llenar el código de control".ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                tbCodControl.Focus()
-                Return False
-            End If
-        Else
-            If (tbNFactura.Text = String.Empty) Then
-                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                ToastNotification.Show(Me, "Por favor debe llenar el ".ToUpper + lbNFactura.Text.ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                tbNFactura.Focus()
-                Return False
-            End If
-        End If
-
-        Return True
     End Function
 
     Public Sub _GuardarNuevo()
@@ -1585,71 +1594,96 @@ salirIf:
         End If
 
     End Sub
+    Private Sub MostrarMensajeError(mensaje As String)
+        ToastNotification.Show(Me,
+                               mensaje.ToUpper,
+                               My.Resources.WARNING,
+                               5000,
+                               eToastGlowColor.Red,
+                               eToastPosition.TopCenter)
 
+    End Sub
     Private Sub btnModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
-        Dim res As Boolean = L_fnVerificarSiSeContabilizo(tbCodigo.Text)
-        If res Then
-            Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
-            ToastNotification.Show(Me, "La Compra no puede ser Modificada porque ya fue contabilizada".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.TopCenter)
-        Else
-
-            If (grCompra.RowCount > 0) Then
-                _prhabilitar()
-                btnNuevo.Enabled = False
-                btnModificar.Enabled = False
-                btnEliminar.Enabled = False
-                btnGrabar.Enabled = True
-
-                PanelNavegacion.Enabled = False
-                _prCargarIconELiminar()
+        Try
+            If VerificarCierreMes(tbFechaVenta.Value.Year.ToString(), tbFechaVenta.Value.Month.ToString()) Then
+                Throw New Exception("SE REALIZO EL CIERRE DE MES DE LA FECHA ESPECÍFICADA")
             End If
-        End If
+            Dim res As Boolean = L_fnVerificarSiSeContabilizo(tbCodigo.Text)
+
+            If res Then
+                Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                ToastNotification.Show(Me, "La Compra no puede ser Modificada porque ya fue contabilizada".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.TopCenter)
+            Else
+
+                If (grCompra.RowCount > 0) Then
+                    _prhabilitar()
+                    btnNuevo.Enabled = False
+                    btnModificar.Enabled = False
+                    btnEliminar.Enabled = False
+                    btnGrabar.Enabled = True
+
+                    PanelNavegacion.Enabled = False
+                    _prCargarIconELiminar()
+                End If
+            End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+
     End Sub
     Private Sub btnEliminar_Click(sender As Object, e As EventArgs) Handles btnEliminar.Click
-        If (swTipoVenta.Value = False) Then
-            Dim res1 As Boolean = L_fnVerificarPagosCompras(tbCodigo.Text)
-            If res1 Then
-                Dim img As Bitmap = New Bitmap(My.Resources.WARNING, 50, 50)
-                ToastNotification.Show(Me, "No se puede eliminar la Compra con código ".ToUpper + tbCodigo.Text + ", porque tiene pagos realizados, por favor primero elimine los pagos correspondientes a esta compra".ToUpper,
+        Try
+            If VerificarCierreMes(tbFechaVenta.Value.Year.ToString(), tbFechaVenta.Value.Month.ToString()) Then
+                Throw New Exception("SE REALIZO EL CIERRE DE MES DE LA FECHA ESPECÍFICADA")
+            End If
+            If (swTipoVenta.Value = False) Then
+                Dim res1 As Boolean = L_fnVerificarPagosCompras(tbCodigo.Text)
+                If res1 Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.WARNING, 50, 50)
+                    ToastNotification.Show(Me, "No se puede eliminar la Compra con código ".ToUpper + tbCodigo.Text + ", porque tiene pagos realizados, por favor primero elimine los pagos correspondientes a esta compra".ToUpper,
                                           img, 5000,
                                           eToastGlowColor.Green,
                                           eToastPosition.TopCenter)
-                Exit Sub
+                    Exit Sub
+                End If
             End If
-        End If
 
-        Dim result As Boolean = L_fnVerificarSiSeContabilizo(tbCodigo.Text)
-        If result Then
-            Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
-            ToastNotification.Show(Me, "La Compra no puede ser Eliminada porque ya fue contabilizada".ToUpper, img, 4500, eToastGlowColor.Red, eToastPosition.TopCenter)
-        End If
+            Dim result As Boolean = L_fnVerificarSiSeContabilizo(tbCodigo.Text)
+            If result Then
+                Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                ToastNotification.Show(Me, "La Compra no puede ser Eliminada porque ya fue contabilizada".ToUpper, img, 4500, eToastGlowColor.Red, eToastPosition.TopCenter)
+            End If
 
-        Dim ef = New Efecto
-        ef.tipo = 2
-        ef.Context = "¿esta seguro de eliminar el registro?".ToUpper
-        ef.Header = "mensaje principal".ToUpper
-        ef.ShowDialog()
-        Dim bandera As Boolean = False
-        bandera = ef.band
-        If (bandera = True) Then
-            Dim mensajeError As String = ""
-            Dim res As Boolean = L_fnEliminarCompra(tbCodigo.Text, mensajeError)
-            If res Then
+            Dim ef = New Efecto
+            ef.tipo = 2
+            ef.Context = "¿esta seguro de eliminar el registro?".ToUpper
+            ef.Header = "mensaje principal".ToUpper
+            ef.ShowDialog()
+            Dim bandera As Boolean = False
+            bandera = ef.band
+            If (bandera = True) Then
+                Dim mensajeError As String = ""
+                Dim res As Boolean = L_fnEliminarCompra(tbCodigo.Text, mensajeError)
+                If res Then
 
-                Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
+                    Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
 
-                ToastNotification.Show(Me, "Código de Compra ".ToUpper + tbCodigo.Text + " eliminado con Exito.".ToUpper,
+                    ToastNotification.Show(Me, "Código de Compra ".ToUpper + tbCodigo.Text + " eliminado con Exito.".ToUpper,
                                           img, 2000,
                                           eToastGlowColor.Green,
                                           eToastPosition.TopCenter)
 
-                _prFiltrar()
+                    _prFiltrar()
 
-            Else
-                Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
-                ToastNotification.Show(Me, mensajeError, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                Else
+                    Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                    ToastNotification.Show(Me, mensajeError, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                End If
             End If
-        End If
+
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
 
     End Sub
 

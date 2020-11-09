@@ -1451,59 +1451,67 @@ Public Class F0_Ventas
 
     End Sub
     Public Function _ValidarCampos() As Boolean
-        Dim fecha As String = Now.Date
-        Dim dtDosificacion As DataSet = L_Dosificacion("1", "1", fecha)
+        Try
+            If VerificarCierreMes(tbFechaVenta.Value.Year.ToString(), tbFechaVenta.Value.Month.ToString()) Then
+                Throw New Exception("SE REALIZO EL CIERRE DE MES DE LA FECHA ESPECÍFICADA")
+            End If
+            Dim fecha As String = Now.Date
+            Dim dtDosificacion As DataSet = L_Dosificacion("1", "1", fecha)
 
-        If (_CodCliente <= 0) Then
-            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-            ToastNotification.Show(Me, "Por Favor Seleccione un Cliente con Ctrl+Enter".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            tbCliente.Focus()
-            Return False
-
-        End If
-        If (_CodEmpleado <= 0) Then
-            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-            ToastNotification.Show(Me, "Por Favor Seleccione un Vendedor con Ctrl+Enter".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            tbVendedor.Focus()
-            Return False
-        End If
-        If (cbSucursal.SelectedIndex < 0) Then
-            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-            ToastNotification.Show(Me, "Por Favor Seleccione una Sucursal".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            cbSucursal.Focus()
-            Return False
-        End If
-        'Validar datos de factura
-        If (TbNit.Text = String.Empty) Then
-            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-            ToastNotification.Show(Me, "Por Favor ponga el nit del cliente.".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            tbVendedor.Focus()
-            Return False
-        End If
-
-        If (TbNombre1.Text = String.Empty) Then
-            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-            ToastNotification.Show(Me, "Por Favor ponga la razon social del cliente.".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            tbVendedor.Focus()
-            Return False
-        End If
-
-        If (grdetalle.RowCount = 1) Then
-            grdetalle.Row = grdetalle.RowCount - 1
-            If (grdetalle.GetValue("tbty5prod") = 0) Then
+            If (_CodCliente <= 0) Then
                 Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                ToastNotification.Show(Me, "Por Favor Seleccione  un detalle de producto".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                ToastNotification.Show(Me, "Por Favor Seleccione un Cliente con Ctrl+Enter".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbCliente.Focus()
+                Return False
+
+            End If
+            If (_CodEmpleado <= 0) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por Favor Seleccione un Vendedor con Ctrl+Enter".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbVendedor.Focus()
                 Return False
             End If
-        End If
-        If dtDosificacion.Tables(0).Rows.Count = 0 Then
-            'dtDosificacion.Tables.Cast(Of DataTable)().Any(Function(x) x.DefaultView.Count = 0)
-            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-            ToastNotification.Show(Me, "La Dosificación para las facturas ya caducó, ingrese nueva dosificación".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.BottomCenter)
-            Return False
-        End If
+            If (cbSucursal.SelectedIndex < 0) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por Favor Seleccione una Sucursal".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                cbSucursal.Focus()
+                Return False
+            End If
+            'Validar datos de factura
+            If (TbNit.Text = String.Empty) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por Favor ponga el nit del cliente.".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbVendedor.Focus()
+                Return False
+            End If
 
-        Return True
+            If (TbNombre1.Text = String.Empty) Then
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "Por Favor ponga la razon social del cliente.".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                tbVendedor.Focus()
+                Return False
+            End If
+
+            If (grdetalle.RowCount = 1) Then
+                grdetalle.Row = grdetalle.RowCount - 1
+                If (grdetalle.GetValue("tbty5prod") = 0) Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "Por Favor Seleccione  un detalle de producto".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                    Return False
+                End If
+            End If
+            If dtDosificacion.Tables(0).Rows.Count = 0 Then
+                'dtDosificacion.Tables.Cast(Of DataTable)().Any(Function(x) x.DefaultView.Count = 0)
+                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                ToastNotification.Show(Me, "La Dosificación para las facturas ya caducó, ingrese nueva dosificación".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                Return False
+            End If
+
+            Return True
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+            Return False
+        End Try
     End Function
     Public Function rearmarDetalle() As DataTable
         Dim dt, dtDetalle, dtSaldos As DataTable
@@ -3237,6 +3245,9 @@ salirIf:
 
     Private Sub btnModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
         Try
+            If VerificarCierreMes(tbFechaVenta.Value.Year.ToString(), tbFechaVenta.Value.Month.ToString()) Then
+                Throw New Exception("SE REALIZO EL CIERRE DE MES DE LA FECHA ESPECÍFICADA")
+            End If
             If (grVentas.RowCount > 0) Then
                 If (gb_FacturaEmite) Then
                     If (Not P_fnValidarFacturaVigente()) Then
@@ -3270,6 +3281,9 @@ salirIf:
     End Sub
     Private Sub btnEliminar_Click(sender As Object, e As EventArgs) Handles btnEliminar.Click
         Try
+            If VerificarCierreMes(tbFechaVenta.Value.Year.ToString(), tbFechaVenta.Value.Month.ToString()) Then
+                Throw New Exception("SE REALIZO EL CIERRE DE MES DE LA FECHA ESPECÍFICADA")
+            End If
             If (gb_FacturaEmite) Then
                 If (P_fnValidarFacturaVigente()) Then
                     Dim img As Bitmap = New Bitmap(My.Resources.WARNING, 50, 50)
