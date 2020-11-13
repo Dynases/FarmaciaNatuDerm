@@ -389,6 +389,18 @@
       <DependentUpon>KardexClienteRes.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Pr_EstadoCuentasProveedores.designer.vb">
+      <DependentUpon>Pr_EstadoCuentasProveedores.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Pr_EstadoCuentasProveedores.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pr_EstadoCuentasProveedoresTodos.designer.vb">
+      <DependentUpon>Pr_EstadoCuentasProveedoresTodos.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Pr_EstadoCuentasProveedoresTodos.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Pr_SAldosPorAlmacenLinea.Designer.vb">
       <DependentUpon>Pr_SAldosPorAlmacenLinea.vb</DependentUpon>
     </Compile>
@@ -477,6 +489,18 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>R_Clientes.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reporte\R_EstadoCuentasCompra.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>R_EstadoCuentasCompra.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reporte\R_EstadoCuentasCompraTodos.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>R_EstadoCuentasCompraTodos.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reporte\R_EtiquetaFormula_4.5x1.3.vb">
@@ -893,6 +917,12 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>KardexClienteRes.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Pr_EstadoCuentasProveedores.resx">
+      <DependentUpon>Pr_EstadoCuentasProveedores.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pr_EstadoCuentasProveedoresTodos.resx">
+      <DependentUpon>Pr_EstadoCuentasProveedoresTodos.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pr_SAldosPorAlmacenLinea.resx">
       <DependentUpon>Pr_SAldosPorAlmacenLinea.vb</DependentUpon>
     </EmbeddedResource>
@@ -938,6 +968,14 @@
     <EmbeddedResource Include="Reporte\R_Clientes.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>R_Clientes.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporte\R_EstadoCuentasCompra.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>R_EstadoCuentasCompra.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporte\R_EstadoCuentasCompraTodos.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>R_EstadoCuentasCompraTodos.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reporte\R_EtiquetaFormula_4.5x1.3.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -1434,9 +1472,11 @@
     <None Include="Resources\14.png" />
     <None Include="Resources\add.png" />
     <Content Include="Resources\atras1.png" />
+    <None Include="Resources\buscar.png" />
     <Content Include="Resources\check-mark.png" />
     <None Include="Resources\cobro.png" />
     <None Include="Resources\creditopagos.png" />
+    <None Include="Resources\cuentas.png" />
     <Content Include="Resources\dinases.png" />
     <None Include="Resources\MapaClientes.png" />
     <None Include="Resources\ventasCostos.png" />

@@ -1848,6 +1848,27 @@ Public Class AccesoLogica
         Return _Tabla
     End Function
 
+    Public Shared Function L_prListarEstadoCuentasCompraTotal(idProveedor As Integer, fechai As String) As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 1))
+        _listParam.Add(New Datos.DParametro("@prov", idProveedor))
+        _listParam.Add(New Datos.DParametro("@fechai", fechai))
+        _listParam.Add(New Datos.DParametro("@cauact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_EstadoCuentas", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_prListarEstadoCuentasCompra(idProveedor As Integer, fechai As String, fechaf As String) As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 2))
+        _listParam.Add(New Datos.DParametro("@prov", idProveedor))
+        _listParam.Add(New Datos.DParametro("@fechai", fechai))
+        _listParam.Add(New Datos.DParametro("@fechaf", fechaf))
+        _listParam.Add(New Datos.DParametro("@cauact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_EstadoCuentas", _listParam)
+        Return _Tabla
+    End Function
     Public Shared Function L_DatosEmpresa(_Cia As String) As DataSet
         Dim _Tabla As DataTable
         Dim _Ds As New DataSet
@@ -4252,7 +4273,15 @@ Public Class AccesoLogica
 
         Return _Tabla
     End Function
+    Public Shared Function L_fnListarProveedoresCreditos() As DataTable
+        Dim _Tabla As DataTable
 
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 17))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_VentasCredito", _listParam)
+
+        Return _Tabla
+    End Function
     Public Shared Function L_fnReporteMorosidadTodosAlmacenVendedor() As DataTable
         Dim _Tabla As DataTable
 
@@ -4284,6 +4313,24 @@ Public Class AccesoLogica
 
         Return _Tabla
     End Function
+    Public Shared Function L_prListarEstadoCuentasProveedoresTodos() As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 7))
+        _listParam.Add(New Datos.DParametro("@cauact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_EstadoCuentas", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_prListarEstadoCuentasUnProveedor(idProveedor As String) As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 8))
+        _listParam.Add(New Datos.DParametro("@prov", idProveedor))
+        _listParam.Add(New Datos.DParametro("@cauact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_EstadoCuentas", _listParam)
+        Return _Tabla
+    End Function
+
 #End Region
 
 #Region "TP001 PROFORMA"
