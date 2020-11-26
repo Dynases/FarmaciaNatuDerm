@@ -233,7 +233,7 @@ Public Class F0_Movimiento
         End With
         With grdetalle.RootTable.Columns("yfcprod")
             .Width = 120
-            .Caption = "Codigo P."
+            .Caption = "CÓDIGO P."
             .Visible = True
         End With
 
@@ -313,6 +313,12 @@ Public Class F0_Movimiento
             .Width = 120
             .Caption = "stock".ToUpper
             .Visible = False
+        End With
+        With grdetalle.RootTable.Columns("icpcosto")
+            .Width = 120
+            .Caption = "P. COSTO".ToUpper
+            .FormatString = "0.00"
+            .Visible = True
         End With
         With grdetalle
             .GroupByBoxVisible = False
@@ -507,6 +513,12 @@ Public Class F0_Movimiento
             .FormatString = "0.00"
             .Caption = "STOCK"
         End With
+        With grproducto.RootTable.Columns("yhprecio")
+            .Width = 150
+            .Visible = True
+            .FormatString = "0.00"
+            .Caption = "P. COSTO"
+        End With
         With grproducto
             .DefaultFilterRowComparison = FilterConditionOperator.Contains
             .FilterMode = FilterMode.Automatic
@@ -627,7 +639,7 @@ Public Class F0_Movimiento
         Dim Bin As New MemoryStream
         Dim img As New Bitmap(My.Resources.delete, 28, 28)
         img.Save(Bin, Imaging.ImageFormat.Png)
-        CType(grdetalle.DataSource, DataTable).Rows.Add(_fnSiguienteNumi() + 1, 0, 0, "", "", "", "", 0, "20170101", CDate("2017/01/01"), Bin.GetBuffer, 0, 0)
+        CType(grdetalle.DataSource, DataTable).Rows.Add(_fnSiguienteNumi() + 1, 0, 0, "", "", "", "", 0, "20170101", CDate("2017/01/01"), 0, Bin.GetBuffer, 0, 0)
     End Sub
     Public Function _fnSiguienteNumi()
         Dim dt As DataTable = CType(grdetalle.DataSource, DataTable)
@@ -772,7 +784,8 @@ Public Class F0_Movimiento
                 detalleCopia.Rows.Add(0, numi, CType(grdetalle.DataSource, DataTable).Rows(i).Item("iccprod"), "", "", "", "",
                                       CType(grdetalle.DataSource, DataTable).Rows(i).Item("iccant"),
                                       CType(grdetalle.DataSource, DataTable).Rows(i).Item("iclot"),
-                                      CType(grdetalle.DataSource, DataTable).Rows(i).Item("icfvenc"), Bin.GetBuffer, estado, 0)
+                                      CType(grdetalle.DataSource, DataTable).Rows(i).Item("icfvenc"),
+                                      CType(grdetalle.DataSource, DataTable).Rows(i).Item("icpcosto"), Bin.GetBuffer, estado, 0)
                 L_prMovimientoChoferABMDetalle(numi, 10, detalleCopia)
             End If
             If (estado = 2) Then
@@ -782,7 +795,8 @@ Public Class F0_Movimiento
                 detalleCopia.Rows.Add(CType(grdetalle.DataSource, DataTable).Rows(i).Item("icid"), numi,
                                       CType(grdetalle.DataSource, DataTable).Rows(i).Item("iccprod"), "", "", "", "",
                                       CType(grdetalle.DataSource, DataTable).Rows(i).Item("iccant"), CType(grdetalle.DataSource, DataTable).Rows(i).Item("iclot"),
-                                      CType(grdetalle.DataSource, DataTable).Rows(i).Item("icfvenc"), Bin.GetBuffer, estado, 0)
+                                      CType(grdetalle.DataSource, DataTable).Rows(i).Item("icfvenc"),
+                                      CType(grdetalle.DataSource, DataTable).Rows(i).Item("icpcosto"), Bin.GetBuffer, estado, 0)
                 L_prMovimientoChoferABMDetalle(numi, 11, detalleCopia)
             End If
             If (estado = -1) Then
@@ -793,7 +807,8 @@ Public Class F0_Movimiento
                                       CType(grdetalle.DataSource, DataTable).Rows(i).Item("iccprod"), "", "", "", "",
                                       CType(grdetalle.DataSource, DataTable).Rows(i).Item("iccant"),
                                       CType(grdetalle.DataSource, DataTable).Rows(i).Item("iclot"),
-                                      CType(grdetalle.DataSource, DataTable).Rows(i).Item("icfvenc"), Bin.GetBuffer, estado, 0)
+                                      CType(grdetalle.DataSource, DataTable).Rows(i).Item("icfvenc"),
+                                      CType(grdetalle.DataSource, DataTable).Rows(i).Item("icpcosto"), Bin.GetBuffer, estado, 0)
                 L_prMovimientoChoferABMDetalle(numi, 12, detalleCopia)
             End If
         Next
@@ -931,6 +946,7 @@ Public Class F0_Movimiento
             CType(grdetalle.DataSource, DataTable).Rows(pos).Item("Presentacion") = grproducto.GetValue("Presentacion")
             CType(grdetalle.DataSource, DataTable).Rows(pos).Item("yfcprod") = grproducto.GetValue("yfcprod")
             CType(grdetalle.DataSource, DataTable).Rows(pos).Item("iccant") = 1
+            CType(grdetalle.DataSource, DataTable).Rows(pos).Item("icpcosto") = grproducto.GetValue("yhprecio")
 
             ''    _DesHabilitarProductos()
 
@@ -1146,9 +1162,12 @@ salirIf:
                         CType(grdetalle.DataSource, DataTable).Rows(pos).Item("iclot") = grproducto.GetValue("iclot")
                         CType(grdetalle.DataSource, DataTable).Rows(pos).Item("icfvenc") = grproducto.GetValue("icfven")
 
+
                         CType(grdetalle.DataSource, DataTable).Rows(pos).Item("Laboratorio") = FilaSelectLote.Item("Laboratorio")
                         CType(grdetalle.DataSource, DataTable).Rows(pos).Item("Presentacion") = FilaSelectLote.Item("Presentacion")
                         CType(grdetalle.DataSource, DataTable).Rows(pos).Item("yfcprod") = FilaSelectLote.Item("yfcprod")
+
+                        CType(grdetalle.DataSource, DataTable).Rows(pos).Item("icpcosto") = FilaSelectLote.Item("yhprecio")
 
                         FilaSelectLote = Nothing
                         _DesHabilitarProductos()
@@ -1432,6 +1451,46 @@ salirIf:
 
         End If
 
+
+    End Sub
+
+    Private Sub btnImprimir_Click(sender As Object, e As EventArgs) Handles btnImprimir.Click
+        P_GenerarReporte()
+    End Sub
+    Private Sub P_GenerarReporte()
+        Try
+            Dim dtDetalle As DataTable = L_fnDetalleMovimiento(tbCodigo.Text)
+
+            If Not IsNothing(P_Global.Visualizador) Then
+                P_Global.Visualizador.Close()
+            End If
+
+            P_Global.Visualizador = New Visualizador
+            Dim objrep As New R_Movimiento
+
+            objrep.SetDataSource(dtDetalle)
+            objrep.SetParameterValue("idMovimiento", tbCodigo.Text)
+            objrep.SetParameterValue("fecha", tbFecha.Text)
+            objrep.SetParameterValue("concepto", cbConcepto.Text)
+            objrep.SetParameterValue("depositoOrigen", cbAlmacenOrigen.Text)
+            objrep.SetParameterValue("depositoDestino", cbDepositoDestino.Text)
+            objrep.SetParameterValue("obs", tbObservacion.Text)
+            objrep.SetParameterValue("usuario", L_Usuario)
+
+            P_Global.Visualizador.CrGeneral.ReportSource = objrep
+            P_Global.Visualizador.Show()
+            P_Global.Visualizador.BringToFront()
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+    End Sub
+    Private Sub MostrarMensajeError(mensaje As String)
+        ToastNotification.Show(Me,
+                               mensaje.ToUpper,
+                               My.Resources.WARNING,
+                               5000,
+                               eToastGlowColor.Red,
+                               eToastPosition.TopCenter)
 
     End Sub
 #End Region
