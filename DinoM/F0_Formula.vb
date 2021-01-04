@@ -33,7 +33,7 @@ Public Class F0_Formula
                     P_Global.Visualizador.Close()
                 End If
 
-                Dim idVenta = Dgv_Busqueda.GetValue("IdVenta")
+                Dim idVenta = Dgv_Busqueda.GetValue("IdFormula")
                 Dim tEtiqueta = L_fnProductoCompuesto_Etiqueta(idVenta)
                 If tEtiqueta.Rows.Count = 0 Then
                     Throw New Exception("Formula no completada")
