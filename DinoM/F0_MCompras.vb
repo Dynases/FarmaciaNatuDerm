@@ -915,8 +915,12 @@ Public Class F0_MCompras
     End Sub
     Public Function _ValidarCampos() As Boolean
         Try
+
             If VerificarCierreMes(tbFechaVenta.Value.Year.ToString(), tbFechaVenta.Value.Month.ToString()) Then
                 Throw New Exception("SE CERRO EL MES DE LA FECHA ESPECÍFICADA")
+            End If
+            If VerificarIntegracion(tbFechaVenta.Value.ToString("yyyy/MM/dd")) Then
+                Throw New Exception("YA EXISTE INTEGRACIÓN DE ESTA FECHA, PRIMERO ELIMINE LA INTEGRACIÓN PARA AGREGAR UNA NUEVA COMPRA")
             End If
             If (_CodProveedor <= 0) Then
                 Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
