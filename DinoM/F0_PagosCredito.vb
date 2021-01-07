@@ -1117,14 +1117,18 @@ Public Class F0_PagosCredito
 
     End Sub
     Public Function _ValidarCampos() As Boolean
+        If VerificarIntegracionPagosVentas(tbfecha.Value.ToString("yyyy/MM/dd")) Then
+            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+            ToastNotification.Show(Me, "YA EXISTE INTEGRACIÓN DE ESTA FECHA, PRIMERO ELIMINE LA INTEGRACIÓN PARA AGREGAR UN NUEVO PAGO", img, 3500, eToastGlowColor.Red, eToastPosition.TopCenter)
+            Return False
+        End If
         If (tbcodVendedor.Text.Length <= 0) Then
-            Dim img As Bitmap = New Bitmap(My.Resources.Mensaje, 50, 50)
+            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
             ToastNotification.Show(Me, "Por Favor Seleccione un Cobrador con Ctrl+Enter".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
             tbcobrador.Focus()
             Return False
 
         End If
-
         If (grfactura.RowCount > 0) Then
             grfactura.Row = grfactura.RowCount - 1
             If (grfactura.GetValue("tcty4clie") = 0) Then

@@ -1555,6 +1555,27 @@ Public Class AccesoLogica
         End If
         Return _resultado
     End Function
+
+    Public Shared Function VerificarIntegracionVentas(fecha As String) As Boolean
+        Try
+            Dim _Tabla As DataTable
+            Dim _listParam As New List(Of Datos.DParametro)
+            _listParam.Add(New Datos.DParametro("@tipo", 16))
+            _listParam.Add(New Datos.DParametro("@tafdoc", fecha))
+            _Tabla = D_ProcedimientoConParam("sp_Mam_TV001", _listParam)
+            If _Tabla.Rows.Count > 0 Then
+                If _Tabla.Rows(0).Item(0) = 0 Then
+                    Return False
+                Else
+                    Return True
+                End If
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            Throw New Exception(ex.Message)
+        End Try
+    End Function
 #End Region
 
 #Region "TC001 Compras"
@@ -1795,7 +1816,7 @@ Public Class AccesoLogica
             Throw New Exception(ex.Message)
         End Try
     End Function
-    Public Shared Function VerificarIntegracion(fecha As String) As Boolean
+    Public Shared Function VerificarIntegracionCompras(fecha As String) As Boolean
         Try
             Dim _Tabla As DataTable
             Dim _listParam As New List(Of Datos.DParametro)
@@ -2833,6 +2854,26 @@ Public Class AccesoLogica
 
         Return _resultado
     End Function
+    Public Shared Function VerificarIntegracionPagosVentas(fecha As String) As Boolean
+        Try
+            Dim _Tabla As DataTable
+            Dim _listParam As New List(Of Datos.DParametro)
+            _listParam.Add(New Datos.DParametro("@tipo", 10))
+            _listParam.Add(New Datos.DParametro("@tefdoc", fecha))
+            _Tabla = D_ProcedimientoConParam("sp_Mam_TV00121Cheque", _listParam)
+            If _Tabla.Rows.Count > 0 Then
+                If _Tabla.Rows(0).Item(0) = 0 Then
+                    Return False
+                Else
+                    Return True
+                End If
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            Throw New Exception(ex.Message)
+        End Try
+    End Function
 #End Region
 
 #Region "PAGOS DE LAS COMPRAS CON CHEQUE"
@@ -2996,6 +3037,26 @@ Public Class AccesoLogica
         End If
 
         Return _resultado
+    End Function
+    Public Shared Function VerificarIntegracionPagosCompras(fecha As String) As Boolean
+        Try
+            Dim _Tabla As DataTable
+            Dim _listParam As New List(Of Datos.DParametro)
+            _listParam.Add(New Datos.DParametro("@tipo", 10))
+            _listParam.Add(New Datos.DParametro("@tefdoc", fecha))
+            _Tabla = D_ProcedimientoConParam("sp_Mam_TC00121Cheque", _listParam)
+            If _Tabla.Rows.Count > 0 Then
+                If _Tabla.Rows(0).Item(0) = 0 Then
+                    Return False
+                Else
+                    Return True
+                End If
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            Throw New Exception(ex.Message)
+        End Try
     End Function
 #End Region
 

@@ -765,7 +765,11 @@ Public Class F0_PagosCreditoCompraUlt
     End Sub
     Public Function _ValidarCampos() As Boolean
 
-
+        If VerificarIntegracionPagosCompras(tbfecha.Value.ToString("yyyy/MM/dd")) Then
+            Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+            ToastNotification.Show(Me, "YA EXISTE INTEGRACIÓN DE ESTA FECHA, PRIMERO ELIMINE LA INTEGRACIÓN PARA AGREGAR UN NUEVO PAGO", img, 3500, eToastGlowColor.Red, eToastPosition.TopCenter)
+            Return False
+        End If
         If (grfactura.RowCount > 0) Then
             grfactura.Row = grfactura.RowCount - 1
             If (grfactura.GetValue("tcty4prov") = 0) Then

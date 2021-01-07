@@ -1455,6 +1455,10 @@ Public Class F0_Ventas
             If VerificarCierreMes(tbFechaVenta.Value.Year.ToString(), tbFechaVenta.Value.Month.ToString()) Then
                 Throw New Exception("SE REALIZO EL CIERRE DE MES DE LA FECHA ESPECÍFICADA")
             End If
+            If VerificarIntegracionVentas(tbFechaVenta.Value.ToString("yyyy/MM/dd")) Then
+                Throw New Exception("YA EXISTE INTEGRACIÓN DE ESTA FECHA, PRIMERO ELIMINE LA INTEGRACIÓN PARA AGREGAR UNA NUEVA VENTA")
+            End If
+
             Dim fecha As String = Now.Date
             Dim dtDosificacion As DataSet = L_Dosificacion("1", "1", fecha)
 
