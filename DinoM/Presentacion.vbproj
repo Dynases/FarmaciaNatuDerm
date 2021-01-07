@@ -113,41 +113,41 @@
       <HintPath>C:\librerias\FlashControlV71.dll</HintPath>
     </Reference>
     <Reference Include="Gma.QrCodeNet.Encoding">
-      <HintPath>C:\librerias\QrCode\Gma.QrCodeNet.Encoding.dll</HintPath>
+      <HintPath>C:\librerias\Gma.QrCodeNet.Encoding.dll</HintPath>
     </Reference>
     <Reference Include="GMap.NET.Core">
-      <HintPath>C:\librerias\Gmap\GMap.NET.Core.dll</HintPath>
+      <HintPath>C:\librerias\GMap.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="GMap.NET.WindowsForms">
-      <HintPath>C:\librerias\Gmap\GMap.NET.WindowsForms.dll</HintPath>
+      <HintPath>C:\librerias\GMap.NET.WindowsForms.dll</HintPath>
     </Reference>
     <Reference Include="Interop.AcroPDFLib">
-      <HintPath>C:\librerias\PDF\Interop.AcroPDFLib.dll</HintPath>
+      <HintPath>C:\librerias\Interop.AcroPDFLib.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="itextsharp">
       <HintPath>C:\librerias\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Janus.Data.v3">
-      <HintPath>C:\librerias\Janus\Janus.Data.v3.dll</HintPath>
+      <HintPath>C:\librerias\Janus.Data.v3.dll</HintPath>
     </Reference>
     <Reference Include="Janus.Windows.CalendarCombo.v3">
-      <HintPath>C:\librerias\Janus\Janus.Windows.CalendarCombo.v3.dll</HintPath>
+      <HintPath>C:\librerias\Janus.Windows.CalendarCombo.v3.dll</HintPath>
     </Reference>
     <Reference Include="Janus.Windows.Common.v3">
-      <HintPath>C:\librerias\Janus\Janus.Windows.Common.v3.dll</HintPath>
+      <HintPath>C:\librerias\Janus.Windows.Common.v3.dll</HintPath>
     </Reference>
     <Reference Include="Janus.Windows.GridEX.v3">
-      <HintPath>C:\librerias\Janus\Janus.Windows.GridEX.v3.dll</HintPath>
+      <HintPath>C:\librerias\Janus.Windows.GridEX.v3.dll</HintPath>
     </Reference>
     <Reference Include="Janus.Windows.Ribbon.v3">
-      <HintPath>C:\librerias\Janus\Janus.Windows.Ribbon.v3.dll</HintPath>
+      <HintPath>C:\librerias\Janus.Windows.Ribbon.v3.dll</HintPath>
     </Reference>
     <Reference Include="Janus.Windows.UI.v3">
-      <HintPath>C:\librerias\Janus\Janus.Windows.UI.v3.dll</HintPath>
+      <HintPath>C:\librerias\Janus.Windows.UI.v3.dll</HintPath>
     </Reference>
     <Reference Include="OnBarcode.Barcode.WinForms">
-      <HintPath>C:\librerias\QrCode\OnBarcode.Barcode.WinForms.dll</HintPath>
+      <HintPath>C:\librerias\OnBarcode.Barcode.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
