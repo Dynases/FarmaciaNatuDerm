@@ -141,6 +141,7 @@ Public Class F0_Ventas
         tbFechaVenc.IsInputReadOnly = True
         swMoneda.IsReadOnly = True
         swTipoVenta.IsReadOnly = True
+        tbEmision.Enabled = False
 
         'Datos facturacion
         tbNroAutoriz.ReadOnly = True
@@ -177,6 +178,7 @@ Public Class F0_Ventas
         tbCodigo.ReadOnly = False
         ''  tbCliente.ReadOnly = False  por que solo podra seleccionar Cliente
         ''  tbVendedor.ReadOnly = False
+        tbEmision.Enabled = True
         tbObservacion.ReadOnly = False
         tbFechaVenta.IsInputReadOnly = False
         tbFechaVenc.IsInputReadOnly = False
@@ -214,6 +216,7 @@ Public Class F0_Ventas
         End If
     End Sub
     Private Sub _Limpiar()
+        tbEmision.SelectedIndex = 0
         tbProforma.Clear()
         tbCodigo.Clear()
         tbCliente.Clear()
@@ -280,8 +283,8 @@ Public Class F0_Ventas
             tbCliente.Text = .GetValue("cliente")
             swMoneda.Value = .GetValue("tamon")
             tbObservacion.Text = .GetValue("taobs")
-            swEmision.Value = .GetValue("taemision")
-
+            'swEmision.Value = .GetValue("taemision")
+            tbEmision.SelectedIndex = .GetValue("taemision") - 1
             Dim proforma As Integer = IIf(IsDBNull(.GetValue("taproforma")), 0, .GetValue("taproforma"))
             If (proforma = 0) Then
                 SwProforma.Value = False
@@ -1482,19 +1485,22 @@ Public Class F0_Ventas
                 Return False
             End If
             'Validar datos de factura
-            If (TbNit.Text = String.Empty) Then
-                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                ToastNotification.Show(Me, "Por Favor ponga el nit del cliente.".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                tbVendedor.Focus()
-                Return False
+            If tbEmision.SelectedIndex = 0 Then
+                If (TbNit.Text = String.Empty) Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "Por Favor ponga el nit del cliente.".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                    tbVendedor.Focus()
+                    Return False
+                End If
+
+                If (TbNombre1.Text = String.Empty) Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "Por Favor ponga la razon social del cliente.".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                    tbVendedor.Focus()
+                    Return False
+                End If
             End If
 
-            If (TbNombre1.Text = String.Empty) Then
-                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                ToastNotification.Show(Me, "Por Favor ponga la razon social del cliente.".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                tbVendedor.Focus()
-                Return False
-            End If
 
             If (grdetalle.RowCount = 1) Then
                 grdetalle.Row = grdetalle.RowCount - 1
@@ -1642,12 +1648,15 @@ Public Class F0_Ventas
             Dim res As Boolean = L_fnGrabarVenta(numi, "", tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado, IIf(swTipoVenta.Value = True, 1, 0),
                                                  IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")),
                                                  _CodCliente, IIf(swMoneda.Value = True, 1, 0), tbObservacion.Text, tbMdesc.Value, tbIce.Value, tbtotal.Value,
-                                                 dtDetalle, cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), IIf(swEmision.Value = True, 1, 0))
+                                                 dtDetalle, cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), tbEmision.SelectedIndex + 1)
 
             If res Then
                 ' res = P_fnGrabarFacturarTFV001(numi)
+
                 If (gb_FacturaEmite) Then
-                    P_fnGenerarFactura(numi)
+                    If tbEmision.SelectedIndex = 0 Or TbNit.Text <> String.Empty And TbNit.Text <> "0" Then
+                        P_fnGenerarFactura(numi)
+                    End If
                 End If
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
                 ToastNotification.Show(Me, "Código de Venta ".ToUpper + tbCodigo.Text + " Grabado con Exito.".ToUpper,
@@ -1698,7 +1707,7 @@ Public Class F0_Ventas
         End If
     End Sub
     Private Sub _prGuardarModificado()
-        Dim res As Boolean = L_fnModificarVenta(tbCodigo.Text, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), _CodCliente, IIf(swMoneda.Value = True, 1, 0), tbObservacion.Text, tbMdesc.Value, tbIce.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), IIf(swEmision.Value = True, 1, 0))
+        Dim res As Boolean = L_fnModificarVenta(tbCodigo.Text, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), _CodCliente, IIf(swMoneda.Value = True, 1, 0), tbObservacion.Text, tbMdesc.Value, tbIce.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), tbEmision.SelectedIndex - 1)
         If res Then
 
             If (gb_FacturaEmite) Then

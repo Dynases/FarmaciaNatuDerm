@@ -34,7 +34,6 @@ Partial Class F0_Ventas
         Me.PanelContentSup = New System.Windows.Forms.Panel()
         Me.GroupPanel1 = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.swEmision = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.LabelX19 = New DevComponents.DotNetBar.LabelX()
         Me.SwProforma = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.LabelX18 = New DevComponents.DotNetBar.LabelX()
@@ -94,6 +93,7 @@ Partial Class F0_Ventas
         Me.GPanelProductos = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.grProductos = New Janus.Windows.GridEX.GridEX()
+        Me.tbEmision = New System.Windows.Forms.ComboBox()
         Me.PanelSuperior.SuspendLayout()
         Me.PanelInferior.SuspendLayout()
         CType(Me.BubbleBarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -497,7 +497,7 @@ Partial Class F0_Ventas
         '
         Me.Panel2.AutoScroll = True
         Me.Panel2.BackColor = System.Drawing.Color.White
-        Me.Panel2.Controls.Add(Me.swEmision)
+        Me.Panel2.Controls.Add(Me.tbEmision)
         Me.Panel2.Controls.Add(Me.LabelX19)
         Me.Panel2.Controls.Add(Me.SwProforma)
         Me.Panel2.Controls.Add(Me.LabelX18)
@@ -526,25 +526,6 @@ Partial Class F0_Ventas
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(1176, 188)
         Me.Panel2.TabIndex = 234
-        '
-        'swEmision
-        '
-        '
-        '
-        '
-        Me.swEmision.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
-        Me.swEmision.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.swEmision.Location = New System.Drawing.Point(635, 71)
-        Me.swEmision.Name = "swEmision"
-        Me.swEmision.OffBackColor = System.Drawing.Color.LawnGreen
-        Me.swEmision.OffText = "RECIBO"
-        Me.swEmision.OnBackColor = System.Drawing.Color.Gold
-        Me.swEmision.OnText = "FACTURA"
-        Me.swEmision.Size = New System.Drawing.Size(136, 22)
-        Me.swEmision.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
-        Me.swEmision.TabIndex = 371
-        Me.swEmision.Value = True
-        Me.swEmision.ValueObject = "Y"
         '
         'LabelX19
         '
@@ -1678,6 +1659,15 @@ Partial Class F0_Ventas
         Me.grProductos.TabIndex = 0
         Me.grProductos.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
+        'tbEmision
+        '
+        Me.tbEmision.FormattingEnabled = True
+        Me.tbEmision.Items.AddRange(New Object() {"FACTURA", "RECIBO", "VENTA SOLIDARIA"})
+        Me.tbEmision.Location = New System.Drawing.Point(635, 71)
+        Me.tbEmision.Name = "tbEmision"
+        Me.tbEmision.Size = New System.Drawing.Size(185, 24)
+        Me.tbEmision.TabIndex = 374
+        '
         'F0_Ventas
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1804,9 +1794,9 @@ Partial Class F0_Ventas
     Friend WithEvents LabelX18 As DevComponents.DotNetBar.LabelX
     Friend WithEvents tbProforma As DevComponents.DotNetBar.Controls.TextBoxX
     Friend WithEvents PrintDialog1 As System.Windows.Forms.PrintDialog
-    Friend WithEvents swEmision As DevComponents.DotNetBar.Controls.SwitchButton
     Friend WithEvents LabelX19 As DevComponents.DotNetBar.LabelX
     Friend WithEvents GPanelProductos As DevComponents.DotNetBar.Controls.GroupPanel
     Friend WithEvents Panel7 As Panel
     Friend WithEvents grProductos As Janus.Windows.GridEX.GridEX
+    Friend WithEvents tbEmision As ComboBox
 End Class

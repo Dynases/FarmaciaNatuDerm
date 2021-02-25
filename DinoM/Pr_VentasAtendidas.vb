@@ -30,6 +30,28 @@ Public Class Pr_VentasAtendidas
         End If
 
     End Sub
+    Public Function _prValidadrFiltros() As DataTable
+
+        Dim fechaDesde As DateTime = tbFechaI.Value.ToString("yyyy/MM/dd")
+        Dim fechaHasta As DateTime = tbFechaF.Value.ToString("yyyy/MM/dd")
+        Dim idVendedor As Integer = 0
+        Dim idCliente As Integer = 0
+        Dim idAlmacen As Integer = 0
+        If CheckTodosAlmacen.Checked = False And CheckUnaALmacen.Checked = True And tbCodAlmacen.Text <> String.Empty Then
+            idAlmacen = tbCodAlmacen.Text
+        End If
+        If CheckTodosVendedor.Checked = False And checkUnaVendedor.Checked = True And tbCodigoVendedor.Text <> String.Empty Then
+            idVendedor = tbCodigoVendedor.Text
+        End If
+        If ckTodosCliente.Checked = False And ckUnoCliente.Checked = True And tbCodigoCliente.Text <> String.Empty Then
+            idCliente = tbCodigoCliente.Text
+        End If
+
+        'Obtiene las ventas con y sin factura
+        Dim ventasAtendidas As DataTable = L_BuscarVentasAtentidas(fechaDesde, fechaHasta, idAlmacen, idVendedor, idCliente)
+        Return ventasAtendidas
+
+    End Function
     Public Sub _prInterpretarDatos(ByRef _dt As DataTable)
         If (gb_FacturaEmite) Then ''''Con factura 
             If (swIce.Value = True) Then '''Factura + Ice
@@ -144,12 +166,12 @@ Public Class Pr_VentasAtendidas
 
     End Sub
     Private Sub _prCargarReporte()
-        Dim _dt As New DataTable
-        _prInterpretarDatos(_dt)
-        If (_dt.Rows.Count > 0) Then
+        Dim _ventasAtendidas As New DataTable
+        _ventasAtendidas = _prValidadrFiltros()
+        If (_ventasAtendidas.Rows.Count > 0) Then
             If (swTipoVenta.Value = True) Then
                 Dim objrep As New R_VentasAtendidasAlmacenVendedor
-                objrep.SetDataSource(_dt)
+                objrep.SetDataSource(_ventasAtendidas)
                 Dim fechaI As String = tbFechaI.Value.ToString("dd/MM/yyyy")
                 Dim fechaF As String = tbFechaF.Value.ToString("dd/MM/yyyy")
                 objrep.SetParameterValue("usuario", L_Usuario)
@@ -160,7 +182,7 @@ Public Class Pr_VentasAtendidas
                 MReportViewer.BringToFront()
             Else
                 Dim objrep As New R_VentasAtendidasVendedorAlmacen
-                objrep.SetDataSource(_dt)
+                objrep.SetDataSource(_ventasAtendidas)
                 Dim fechaI As String = tbFechaI.Value.ToString("dd/MM/yyyy")
                 Dim fechaF As String = tbFechaF.Value.ToString("dd/MM/yyyy")
                 objrep.SetParameterValue("usuario", L_Usuario)
@@ -299,5 +321,67 @@ Public Class Pr_VentasAtendidas
 
     Private Sub btnSalir_Click(sender As Object, e As EventArgs) Handles btnSalir.Click
         _tab.Close()
+    End Sub
+
+    Private Sub ckUnoCliente_CheckedChanged(sender As Object, e As EventArgs) Handles ckUnoCliente.CheckedChanged
+        If (ckUnoCliente.Checked) Then
+            ckTodosCliente.CheckValue = False
+            tbCliente.Enabled = True
+            tbCliente.BackColor = Color.White
+            tbCliente.Focus()
+        End If
+    End Sub
+
+    Private Sub ckTodosCliente_CheckValueChanged(sender As Object, e As EventArgs) Handles ckTodosCliente.CheckValueChanged
+        If (ckTodosCliente.Checked) Then
+            ckUnoCliente.CheckValue = False
+            tbCliente.Enabled = True
+            tbCliente.BackColor = Color.Gainsboro
+            tbCliente.Clear()
+            tbCodigoCliente.Clear()
+        End If
+    End Sub
+
+    Private Sub tbCliente_KeyDown(sender As Object, e As KeyEventArgs) Handles tbCliente.KeyDown
+        If (ckUnoCliente.Checked) Then
+            If e.KeyData = Keys.Control + Keys.Enter Then
+
+                Dim dt As DataTable
+                'dt = L_fnListarClientes()
+                dt = L_fnListarClientesVenta()
+
+                Dim listEstCeldas As New List(Of Modelo.Celda)
+                listEstCeldas.Add(New Modelo.Celda("ydnumi,", True, "ID", 50))
+                listEstCeldas.Add(New Modelo.Celda("ydcod", False, "ID", 50))
+                listEstCeldas.Add(New Modelo.Celda("ydrazonsocial", True, "RAZÓN SOCIAL", 180))
+                listEstCeldas.Add(New Modelo.Celda("yddesc", True, "NOMBRE", 280))
+                listEstCeldas.Add(New Modelo.Celda("yddctnum", True, "N. Documento".ToUpper, 150))
+                listEstCeldas.Add(New Modelo.Celda("yddirec", True, "DIRECCIÓN", 220))
+                listEstCeldas.Add(New Modelo.Celda("ydtelf1", True, "Teléfono".ToUpper, 200))
+                listEstCeldas.Add(New Modelo.Celda("ydfnac", True, "F.Nacimiento".ToUpper, 150, "MM/dd,YYYY"))
+                listEstCeldas.Add(New Modelo.Celda("ydnumivend,", False, "ID", 50))
+                listEstCeldas.Add(New Modelo.Celda("vendedor,", False, "ID", 50))
+                listEstCeldas.Add(New Modelo.Celda("yddias", False, "CRED", 50))
+                listEstCeldas.Add(New Modelo.Celda("ydnomfac", False, "Nombre Factura", 50))
+                listEstCeldas.Add(New Modelo.Celda("ydnit", False, "Nit/CI", 50))
+                Dim ef = New Efecto
+                ef.tipo = 3
+                ef.dt = dt
+                ef.SeleclCol = 2
+                ef.listEstCeldas = listEstCeldas
+                ef.alto = 50
+                ef.ancho = 350
+                ef.Context = "Seleccione Cliente".ToUpper
+                ef.ShowDialog()
+                Dim bandera As Boolean = False
+                bandera = ef.band
+                If (bandera = True) Then
+                    Dim Row As Janus.Windows.GridEX.GridEXRow = ef.Row
+
+                    tbCodigoCliente.Text = Row.Cells("ydnumi").Value
+                    tbCliente.Text = Row.Cells("yddesc").Value
+                End If
+            End If
+        End If
     End Sub
 End Class

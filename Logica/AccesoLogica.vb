@@ -1249,6 +1249,15 @@ Public Class AccesoLogica
 #End Region
 
 #Region "TV001 Ventas"
+    Public Shared Function L_fnListarClientesVenta() As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 18))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TV001", _listParam)
+
+        Return _Tabla
+    End Function
     Public Shared Function L_fnGeneralVenta() As DataTable
         Dim _Tabla As DataTable
 
@@ -3652,6 +3661,19 @@ Public Class AccesoLogica
 
 #End Region
 #Region "REPORTES VENTAS"
+    Public Shared Function L_BuscarVentasAtentidas(fechaI As String, fechaF As String, idAlmacen As Integer, idVendedor As Integer, idCliente As Integer) As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 1))
+        _listParam.Add(New Datos.DParametro("@fechaI", fechaI))
+        _listParam.Add(New Datos.DParametro("@fechaF", fechaF))
+        _listParam.Add(New Datos.DParametro("@Vendedor", idVendedor))
+        _listParam.Add(New Datos.DParametro("@Cliente", idCliente))
+        _listParam.Add(New Datos.DParametro("@almacen", idAlmacen))
+        _listParam.Add(New Datos.DParametro("@uact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("Sp_Mam_ReporteVentas", _listParam)
+        Return _Tabla
+    End Function
     Public Shared Function L_prVentasAtendidaGeneralAlmacenVendedor(fechaI As String, fechaF As String) As DataTable
         Dim _Tabla As DataTable
 
