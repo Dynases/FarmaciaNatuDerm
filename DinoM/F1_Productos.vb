@@ -109,9 +109,9 @@ Public Class F1_Productos
         End If
     End Sub
     Public Sub _prMaxLength()
-        tbCodProd.MaxLength = 15
+        tbCodProd.MaxLength = 10
         tbCodBarra.MaxLength = 15
-        tbDescPro.MaxLength = 70
+        tbDescPro.MaxLength = 50
         tbDescCort.MaxLength = 15
         cbgrupo1.MaxLength = 40
         cbgrupo2.MaxLength = 40
