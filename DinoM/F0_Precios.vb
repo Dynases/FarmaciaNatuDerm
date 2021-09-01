@@ -80,7 +80,7 @@ Public Class F0_Precios
                     Dim rowIndex As Integer = precio.Rows.IndexOf(result(i))
                     Dim columnprecio As String = result(i).Item("yhcatpre")
                     Dim columnestado As String = "estado_" + result(i).Item("ygcod")
-                    productos.Rows(j).Item(columnprecio) = Math.Round(result(i).Item("yhprecio"), 2)
+                    productos.Rows(j).Item(columnprecio) = Math.Round(result(i).Item("yhprecio"), 5)
                     productos.Rows(j).Item(columnestado) = Str(result(i).Item("estado")) + "_" + Str(rowIndex).Trim
 
                 Next

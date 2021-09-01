@@ -364,7 +364,7 @@ Public Class F0_MCompras
             .Width = 120
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
             .Visible = True
-            .FormatString = "0.00"
+            .FormatString = "0.00000"
             .Caption = "Precio U.".ToUpper
         End With
         If (_estadoPor = 1) Then
@@ -379,7 +379,7 @@ Public Class F0_MCompras
                 .Width = 120
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
                 .Visible = True
-                .FormatString = "0.00"
+                .FormatString = "0.00000"
                 .Caption = "Precio Venta".ToUpper
             End With
         Else
@@ -394,7 +394,7 @@ Public Class F0_MCompras
                 .Width = 120
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
                 .Visible = False
-                .FormatString = "0.00"
+                .FormatString = "0.00000"
                 .Caption = "Precio Venta".ToUpper
             End With
         End If
@@ -751,7 +751,7 @@ Public Class F0_MCompras
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
             .Visible = True
             .Caption = "Precio Costo"
-            .FormatString = "0.00"
+            .FormatString = "0.00000"
         End With
 
         With grProductos.RootTable.Columns("venta")
@@ -759,7 +759,7 @@ Public Class F0_MCompras
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
             .Visible = True
             .Caption = "Precio Venta"
-            .FormatString = "0.00"
+            .FormatString = "0.00000"
         End With
         With grProductos.RootTable.Columns("stock")
             .Width = 100
@@ -1090,7 +1090,7 @@ Public Class F0_MCompras
     Private Sub _prGuardarModificado()
 
         RecuperarDatosTFC001()
-        Dim res As Boolean = L_fnModificarCompra(tbCodigo.Text, cbSucursal.Value, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodProveedor, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), cbSucursal.Value, tbObservacion.Text, tbMdesc.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), _detalleCompras, IIf(swEmision.Value = True, 1, 0), tbNFactura.Text, IIf(swConsigna.Value = True, 1, 0), IIf(swRetencion.Value = True, 1, 0))
+        Dim res As Boolean = L_fnModificarCompra(tbCodigo.Text, cbSucursal.Value, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodProveedor, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), 1, tbObservacion.Text, tbMdesc.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), _detalleCompras, IIf(swEmision.Value = True, 1, 0), tbNFactura.Text, IIf(swConsigna.Value = True, 1, 0), IIf(swRetencion.Value = True, 1, 0))
 
         If res Then
 

@@ -317,7 +317,7 @@ Public Class F0_Movimiento
         With grdetalle.RootTable.Columns("icpcosto")
             .Width = 120
             .Caption = "P. COSTO".ToUpper
-            .FormatString = "0.00"
+            .FormatString = "0.00000"
             .Visible = True
         End With
         With grdetalle
@@ -516,7 +516,7 @@ Public Class F0_Movimiento
         With grproducto.RootTable.Columns("yhprecio")
             .Width = 150
             .Visible = True
-            .FormatString = "0.00"
+            .FormatString = "0.00000"
             .Caption = "P. COSTO"
         End With
         With grproducto
