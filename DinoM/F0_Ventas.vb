@@ -419,7 +419,7 @@ Public Class F0_Ventas
             .Width = 120
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
             .Visible = True
-            .FormatString = "0.00000"
+            .FormatString = "0.000"
             .Caption = "Precio U.".ToUpper
         End With
         With grdetalle.RootTable.Columns("tbptot")
@@ -936,14 +936,14 @@ Public Class F0_Ventas
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
             .Visible = True
             .Caption = "PRECIO"
-            .FormatString = "0.00"
+            .FormatString = "0.000"
         End With
         With grProductos.RootTable.Columns("pcos")
             .Width = 120
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
             .Visible = False
             .Caption = "Precio Costo"
-            .FormatString = "0.00"
+            .FormatString = "0.00000"
         End With
         With grProductos.RootTable.Columns("stock")
             .Width = 90

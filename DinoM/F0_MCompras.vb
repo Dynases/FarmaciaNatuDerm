@@ -379,7 +379,7 @@ Public Class F0_MCompras
                 .Width = 120
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
                 .Visible = True
-                .FormatString = "0.00000"
+                .FormatString = "0.000"
                 .Caption = "Precio Venta".ToUpper
             End With
         Else
@@ -394,7 +394,7 @@ Public Class F0_MCompras
                 .Width = 120
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
                 .Visible = False
-                .FormatString = "0.00000"
+                .FormatString = "0.000"
                 .Caption = "Precio Venta".ToUpper
             End With
         End If
@@ -759,7 +759,7 @@ Public Class F0_MCompras
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
             .Visible = True
             .Caption = "Precio Venta"
-            .FormatString = "0.00000"
+            .FormatString = "0.000"
         End With
         With grProductos.RootTable.Columns("stock")
             .Width = 100
@@ -1404,7 +1404,7 @@ salirIf:
                 Dim cantidad As Double = grdetalle.GetValue("cbcmin")
                 CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbpcost") = CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbpcost")
                 CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbptot") = cantidad * CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbpcost")
-                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbprven") = _PorcentajeUtil * CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbpcost")
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbprven") = Math.Round(_PorcentajeUtil * CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbpcost"), 3)
 
 
             Else
@@ -1416,7 +1416,7 @@ salirIf:
                     Dim cantidad As Double = grdetalle.GetValue("cbcmin")
                     CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbpcost") = CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbpcost")
                     CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbptot") = cantidad * CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbpcost")
-                    CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbprven") = _PorcentajeUtil * CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbpcost")
+                    CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbprven") = Math.Round(_PorcentajeUtil * CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbpcost"), 3)
                 End If
             End If
         End If
@@ -1477,7 +1477,7 @@ salirIf:
                     Dim porcentaje As Double = grdetalle.GetValue("cbutven")
 
                     Dim monto As Double = (grdetalle.GetValue("cbpcost") * (porcentaje / 100))
-                    Dim precioventa As Double = monto + grdetalle.GetValue("cbpcost")
+                    Dim precioventa As Double = Math.Round(monto + grdetalle.GetValue("cbpcost"), 3)
                     grdetalle.SetValue("cbprven", precioventa)
 
 
