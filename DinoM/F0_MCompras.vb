@@ -863,10 +863,10 @@ Public Class F0_MCompras
                 If (estado = 1) Then
                     CType(grdetalle.DataSource, DataTable).Rows(pos).Item("estado") = 2
                 End If
-                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbprven") = uni + (uni * (grdetalle.GetValue("cbutven") / 100))
-                grdetalle.SetValue("cbprven", uni + (uni * (grdetalle.GetValue("cbutven") / 100)))
-                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("venta") = uni + (uni * (grdetalle.GetValue("cbutven") / 100))
-                grdetalle.SetValue("cbprven", uni + (uni * (grdetalle.GetValue("cbutven") / 100)))
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("cbprven") = Math.Round(uni + (uni * (grdetalle.GetValue("cbutven") / 100)), 3)
+                grdetalle.SetValue("cbprven", Math.Round(uni + (uni * (grdetalle.GetValue("cbutven") / 100)), 3))
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("venta") = Math.Round(uni + (uni * (grdetalle.GetValue("cbutven") / 100)), 3)
+                grdetalle.SetValue("cbprven", Math.Round(uni + (uni * (grdetalle.GetValue("cbutven") / 100)), 3))
             End If
             _prCalcularPrecioTotal()
         End If
