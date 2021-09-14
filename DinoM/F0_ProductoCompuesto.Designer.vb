@@ -877,6 +877,7 @@ Partial Class F0_ProductoCompuesto
         Me.tb_Total.BackgroundStyle.Class = "DateTimeInputBackground"
         Me.tb_Total.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.tb_Total.ButtonFreeText.Shortcut = DevComponents.DotNetBar.eShortcut.F2
+        Me.tb_Total.DisplayFormat = "0.00000"
         Me.tb_Total.Dock = System.Windows.Forms.DockStyle.Right
         Me.tb_Total.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tb_Total.Increment = 1.0R

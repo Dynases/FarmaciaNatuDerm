@@ -431,7 +431,7 @@ Public Class F0_Formula
             With Dgv_Detalle.RootTable.Columns("pdprec")
                 .Key = "pdprec"
                 .Caption = "Precio"
-                .FormatString = "0.00"
+                .FormatString = "0.00000"
                 .Width = 100
                 .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
@@ -443,7 +443,7 @@ Public Class F0_Formula
             With Dgv_Detalle.RootTable.Columns("pdtotal")
                 .Key = "pdtotal"
                 .Caption = "Total"
-                .FormatString = "0.00"
+                .FormatString = "0.00000"
                 .Width = 100
                 .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
                 .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
