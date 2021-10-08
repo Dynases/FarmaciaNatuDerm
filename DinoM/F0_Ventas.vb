@@ -1965,28 +1965,31 @@ Public Class F0_Ventas
         _DsDatos_Factura = L_Reporte_Factura_Cia("1")
         QrFactura.Text = _DsDatos_Factura.Tables(0).Rows(0).Item("scnit").ToString + "|" + Str(_NumFac).Trim + "|" + _Autorizacion + "|" + _Fecha + "|" + _Total + "|" + _TotalLi.ToString + "|" + _Cod_Control + "|" + TbNit.Text.Trim + "|" + ice.ToString + "|0|0|" + Str(_Desc).Trim
 
-        L_Modificar_Factura("fvanumi = " + CStr(numi),
-                            "",
-                            CStr(_NumFac),
-                            CStr(_Autorizacion),
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "",
-                            _Cod_Control,
-                            _FechaAl.ToString("yyyy/MM/dd"),
-                            "",
-                            "",
-                            CStr(numi))
+        If reimprimir = False Then
+            L_Modificar_Factura("fvanumi = " + CStr(numi),
+                    "",
+                    CStr(_NumFac),
+                    CStr(_Autorizacion),
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    _Cod_Control,
+                    _FechaAl.ToString("yyyy/MM/dd"),
+                    "",
+                    "",
+                    CStr(numi))
+        End If
+
 
         _DsFactura = L_Reporte_Factura(numi, numi)
 
