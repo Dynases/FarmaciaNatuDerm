@@ -15,6 +15,7 @@ Public Class Pr_VentasAtendidas
         Me.Text = "REPORTE VENTAS ATENDIDAS"
         MReportViewer.ToolPanelView = CrystalDecisions.Windows.Forms.ToolPanelViewType.None
         _IniciarComponentes()
+        _prCargarComboEmision()
     End Sub
     Public Sub _IniciarComponentes()
         tbVendedor.ReadOnly = True
@@ -30,6 +31,30 @@ Public Class Pr_VentasAtendidas
         End If
 
     End Sub
+    Private Sub _prCargarComboEmision()
+        Dim dt As New DataTable
+        dt.Columns.Add("numi", GetType(Integer))
+        dt.Columns.Add("desc", GetType(String))
+
+        dt.Rows.Add({1, "FACTURA"})
+        dt.Rows.Add({2, "RECIBO"})
+        dt.Rows.Add({3, "VENTA SOLIDARIA"})
+
+        With cbEmision
+            .DropDownList.Columns.Clear()
+            .DropDownList.Columns.Add("numi").Width = 60
+            .DropDownList.Columns("numi").Caption = "COD"
+            .DropDownList.Columns.Add("desc").Width = 200
+            .DropDownList.Columns("desc").Caption = "DESCRIPCIÓN"
+            .ValueMember = "numi"
+            .DisplayMember = "desc"
+            .DataSource = dt
+            .Refresh()
+
+            '.SelectedIndex = 1
+        End With
+
+    End Sub
     Public Function _prValidadrFiltros() As DataTable
 
         Dim fechaDesde As DateTime = tbFechaI.Value.ToString("yyyy/MM/dd")
@@ -37,6 +62,7 @@ Public Class Pr_VentasAtendidas
         Dim idVendedor As Integer = 0
         Dim idCliente As Integer = 0
         Dim idAlmacen As Integer = 0
+        Dim ventasAtendidas As DataTable
         If CheckTodosAlmacen.Checked = False And CheckUnaALmacen.Checked = True And tbCodAlmacen.Text <> String.Empty Then
             idAlmacen = tbCodAlmacen.Text
         End If
@@ -46,9 +72,37 @@ Public Class Pr_VentasAtendidas
         If ckTodosCliente.Checked = False And ckUnoCliente.Checked = True And tbCodigoCliente.Text <> String.Empty Then
             idCliente = tbCodigoCliente.Text
         End If
+        If swTipoEmision.Value = True Then
+            'Obtiene las ventas con y sin factura
+            ventasAtendidas = L_BuscarVentasAtentidas(fechaDesde, fechaHasta, idAlmacen, idVendedor, idCliente)
+            Return ventasAtendidas
+        Else
+            If cbEmision.Value > 0 Then
+                'Factura
+                If cbEmision.Value = 1 Then
+                    ventasAtendidas = L_BuscarVentasAtentidasFactura(fechaDesde, fechaHasta, idAlmacen, idVendedor, idCliente, cbEmision.Value)
+                    Return ventasAtendidas
+                End If
+                'Recibo
+                If cbEmision.Value = 2 Then
+                    ventasAtendidas = L_BuscarVentasAtentidasReciboVSolidaria(fechaDesde, fechaHasta, idAlmacen, idVendedor, idCliente, cbEmision.Value)
+                    Return ventasAtendidas
+                End If
+                'Venta Solidaria
+                If cbEmision.Value = 3 Then
+                    ventasAtendidas = L_BuscarVentasAtentidasReciboVSolidaria(fechaDesde, fechaHasta, idAlmacen, idVendedor, idCliente, cbEmision.Value)
+                    Return ventasAtendidas
+                End If
+            Else
+                ToastNotification.Show(Me, "Debe seleccionar una Emisión..!!!",
+                                 My.Resources.INFORMATION, 2000,
+                                 eToastGlowColor.Blue,
+                                 eToastPosition.BottomLeft)
+                Exit Function
+            End If
 
-        'Obtiene las ventas con y sin factura
-        Dim ventasAtendidas As DataTable = L_BuscarVentasAtentidas(fechaDesde, fechaHasta, idAlmacen, idVendedor, idCliente)
+        End If
+
         Return ventasAtendidas
 
     End Function
@@ -168,36 +222,42 @@ Public Class Pr_VentasAtendidas
     Private Sub _prCargarReporte()
         Dim _ventasAtendidas As New DataTable
         _ventasAtendidas = _prValidadrFiltros()
-        If (_ventasAtendidas.Rows.Count > 0) Then
-            If (swTipoVenta.Value = True) Then
-                Dim objrep As New R_VentasAtendidasAlmacenVendedor
-                objrep.SetDataSource(_ventasAtendidas)
-                Dim fechaI As String = tbFechaI.Value.ToString("dd/MM/yyyy")
-                Dim fechaF As String = tbFechaF.Value.ToString("dd/MM/yyyy")
-                objrep.SetParameterValue("usuario", L_Usuario)
-                objrep.SetParameterValue("fechaI", fechaI)
-                objrep.SetParameterValue("fechaF", fechaF)
-                MReportViewer.ReportSource = objrep
-                MReportViewer.Show()
-                MReportViewer.BringToFront()
-            Else
-                Dim objrep As New R_VentasAtendidasVendedorAlmacen
-                objrep.SetDataSource(_ventasAtendidas)
-                Dim fechaI As String = tbFechaI.Value.ToString("dd/MM/yyyy")
-                Dim fechaF As String = tbFechaF.Value.ToString("dd/MM/yyyy")
-                objrep.SetParameterValue("usuario", L_Usuario)
-                objrep.SetParameterValue("fechaI", fechaI)
-                objrep.SetParameterValue("fechaF", fechaF)
-                MReportViewer.ReportSource = objrep
-                MReportViewer.Show()
-                MReportViewer.BringToFront()
-            End If
+        If IsNothing(_ventasAtendidas) Then
+            Exit Sub
         Else
-            ToastNotification.Show(Me, "NO HAY DATOS PARA LOS PARAMETROS SELECCIONADOS..!!!",
-                                       My.Resources.INFORMATION, 2000,
-                                       eToastGlowColor.Blue,
-                                       eToastPosition.BottomLeft)
-            MReportViewer.ReportSource = Nothing
+
+
+            If (_ventasAtendidas.Rows.Count > 0) Then
+                If (swTipoVenta.Value = True) Then
+                    Dim objrep As New R_VentasAtendidasAlmacenVendedor
+                    objrep.SetDataSource(_ventasAtendidas)
+                    Dim fechaI As String = tbFechaI.Value.ToString("dd/MM/yyyy")
+                    Dim fechaF As String = tbFechaF.Value.ToString("dd/MM/yyyy")
+                    objrep.SetParameterValue("usuario", L_Usuario)
+                    objrep.SetParameterValue("fechaI", fechaI)
+                    objrep.SetParameterValue("fechaF", fechaF)
+                    MReportViewer.ReportSource = objrep
+                    MReportViewer.Show()
+                    MReportViewer.BringToFront()
+                Else
+                    Dim objrep As New R_VentasAtendidasVendedorAlmacen
+                    objrep.SetDataSource(_ventasAtendidas)
+                    Dim fechaI As String = tbFechaI.Value.ToString("dd/MM/yyyy")
+                    Dim fechaF As String = tbFechaF.Value.ToString("dd/MM/yyyy")
+                    objrep.SetParameterValue("usuario", L_Usuario)
+                    objrep.SetParameterValue("fechaI", fechaI)
+                    objrep.SetParameterValue("fechaF", fechaF)
+                    MReportViewer.ReportSource = objrep
+                    MReportViewer.Show()
+                    MReportViewer.BringToFront()
+                End If
+            Else
+                ToastNotification.Show(Me, "NO HAY DATOS PARA LOS PARAMETROS SELECCIONADOS..!!!",
+                                           My.Resources.INFORMATION, 2000,
+                                           eToastGlowColor.Blue,
+                                           eToastPosition.BottomLeft)
+                MReportViewer.ReportSource = Nothing
+            End If
         End If
     End Sub
     Private Sub btnGenerar_Click(sender As Object, e As EventArgs) Handles btnGenerar.Click
@@ -382,6 +442,14 @@ Public Class Pr_VentasAtendidas
                     tbCliente.Text = Row.Cells("yddesc").Value
                 End If
             End If
+        End If
+    End Sub
+
+    Private Sub swTipoEmision_ValueChanged(sender As Object, e As EventArgs) Handles swTipoEmision.ValueChanged
+        If swTipoEmision.Value = True Then
+            cbEmision.Enabled = False
+        Else
+            cbEmision.Enabled = True
         End If
     End Sub
 End Class

@@ -521,11 +521,15 @@ Public Class F0_Precios
     Private Sub grprecio_EditingCell(sender As Object, e As EditingCellEventArgs) Handles grprecio.EditingCell
 
         If btnGrabar.Enabled = False Then
+            e.Cancel = True
             Return
         End If
+
         If (_fnAccesible() And IsNothing(grprecio.DataSource) = False) Then
             'Deshabilitar la columna de Productos y solo habilitar la de los precios
-            If (e.Column.Index = grprecio.RootTable.Columns("yfcdprod1").Index) Then 'Or e.Column.Index = grprecio.RootTable.Columns("73").Index
+            If (e.Column.Index = grprecio.RootTable.Columns("yfcprod").Index Or
+                e.Column.Index = grprecio.RootTable.Columns("yfcdprod1").Index Or
+                e.Column.Index = grprecio.RootTable.Columns("Laboratorio").Index) Then
                 e.Cancel = True
             Else
                 e.Cancel = False

@@ -34,6 +34,7 @@ Partial Class F0_Ventas
         Me.PanelContentSup = New System.Windows.Forms.Panel()
         Me.GroupPanel1 = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.tbEmision = New System.Windows.Forms.ComboBox()
         Me.LabelX19 = New DevComponents.DotNetBar.LabelX()
         Me.SwProforma = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.LabelX18 = New DevComponents.DotNetBar.LabelX()
@@ -93,7 +94,6 @@ Partial Class F0_Ventas
         Me.GPanelProductos = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.grProductos = New Janus.Windows.GridEX.GridEX()
-        Me.tbEmision = New System.Windows.Forms.ComboBox()
         Me.PanelSuperior.SuspendLayout()
         Me.PanelInferior.SuspendLayout()
         CType(Me.BubbleBarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -223,6 +223,7 @@ Partial Class F0_Ventas
         '
         'btnModificar
         '
+        Me.btnModificar.Visible = False
         '
         'btnNuevo
         '
@@ -526,6 +527,15 @@ Partial Class F0_Ventas
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(1176, 188)
         Me.Panel2.TabIndex = 234
+        '
+        'tbEmision
+        '
+        Me.tbEmision.FormattingEnabled = True
+        Me.tbEmision.Items.AddRange(New Object() {"FACTURA", "RECIBO", "VENTA SOLIDARIA"})
+        Me.tbEmision.Location = New System.Drawing.Point(635, 71)
+        Me.tbEmision.Name = "tbEmision"
+        Me.tbEmision.Size = New System.Drawing.Size(185, 24)
+        Me.tbEmision.TabIndex = 374
         '
         'LabelX19
         '
@@ -1658,15 +1668,6 @@ Partial Class F0_Ventas
         Me.grProductos.Size = New System.Drawing.Size(714, 17)
         Me.grProductos.TabIndex = 0
         Me.grProductos.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
-        '
-        'tbEmision
-        '
-        Me.tbEmision.FormattingEnabled = True
-        Me.tbEmision.Items.AddRange(New Object() {"FACTURA", "RECIBO", "VENTA SOLIDARIA"})
-        Me.tbEmision.Location = New System.Drawing.Point(635, 71)
-        Me.tbEmision.Name = "tbEmision"
-        Me.tbEmision.Size = New System.Drawing.Size(185, 24)
-        Me.tbEmision.TabIndex = 374
         '
         'F0_Ventas
         '

@@ -1931,6 +1931,28 @@ Public Class AccesoLogica
     End Function
 #End Region
 
+#Region "REPORTE DETALLADO COMPRAS Y VENTAS"
+    Public Shared Function L_ComprasDetallado(fechaI As String, fechaF As String) As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 1))
+        _listParam.Add(New Datos.DParametro("@fechaI", fechaI))
+        _listParam.Add(New Datos.DParametro("@fechaF", fechaF))
+        _listParam.Add(New Datos.DParametro("@uact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("Sp_Mam_ReporteDetalladoComprasVentas", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_VentasDetallado(fechaI As String, fechaF As String) As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 2))
+        _listParam.Add(New Datos.DParametro("@fechaI", fechaI))
+        _listParam.Add(New Datos.DParametro("@fechaF", fechaF))
+        _listParam.Add(New Datos.DParametro("@uact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("Sp_Mam_ReporteDetalladoComprasVentas", _listParam)
+        Return _Tabla
+    End Function
+#End Region
 #Region "TA002 Deposito"
     Public Shared Function L_fnEliminarDeposito(numi As String, ByRef mensaje As String) As Boolean
         Dim _resultado As Boolean
@@ -3291,7 +3313,7 @@ Public Class AccesoLogica
         Return _resultado
     End Function
 
-    Public Shared Function L_prMovimientoEliminar(numi As String) As Boolean
+    Public Shared Function L_prMovimientoEliminar(numi As String, detalle As DataTable) As Boolean
         Dim _resultado As Boolean
 
         Dim _Tabla As DataTable
@@ -3299,6 +3321,7 @@ Public Class AccesoLogica
 
         _listParam.Add(New Datos.DParametro("@tipo", -1))
         _listParam.Add(New Datos.DParametro("@ibid", numi))
+        _listParam.Add(New Datos.DParametro("@TI0021", "", detalle))
         _listParam.Add(New Datos.DParametro("@ibuact", L_Usuario))
 
         _Tabla = D_ProcedimientoConParam("sp_Mam_TI002", _listParam)
@@ -3670,6 +3693,34 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@Vendedor", idVendedor))
         _listParam.Add(New Datos.DParametro("@Cliente", idCliente))
         _listParam.Add(New Datos.DParametro("@almacen", idAlmacen))
+        _listParam.Add(New Datos.DParametro("@uact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("Sp_Mam_ReporteVentas", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_BuscarVentasAtentidasFactura(fechaI As String, fechaF As String, idAlmacen As Integer, idVendedor As Integer, idCliente As Integer, emision As Integer) As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 2))
+        _listParam.Add(New Datos.DParametro("@fechaI", fechaI))
+        _listParam.Add(New Datos.DParametro("@fechaF", fechaF))
+        _listParam.Add(New Datos.DParametro("@Vendedor", idVendedor))
+        _listParam.Add(New Datos.DParametro("@Cliente", idCliente))
+        _listParam.Add(New Datos.DParametro("@almacen", idAlmacen))
+        _listParam.Add(New Datos.DParametro("@emision", emision))
+        _listParam.Add(New Datos.DParametro("@uact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("Sp_Mam_ReporteVentas", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Function L_BuscarVentasAtentidasReciboVSolidaria(fechaI As String, fechaF As String, idAlmacen As Integer, idVendedor As Integer, idCliente As Integer, emision As Integer) As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 3))
+        _listParam.Add(New Datos.DParametro("@fechaI", fechaI))
+        _listParam.Add(New Datos.DParametro("@fechaF", fechaF))
+        _listParam.Add(New Datos.DParametro("@Vendedor", idVendedor))
+        _listParam.Add(New Datos.DParametro("@Cliente", idCliente))
+        _listParam.Add(New Datos.DParametro("@almacen", idAlmacen))
+        _listParam.Add(New Datos.DParametro("@emision", emision))
         _listParam.Add(New Datos.DParametro("@uact", L_Usuario))
         _Tabla = D_ProcedimientoConParam("Sp_Mam_ReporteVentas", _listParam)
         Return _Tabla

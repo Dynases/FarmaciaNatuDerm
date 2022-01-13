@@ -1045,8 +1045,9 @@ Public Class F0_Movimiento
                 e.Cancel = False
             Else
                 If ((e.Column.Index = grdetalle.RootTable.Columns("iclot").Index Or
-                    e.Column.Index = grdetalle.RootTable.Columns("icfvenc").Index) And (cbConcepto.Value = 1) And
-                Lote = True) Then
+                    e.Column.Index = grdetalle.RootTable.Columns("icfvenc").Index Or
+                    e.Column.Index = grdetalle.RootTable.Columns("icpcosto").Index) And
+                    (cbConcepto.Value = 1) And Lote = True) Then
                     e.Cancel = False
                 Else
                     e.Cancel = True
@@ -1193,8 +1194,9 @@ salirIf:
 
     Private Sub grdetalle_CellValueChanged(sender As Object, e As ColumnActionEventArgs) Handles grdetalle.CellValueChanged
 
-        If (e.Column.Index = grdetalle.RootTable.Columns("iccant").Index) Then
-            If (Not IsNumeric(grdetalle.GetValue("iccant")) Or grdetalle.GetValue("iccant").ToString = String.Empty) Then
+        If (e.Column.Index = grdetalle.RootTable.Columns("iccant").Index) Or (e.Column.Index = grdetalle.RootTable.Columns("icpcosto").Index) Then
+            If (Not IsNumeric(grdetalle.GetValue("iccant")) Or grdetalle.GetValue("iccant").ToString = String.Empty Or
+                Not IsNumeric(grdetalle.GetValue("icpcosto")) Or grdetalle.GetValue("icpcosto").ToString = String.Empty) Then
 
                 'grDetalle.GetRow(rowIndex).Cells("cant").Value = 1
                 '  grDetalle.CurrentRow.Cells.Item("cant").Value = 1
@@ -1210,7 +1212,7 @@ salirIf:
                 End If
 
             Else
-                If (grdetalle.GetValue("iccant") > 0) Then
+                If (grdetalle.GetValue("iccant") > 0) Or (grdetalle.GetValue("icpcosto") > 0) Then
                     Dim lin As Integer = grdetalle.GetValue("icid")
                     Dim pos As Integer = -1
                     _fnObtenerFilaDetalle(pos, lin)
@@ -1233,7 +1235,9 @@ salirIf:
 
                 End If
             End If
+
         End If
+
     End Sub
 
     Private Sub grdetalle_CellEdited(sender As Object, e As ColumnActionEventArgs) Handles grdetalle.CellEdited
@@ -1321,7 +1325,27 @@ salirIf:
         bandera = ef.band
         If (bandera = True) Then
             Dim mensajeError As String = ""
-            Dim res As Boolean = L_prMovimientoEliminar(tbCodigo.Text)
+
+            Dim Bin As New MemoryStream
+            Dim img1 As New Bitmap(My.Resources.delete, 28, 28)
+            img1.Save(Bin, Imaging.ImageFormat.Png)
+            Dim detalleCopia As DataTable = CType(grdetalle.DataSource, DataTable).Copy
+            Dim estado As Integer = -1
+            detalleCopia.Rows.Clear()
+            For i As Integer = 0 To CType(grdetalle.DataSource, DataTable).Rows.Count - 1 Step 1
+                'a.icid ,a.icibid ,a.iccprod ,b.cadesc as producto,a.iccant ,Cast(null as image ) as img,1 as estado
+
+
+                detalleCopia.Rows.Add(CType(grdetalle.DataSource, DataTable).Rows(i).Item("icid"), tbCodigo.Text,
+                                  CType(grdetalle.DataSource, DataTable).Rows(i).Item("iccprod"), "", "", "", "",
+                                  CType(grdetalle.DataSource, DataTable).Rows(i).Item("iccant"),
+                                  CType(grdetalle.DataSource, DataTable).Rows(i).Item("iclot"),
+                                  CType(grdetalle.DataSource, DataTable).Rows(i).Item("icfvenc"),
+                                  CType(grdetalle.DataSource, DataTable).Rows(i).Item("icpcosto"), Bin.GetBuffer, estado, 0)
+
+
+            Next
+            Dim res As Boolean = L_prMovimientoEliminar(tbCodigo.Text, detalleCopia)
             If res Then
 
 

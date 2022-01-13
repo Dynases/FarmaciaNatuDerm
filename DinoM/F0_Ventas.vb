@@ -657,6 +657,7 @@ Public Class F0_Ventas
             .Visible = True
             .Caption = "TOTAL"
             .FormatString = "0.00"
+            .AggregateFunction = AggregateFunction.Sum
         End With
         With grVentas.RootTable.Columns("taemision")
             .Width = 50
@@ -668,6 +669,10 @@ Public Class F0_Ventas
             .FilterMode = FilterMode.Automatic
             .FilterRowUpdateMode = FilterRowUpdateMode.WhenValueChanges
             .GroupByBoxVisible = False
+
+            .TotalRow = InheritableBoolean.True
+            .TotalRowFormatStyle.BackColor = Color.Gold
+            .TotalRowPosition = TotalRowPosition.BottomFixed
             'diseño de la grilla
 
         End With

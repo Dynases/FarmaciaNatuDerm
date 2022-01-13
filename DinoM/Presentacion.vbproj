@@ -327,6 +327,18 @@
     <Compile Include="F1_Almacen.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="F1_VentaDetallada.designer.vb">
+      <DependentUpon>F1_VentaDetallada.vb</DependentUpon>
+    </Compile>
+    <Compile Include="F1_VentaDetallada.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="F1_CompraDetallada.designer.vb">
+      <DependentUpon>F1_CompraDetallada.vb</DependentUpon>
+    </Compile>
+    <Compile Include="F1_CompraDetallada.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="F1_Proveedor.Designer.vb">
       <DependentUpon>F1_Proveedor.vb</DependentUpon>
     </Compile>
@@ -891,6 +903,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="F1_Almacen.resx">
       <DependentUpon>F1_Almacen.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="F1_VentaDetallada.resx">
+      <DependentUpon>F1_VentaDetallada.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="F1_CompraDetallada.resx">
+      <DependentUpon>F1_CompraDetallada.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="F1_Proveedor.resx">
       <DependentUpon>F1_Proveedor.vb</DependentUpon>
@@ -1487,6 +1505,7 @@
     <None Include="Resources\cobro.png" />
     <None Include="Resources\creditopagos.png" />
     <None Include="Resources\cuentas.png" />
+    <None Include="Resources\codigobarra.png" />
     <Content Include="Resources\dinases.png" />
     <None Include="Resources\MapaClientes.png" />
     <None Include="Resources\ventasCostos.png" />

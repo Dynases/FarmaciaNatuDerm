@@ -1048,6 +1048,20 @@ Public Class P_Principal
         frm.Show()
     End Sub
 
+    Private Sub btComprasDetallado_Click(sender As Object, e As EventArgs) Handles btComprasDetallado.Click
+        Dim frm As New F1_CompraDetallada
+        frm._nameButton = btComprasDetallado.Name
+        frm._modulo = FP_COMPRAS
+        frm.Show()
+    End Sub
+
+    Private Sub btVentasDetalladas_Click(sender As Object, e As EventArgs) Handles btVentasDetalladas.Click
+        Dim frm As New F1_VentaDetallada
+        frm._nameButton = btComprasDetallado.Name
+        frm._modulo = FP_COMPRAS
+        frm.Show()
+    End Sub
+
     'Private Sub btnCredPagoCliente_Click(sender As Object, e As EventArgs) Handles btnCredPagoCliente.Click
     '    SideNav1.IsMenuExpanded = False
     '    Ventana.Select()

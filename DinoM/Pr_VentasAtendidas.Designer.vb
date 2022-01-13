@@ -24,6 +24,7 @@ Partial Class Pr_VentasAtendidas
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Pr_VentasAtendidas))
         Dim tbAlmacen_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
+        Dim cbEmision_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.swIce = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.swTipoVenta = New DevComponents.DotNetBar.Controls.SwitchButton()
@@ -47,6 +48,10 @@ Partial Class Pr_VentasAtendidas
         Me.tbFechaF = New DevComponents.Editors.DateTimeAdv.DateTimeInput()
         Me.LabelX4 = New DevComponents.DotNetBar.LabelX()
         Me.tbFechaI = New DevComponents.Editors.DateTimeAdv.DateTimeInput()
+        Me.swTipoEmision = New DevComponents.DotNetBar.Controls.SwitchButton()
+        Me.cbEmision = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
+        Me.LabelX6 = New DevComponents.DotNetBar.LabelX()
+        Me.LabelX7 = New DevComponents.DotNetBar.LabelX()
         CType(Me.SuperTabPrincipal, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuperTabPrincipal.SuspendLayout()
         Me.SuperTabControlPanelRegistro.SuspendLayout()
@@ -66,6 +71,7 @@ Partial Class Pr_VentasAtendidas
         CType(Me.tbAlmacen, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tbFechaF, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tbFechaI, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.cbEmision, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'SuperTabPrincipal
@@ -250,6 +256,10 @@ Partial Class Pr_VentasAtendidas
         'GroupBox2
         '
         Me.GroupBox2.BackColor = System.Drawing.Color.Transparent
+        Me.GroupBox2.Controls.Add(Me.LabelX7)
+        Me.GroupBox2.Controls.Add(Me.LabelX6)
+        Me.GroupBox2.Controls.Add(Me.cbEmision)
+        Me.GroupBox2.Controls.Add(Me.swTipoEmision)
         Me.GroupBox2.Controls.Add(Me.tbCliente)
         Me.GroupBox2.Controls.Add(Me.ckTodosCliente)
         Me.GroupBox2.Controls.Add(Me.ckUnoCliente)
@@ -627,6 +637,74 @@ Partial Class Pr_VentasAtendidas
         Me.tbFechaI.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
         Me.tbFechaI.TabIndex = 232
         '
+        'swTipoEmision
+        '
+        '
+        '
+        '
+        Me.swTipoEmision.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.swTipoEmision.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.swTipoEmision.Location = New System.Drawing.Point(108, 273)
+        Me.swTipoEmision.Name = "swTipoEmision"
+        Me.swTipoEmision.OffBackColor = System.Drawing.Color.DarkSlateGray
+        Me.swTipoEmision.OffText = "Un solo Tipo Emisión"
+        Me.swTipoEmision.OffTextColor = System.Drawing.Color.White
+        Me.swTipoEmision.OnBackColor = System.Drawing.Color.Gold
+        Me.swTipoEmision.OnText = "Todas las Ventas"
+        Me.swTipoEmision.Size = New System.Drawing.Size(165, 22)
+        Me.swTipoEmision.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.swTipoEmision.TabIndex = 258
+        Me.swTipoEmision.Value = True
+        Me.swTipoEmision.ValueObject = "Y"
+        '
+        'cbEmision
+        '
+        Me.cbEmision.ComboStyle = Janus.Windows.GridEX.ComboStyle.DropDownList
+        cbEmision_DesignTimeLayout.LayoutString = resources.GetString("cbEmision_DesignTimeLayout.LayoutString")
+        Me.cbEmision.DesignTimeLayout = cbEmision_DesignTimeLayout
+        Me.cbEmision.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cbEmision.Location = New System.Drawing.Point(108, 312)
+        Me.cbEmision.Name = "cbEmision"
+        Me.cbEmision.Office2007ColorScheme = Janus.Windows.GridEX.Office2007ColorScheme.Custom
+        Me.cbEmision.Office2007CustomColor = System.Drawing.Color.DodgerBlue
+        Me.cbEmision.SelectedIndex = -1
+        Me.cbEmision.SelectedItem = Nothing
+        Me.cbEmision.Size = New System.Drawing.Size(165, 21)
+        Me.cbEmision.TabIndex = 259
+        Me.cbEmision.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
+        '
+        'LabelX6
+        '
+        Me.LabelX6.BackColor = System.Drawing.Color.Transparent
+        '
+        '
+        '
+        Me.LabelX6.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX6.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.LabelX6.Location = New System.Drawing.Point(6, 310)
+        Me.LabelX6.Name = "LabelX6"
+        Me.LabelX6.SingleLineColor = System.Drawing.SystemColors.Control
+        Me.LabelX6.Size = New System.Drawing.Size(74, 23)
+        Me.LabelX6.TabIndex = 260
+        Me.LabelX6.Text = "Emisión:"
+        '
+        'LabelX7
+        '
+        Me.LabelX7.BackColor = System.Drawing.Color.Transparent
+        '
+        '
+        '
+        Me.LabelX7.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX7.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX7.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.LabelX7.Location = New System.Drawing.Point(6, 272)
+        Me.LabelX7.Name = "LabelX7"
+        Me.LabelX7.SingleLineColor = System.Drawing.SystemColors.Control
+        Me.LabelX7.Size = New System.Drawing.Size(84, 23)
+        Me.LabelX7.TabIndex = 261
+        Me.LabelX7.Text = "Seleccionar:"
+        '
         'Pr_VentasAtendidas
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -657,6 +735,7 @@ Partial Class Pr_VentasAtendidas
         CType(Me.tbAlmacen, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tbFechaF, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.tbFechaI, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.cbEmision, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -683,4 +762,8 @@ Partial Class Pr_VentasAtendidas
     Friend WithEvents ckUnoCliente As DevComponents.DotNetBar.Controls.CheckBoxX
     Friend WithEvents tbCodigoCliente As DevComponents.DotNetBar.Controls.TextBoxX
     Friend WithEvents LabelX5 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents swTipoEmision As DevComponents.DotNetBar.Controls.SwitchButton
+    Friend WithEvents LabelX7 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents LabelX6 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents cbEmision As Janus.Windows.GridEX.EditControls.MultiColumnCombo
 End Class
