@@ -1936,7 +1936,7 @@ Public Class F0_Ventas
             _NumFac = CInt(_DsFactura.Tables(0).Rows(0).Item("fvanfac"))
             _DsDosificacion = L_Dosificacion("1", "1", _Fecha)
         Else
-            _Fecha = Now.Date
+            _Fecha = tbFechaVenta.Value
             _Hora = Now.Hour.ToString + ":" + Now.Minute.ToString
             _DsDosificacion = L_Dosificacion("1", "1", _Fecha)
             _NumFac = CInt(_DsDosificacion.Tables(0).Rows(0).Item("sbnfac")) + 1
@@ -3541,5 +3541,11 @@ salirIf:
     Private Sub TbNombre1_TextChanged(sender As Object, e As EventArgs) Handles TbNombre1.TextChanged
 
     End Sub
+
+    Private Sub tbFechaVenta_ValueChanged(sender As Object, e As EventArgs) Handles tbFechaVenta.ValueChanged
+        dtiFechaFactura.Value = tbFechaVenta.Value
+    End Sub
+
+
 #End Region
 End Class

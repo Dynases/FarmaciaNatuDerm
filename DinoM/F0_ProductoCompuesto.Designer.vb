@@ -785,6 +785,7 @@ Partial Class F0_ProductoCompuesto
         Me.tb_Codigo.Location = New System.Drawing.Point(150, 41)
         Me.tb_Codigo.Name = "tb_Codigo"
         Me.tb_Codigo.PreventEnterBeep = True
+        Me.tb_Codigo.ReadOnly = True
         Me.tb_Codigo.Size = New System.Drawing.Size(85, 22)
         Me.tb_Codigo.TabIndex = 1
         Me.tb_Codigo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right

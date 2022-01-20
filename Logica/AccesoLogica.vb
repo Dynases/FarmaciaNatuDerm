@@ -2464,7 +2464,7 @@ Public Class AccesoLogica
             If (_Nom1 <> _Nom01) Or (_Nom2 <> _Nom02) Then
                 Sql = "sanom1 = '" + _Nom1 + "' " +
                       IIf(_Nom02.ToString.Trim.Equals(""), "", ", sanom2 = '" + _Nom2 + "', ")
-                _Err = D_Modificar_Datos("TS001", Sql, "sanit = " + _Nit)
+                _Err = D_Modificar_Datos("TS001", Sql, "sanit = '" + _Nit + "'")
             End If
         End If
 
