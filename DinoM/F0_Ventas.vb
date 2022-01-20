@@ -1929,14 +1929,16 @@ Public Class F0_Ventas
         End If
 
         _DsFactura = L_Reporte_Factura(numi, numi)
-        _DsDosificacion = L_Dosificacion("1", "1", _Fecha)
+
         If reimprimir Then
             _Fecha = _DsFactura.Tables(0).Rows(0).Item("fvafec").ToString
             _Hora = _DsFactura.Tables(0).Rows(0).Item("fvahora").ToString
             _NumFac = CInt(_DsFactura.Tables(0).Rows(0).Item("fvanfac"))
+            _DsDosificacion = L_Dosificacion("1", "1", _Fecha)
         Else
             _Fecha = Now.Date
             _Hora = Now.Hour.ToString + ":" + Now.Minute.ToString
+            _DsDosificacion = L_Dosificacion("1", "1", _Fecha)
             _NumFac = CInt(_DsDosificacion.Tables(0).Rows(0).Item("sbnfac")) + 1
         End If
         _Autorizacion = _DsDosificacion.Tables(0).Rows(0).Item("sbautoriz").ToString

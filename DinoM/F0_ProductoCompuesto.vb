@@ -735,7 +735,7 @@ Public Class F0_ProductoCompuesto
         btnEliminar.Enabled = False
         btnGrabar.Enabled = True
         tb_Id.ReadOnly = False
-        tb_Codigo.ReadOnly = False
+        'tb_Codigo.ReadOnly = False
         tb_Descripcion.ReadOnly = False
         tb_Observacion.ReadOnly = False
         tb_Fecha.IsInputReadOnly = False
