@@ -262,7 +262,7 @@ Public Class F0_Movimiento
             .Width = 160
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Far
             .Visible = True
-            .FormatString = "0"
+            .FormatString = "0.00"
             .Caption = "Cantidad".ToUpper
         End With
 
