@@ -492,7 +492,7 @@ Public Class F0_ProductoCompuesto
         End With
         With Dgv_Busqueda.RootTable.Columns(6)
             .Key = "TIpo"
-            .Caption = "TIpo"
+            .Caption = "Tipo"
             .Width = 150
             .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Center
@@ -512,7 +512,7 @@ Public Class F0_ProductoCompuesto
         End With
         With Dgv_Busqueda.RootTable.Columns(8)
             .Key = "pcCatidad"
-            .Caption = "Catidad"
+            .Caption = "Cantidad"
             .FormatString = "0.00"
             .Width = 100
             .HeaderAlignment = Janus.Windows.GridEX.TextAlignment.Center

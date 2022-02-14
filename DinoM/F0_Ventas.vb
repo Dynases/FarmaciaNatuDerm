@@ -297,40 +297,44 @@ Public Class F0_Ventas
 
 
             'If (gb_FacturaEmite) Then
-            Dim dt As DataTable = L_fnObtenerTabla("TFV001", "fvanitcli, fvadescli1, fvadescli2, fvaautoriz, fvanfac, fvaccont, fvafec", "fvanumi=" + tbCodigo.Text.Trim)
-            If (dt.Rows.Count = 1) Then
-                TbNit.Text = dt.Rows(0).Item("fvanitcli").ToString
-                TbNombre1.Text = dt.Rows(0).Item("fvadescli1").ToString
-                TbNombre2.Text = dt.Rows(0).Item("fvadescli2").ToString
+            If tbCodigo.Text <> String.Empty Then
 
-                tbNroAutoriz.Text = dt.Rows(0).Item("fvaautoriz").ToString
-                tbNroFactura.Text = dt.Rows(0).Item("fvanfac").ToString
-                tbCodigoControl.Text = dt.Rows(0).Item("fvaccont").ToString
-                dtiFechaFactura.Value = dt.Rows(0).Item("fvafec")
-            Else
-                TbNit.Clear()
-                TbNombre1.Clear()
-                TbNombre2.Clear()
 
-                tbNroAutoriz.Clear()
-                tbNroFactura.Clear()
-                tbCodigoControl.Clear()
-                dtiFechaFactura.Value = "2000/01/01"
+                Dim dt As DataTable = L_fnObtenerTabla("TFV001", "fvanitcli, fvadescli1, fvadescli2, fvaautoriz, fvanfac, fvaccont, fvafec", "fvanumi=" + tbCodigo.Text.Trim)
+                If (dt.Rows.Count = 1) Then
+                    TbNit.Text = dt.Rows(0).Item("fvanitcli").ToString
+                    TbNombre1.Text = dt.Rows(0).Item("fvadescli1").ToString
+                    TbNombre2.Text = dt.Rows(0).Item("fvadescli2").ToString
+
+                    tbNroAutoriz.Text = dt.Rows(0).Item("fvaautoriz").ToString
+                    tbNroFactura.Text = dt.Rows(0).Item("fvanfac").ToString
+                    tbCodigoControl.Text = dt.Rows(0).Item("fvaccont").ToString
+                    dtiFechaFactura.Value = dt.Rows(0).Item("fvafec")
+                Else
+                    TbNit.Clear()
+                    TbNombre1.Clear()
+                    TbNombre2.Clear()
+
+                    tbNroAutoriz.Clear()
+                    tbNroFactura.Clear()
+                    tbCodigoControl.Clear()
+                    dtiFechaFactura.Value = "2000/01/01"
+                End If
+                'End If
+
+                lbFecha.Text = CType(.GetValue("tafact"), Date).ToString("dd/MM/yyyy")
+                lbHora.Text = .GetValue("tahact").ToString
+                lbUsuario.Text = .GetValue("tauact").ToString
             End If
-            'End If
-
-            lbFecha.Text = CType(.GetValue("tafact"), Date).ToString("dd/MM/yyyy")
-            lbHora.Text = .GetValue("tahact").ToString
-            lbUsuario.Text = .GetValue("tauact").ToString
-
         End With
 
-        _prCargarDetalleVenta(tbCodigo.Text)
-        tbMdesc.Value = grVentas.GetValue("tadesc")
-        tbIce.Value = grVentas.GetValue("taice")
-        _prCalcularPrecioTotal()
-        LblPaginacion.Text = Str(grVentas.Row + 1) + "/" + grVentas.RowCount.ToString
-
+        If tbCodigo.Text <> String.Empty Then
+            _prCargarDetalleVenta(tbCodigo.Text)
+            tbMdesc.Value = grVentas.GetValue("tadesc")
+            tbIce.Value = grVentas.GetValue("taice")
+            _prCalcularPrecioTotal()
+            LblPaginacion.Text = Str(grVentas.Row + 1) + "/" + grVentas.RowCount.ToString
+        End If
     End Sub
 
     Private Sub _prCargarDetalleVenta(_numi As String)
