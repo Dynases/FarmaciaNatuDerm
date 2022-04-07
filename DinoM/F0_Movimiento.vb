@@ -815,13 +815,13 @@ Public Class F0_Movimiento
     End Sub
     Sub _prGuardarTraspaso()
         Dim numi As String = ""
-        Dim res As Boolean = L_prMovimientoChoferGrabar(numi, tbFecha.Value.ToString("yyyy/MM/dd"), cbConcepto.Value, tbObservacion.Text, cbAlmacenOrigen.Value, cbDepositoDestino.Value, 0)
+        Dim res As Boolean = L_prMovimientoChoferGrabar(numi, tbFecha.Value.ToString("yyyy/MM/dd"), cbConcepto.Value, tbObservacion.Text, cbAlmacenOrigen.Value, cbDepositoDestino.Value, 0, swContabiliza.Value, 0)
         If res Then
             If (numi <> String.Empty) Then
                 _prGardarDetalleAbm(numi)
             End If
             Dim numDestino As String = ""
-            Dim resDestino As Boolean = L_prMovimientoChoferGrabar(numDestino, tbFecha.Value.ToString("yyyy/MM/dd"), 5, tbObservacion.Text, cbDepositoDestino.Value, cbAlmacenOrigen.Value, numi)
+            Dim resDestino As Boolean = L_prMovimientoChoferGrabar(numDestino, tbFecha.Value.ToString("yyyy/MM/dd"), 5, tbObservacion.Text, cbDepositoDestino.Value, cbAlmacenOrigen.Value, numi, swContabiliza.Value, 0)
             If resDestino Then
                 If (numDestino <> String.Empty) Then
                     _prGardarDetalleAbm(numDestino)
@@ -844,14 +844,21 @@ Public Class F0_Movimiento
     End Sub
     Public Sub _GuardarNuevo()
         'ByRef _ibid As String, _ibfdoc As String, _ibconcep As Integer, _ibobs As String, _almacen As Integer
-
+        Dim totalDetalle As Decimal
         If (cbConcepto.Value = 6) Then
             _prGuardarTraspaso()
             Return
-
+            'obtengo el valor total
         End If
+        If (cbConcepto.Value = 2 And swContabiliza.Value = True) Then
+
+            For Each row As GridEXRow In grdetalle.GetRows
+                totalDetalle = (Convert.ToDecimal(row.Cells("iccant").Value) * Convert.ToDecimal(row.Cells("icpcosto").Value)) + totalDetalle
+            Next
+        End If
+
         Dim numi As String = ""
-        Dim res As Boolean = L_prMovimientoChoferGrabar(numi, tbFecha.Value.ToString("yyyy/MM/dd"), cbConcepto.Value, tbObservacion.Text, cbAlmacenOrigen.Value, 0, 0)
+        Dim res As Boolean = L_prMovimientoChoferGrabar(numi, tbFecha.Value.ToString("yyyy/MM/dd"), cbConcepto.Value, tbObservacion.Text, cbAlmacenOrigen.Value, 0, 0, swContabiliza.Value, totalDetalle)
         If res Then
             If (numi <> String.Empty) Then
                 _prGardarDetalleAbm(numi)

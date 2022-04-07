@@ -3258,7 +3258,7 @@ Public Class AccesoLogica
     End Function
 
 
-    Public Shared Function L_prMovimientoChoferGrabar(ByRef _ibid As String, _ibfdoc As String, _ibconcep As Integer, _ibobs As String, _almacen As Integer, _depositoDestino As Integer, _ibidOrigen As Integer) As Boolean
+    Public Shared Function L_prMovimientoChoferGrabar(ByRef _ibid As String, _ibfdoc As String, _ibconcep As Integer, _ibobs As String, _almacen As Integer, _depositoDestino As Integer, _ibidOrigen As Integer, _swcontabiliza As Boolean, _totalDetalle As Decimal) As Boolean
         Dim _resultado As Boolean
         Dim _Tabla As DataTable
         Dim _listParam As New List(Of Datos.DParametro)
@@ -3273,6 +3273,8 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@ibiddc", 0))
         _listParam.Add(New Datos.DParametro("@ibidOrigen", _ibidOrigen))
         _listParam.Add(New Datos.DParametro("@ibuact", L_Usuario))
+        _listParam.Add(New Datos.DParametro("@ibcontabiliza", _swcontabiliza))
+        _listParam.Add(New Datos.DParametro("@totalDetalle", _totalDetalle))
         _Tabla = D_ProcedimientoConParam("sp_Mam_TI002", _listParam)
         If _Tabla.Rows.Count > 0 Then
             _ibid = _Tabla.Rows(0).Item(0)
