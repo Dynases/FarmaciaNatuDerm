@@ -106,6 +106,7 @@ Public Class F0_Movimiento
         tbObservacion.ReadOnly = True
         tbFecha.IsInputReadOnly = True
         cbAlmacenOrigen.ReadOnly = True
+        swContabiliza.IsReadOnly = True
         ''''''''''
         btnModificar.Enabled = True
         btnGrabar.Enabled = False
@@ -129,6 +130,7 @@ Public Class F0_Movimiento
         tbFecha.IsInputReadOnly = False
         cbAlmacenOrigen.ReadOnly = False
         grmovimiento.Enabled = False
+        swContabiliza.IsReadOnly = False
         ''  tbCliente.ReadOnly = False  por que solo podra seleccionar Cliente
         ''  tbVendedor.ReadOnly = False
         If (tbCodigo.Text.Length > 0) Then
@@ -157,6 +159,7 @@ Public Class F0_Movimiento
         tbCodigo.Clear()
         tbObservacion.Clear()
         tbFecha.Value = Now.Date
+        swContabiliza.Value = False
         _prCargarDetalleVenta(-1)
 
 
@@ -196,6 +199,7 @@ Public Class F0_Movimiento
             lbUsuario.Text = .GetValue("ibuact").ToString
             cbAlmacenOrigen.Value = .GetValue("ibalm")
             cbDepositoDestino.Value = IIf(IsDBNull(.GetValue("ibdepdest")), 0, .GetValue("ibdepdest"))
+            swContabiliza.Value = .GetValue("ibcontabiliza")
         End With
 
         _prCargarDetalleVenta(tbCodigo.Text)
@@ -361,9 +365,9 @@ Public Class F0_Movimiento
             .Caption = "CONCEPTO"
         End With
         With grmovimiento.RootTable.Columns("ibobs")
-            .Width = 250
+            .Width = 550
             .Visible = True
-            .Caption = "observacion".ToUpper
+            .Caption = "Observación".ToUpper
         End With
 
 
@@ -401,10 +405,13 @@ Public Class F0_Movimiento
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
             .Visible = False
         End With
-     
+
         With grmovimiento.RootTable.Columns("ibdepdest")
             .Width = 50
             .CellStyle.TextAlignment = Janus.Windows.GridEX.TextAlignment.Near
+            .Visible = False
+        End With
+        With grmovimiento.RootTable.Columns("ibcontabiliza")
             .Visible = False
         End With
         With grmovimiento
@@ -815,13 +822,13 @@ Public Class F0_Movimiento
     End Sub
     Sub _prGuardarTraspaso()
         Dim numi As String = ""
-        Dim res As Boolean = L_prMovimientoChoferGrabar(numi, tbFecha.Value.ToString("yyyy/MM/dd"), cbConcepto.Value, tbObservacion.Text, cbAlmacenOrigen.Value, cbDepositoDestino.Value, 0, swContabiliza.Value, 0)
+        Dim res As Boolean = L_prMovimientoChoferGrabar(numi, tbFecha.Value.ToString("yyyy/MM/dd"), cbConcepto.Value, tbObservacion.Text, cbAlmacenOrigen.Value, cbDepositoDestino.Value, 0, 0, 0)
         If res Then
             If (numi <> String.Empty) Then
                 _prGardarDetalleAbm(numi)
             End If
             Dim numDestino As String = ""
-            Dim resDestino As Boolean = L_prMovimientoChoferGrabar(numDestino, tbFecha.Value.ToString("yyyy/MM/dd"), 5, tbObservacion.Text, cbDepositoDestino.Value, cbAlmacenOrigen.Value, numi, swContabiliza.Value, 0)
+            Dim resDestino As Boolean = L_prMovimientoChoferGrabar(numDestino, tbFecha.Value.ToString("yyyy/MM/dd"), 5, tbObservacion.Text, cbDepositoDestino.Value, cbAlmacenOrigen.Value, numi, 0, 0)
             If resDestino Then
                 If (numDestino <> String.Empty) Then
                     _prGardarDetalleAbm(numDestino)
@@ -848,17 +855,18 @@ Public Class F0_Movimiento
         If (cbConcepto.Value = 6) Then
             _prGuardarTraspaso()
             Return
-            'obtengo el valor total
         End If
         If (cbConcepto.Value = 2 And swContabiliza.Value = True) Then
-
             For Each row As GridEXRow In grdetalle.GetRows
-                totalDetalle = (Convert.ToDecimal(row.Cells("iccant").Value) * Convert.ToDecimal(row.Cells("icpcosto").Value)) + totalDetalle
+                Dim estado As Integer = Convert.ToInt32(row.Cells("estado").Value)
+                If (estado = 0) Then
+                    totalDetalle = (Convert.ToDecimal(row.Cells("iccant").Value) * Convert.ToDecimal(row.Cells("icpcosto").Value)) + totalDetalle
+                End If
             Next
         End If
 
         Dim numi As String = ""
-        Dim res As Boolean = L_prMovimientoChoferGrabar(numi, tbFecha.Value.ToString("yyyy/MM/dd"), cbConcepto.Value, tbObservacion.Text, cbAlmacenOrigen.Value, 0, 0, swContabiliza.Value, totalDetalle)
+        Dim res As Boolean = L_prMovimientoChoferGrabar(numi, tbFecha.Value.ToString("yyyy/MM/dd"), cbConcepto.Value, tbObservacion.Text, cbAlmacenOrigen.Value, 0, 0, IIf(cbConcepto.Value = 2, swContabiliza.Value, 0), totalDetalle)
         If res Then
             If (numi <> String.Empty) Then
                 _prGardarDetalleAbm(numi)
@@ -880,7 +888,16 @@ Public Class F0_Movimiento
 
     End Sub
     Private Sub _prGuardarModificado()
-        Dim res As Boolean = L_prMovimientoModificar(tbCodigo.Text, tbFecha.Value.ToString("yyyy/MM/dd"), cbConcepto.Value, tbObservacion.Text, cbAlmacenOrigen.Value)
+        Dim totalDetalle As Decimal
+        If (cbConcepto.Value = 2 And swContabiliza.Value = True) Then
+            For Each row As GridEXRow In grdetalle.GetRows
+                Dim estado As Integer = Convert.ToInt32(row.Cells("estado").Value)
+                If (estado = 0 Or estado = 1 Or estado = 2) Then
+                    totalDetalle = (Convert.ToDecimal(row.Cells("iccant").Value) * Convert.ToDecimal(row.Cells("icpcosto").Value)) + totalDetalle
+                End If
+            Next
+        End If
+        Dim res As Boolean = L_prMovimientoModificar(tbCodigo.Text, tbFecha.Value.ToString("yyyy/MM/dd"), cbConcepto.Value, tbObservacion.Text, cbAlmacenOrigen.Value, IIf(cbConcepto.Value = 2, swContabiliza.Value, 0), totalDetalle)
         If res Then
 
             _prGardarDetalleAbm(tbCodigo.Text)
@@ -1308,6 +1325,16 @@ salirIf:
     End Sub
 
     Private Sub btnModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
+        If cbConcepto.Value = 2 Then
+            Dim res As Boolean = L_fnVerificarSiSeContabilizoMov(tbCodigo.Text)
+            If res Then
+                Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                ToastNotification.Show(Me, "El movimiento no puede ser Modificado porque ya fue contabilizado".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.TopCenter)
+                Return
+            End If
+        End If
+
+
         If (grmovimiento.RowCount > 0) Then
             _prhabilitar()
             btnNuevo.Enabled = False
@@ -1318,12 +1345,20 @@ salirIf:
             PanelInferior.Enabled = False
             _prCargarIconELiminar()
         End If
+
     End Sub
 
     Private Sub btnEliminar_Click(sender As Object, e As EventArgs) Handles btnEliminar.Click
+        If cbConcepto.Value = 2 Then
+            Dim res As Boolean = L_fnVerificarSiSeContabilizoMov(tbCodigo.Text)
+            If res Then
+                Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                ToastNotification.Show(Me, "El movimiento no puede ser Eliminado porque ya fue contabilizado".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.TopCenter)
+                Return
+            End If
+        End If
+
         Dim ef = New Efecto
-
-
         ef.tipo = 2
         ef.Context = "¿esta seguro de eliminar el registro?".ToUpper
         ef.Header = "mensaje principal".ToUpper
@@ -1464,7 +1499,14 @@ salirIf:
                 lbDepositoDestino.Visible = False
                 cbDepositoDestino.Visible = False
                 lbDepositoOrigen.Text = "Deposito:"
-              
+
+            End If
+            If (cbConcepto.Value = 2) Then
+                swContabiliza.Visible = True
+                lbContabiliza.Visible = True
+            Else
+                swContabiliza.Visible = False
+                lbContabiliza.Visible = False
             End If
             If (_fnAccesible() And tbCodigo.Text = String.Empty) Then
                 CType(grdetalle.DataSource, DataTable).Rows.Clear()

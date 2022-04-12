@@ -3287,7 +3287,7 @@ Public Class AccesoLogica
     End Function
 
 
-    Public Shared Function L_prMovimientoModificar(ByRef _ibid As String, _ibfdoc As String, _ibconcep As Integer, _ibobs As String, _almacen As Integer) As Boolean
+    Public Shared Function L_prMovimientoModificar(ByRef _ibid As String, _ibfdoc As String, _ibconcep As Integer, _ibobs As String, _almacen As Integer, _swcontabiliza As Boolean, _totalDetalle As Decimal) As Boolean
         Dim _resultado As Boolean
 
         Dim _Tabla As DataTable
@@ -3301,8 +3301,9 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@ibest", 1))
         _listParam.Add(New Datos.DParametro("@ibalm", _almacen))
         _listParam.Add(New Datos.DParametro("@ibiddc", 0))
-
         _listParam.Add(New Datos.DParametro("@ibuact", L_Usuario))
+        _listParam.Add(New Datos.DParametro("@ibcontabiliza", _swcontabiliza))
+        _listParam.Add(New Datos.DParametro("@totalDetalle", _totalDetalle))
         _Tabla = D_ProcedimientoConParam("sp_Mam_TI002", _listParam)
 
         If _Tabla.Rows.Count > 0 Then
@@ -3527,6 +3528,24 @@ Public Class AccesoLogica
         _Tabla = D_ProcedimientoConParam("sp_Mam_TI002", _listParam)
 
         Return _Tabla
+    End Function
+    Public Shared Function L_fnVerificarSiSeContabilizoMov(_ibid As String) As Boolean
+        Dim _Tabla As DataTable
+        Dim _resultado As Boolean
+        Dim _listParam As New List(Of Datos.DParametro)
+
+        _listParam.Add(New Datos.DParametro("@tipo", 42))
+        _listParam.Add(New Datos.DParametro("@ibid", _ibid))
+        _listParam.Add(New Datos.DParametro("@ibuact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TI002", _listParam)
+
+        If _Tabla.Rows.Count > 0 Then
+            _resultado = True
+        Else
+            _resultado = False
+        End If
+
+        Return _resultado
     End Function
     'Buscar Stock por lote segun un criterio de busqueda
     Public Shared Function L_fnBuscarStockLote(_valor1 As String, _laboratorio As Boolean, _valor2 As String, _fechaVenc As Boolean) As DataTable
