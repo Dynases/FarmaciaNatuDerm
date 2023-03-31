@@ -416,7 +416,8 @@ Public Class AccesoLogica
                                               _yfcdprod2 As String, _yfgr1 As Integer, _yfgr2 As Integer,
                                               _yfgr3 As Integer, _yfgr4 As Integer, _yfMed As Integer, _yfumin As Integer,
                                               _yfusup As Integer, _yfvsup As Double, _yfsmin As Integer, _yfap As Integer,
-                                              _yfimg As String, TY0051 As DataTable, _tipoProducto As String
+                                              _yfimg As String, TY0051 As DataTable, _tipoProducto As String,
+                                               _ycodact As String, _ycodu As Integer, _ycodprosin As String, _ypreciosif As Double
                                               ) As Boolean
         Dim _resultado As Boolean
         '@yfnumi ,@yfcprod ,@yfcbarra ,@yfcdprod1 ,@yfcdprod2 ,
@@ -443,6 +444,11 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@yfmstk", _tipoProducto))
         _listParam.Add(New Datos.DParametro("@yfclot", 0))
 
+        _listParam.Add(New Datos.DParametro("@ycodact", _ycodact))
+        _listParam.Add(New Datos.DParametro("@ygcodu", _ycodu))
+        _listParam.Add(New Datos.DParametro("@ycodprosin", _ycodprosin))
+        _listParam.Add(New Datos.DParametro("@ypreciosif", _ypreciosif))
+
         _listParam.Add(New Datos.DParametro("@yfsmin", _yfsmin))
         _listParam.Add(New Datos.DParametro("@yfap", _yfap))
         _listParam.Add(New Datos.DParametro("@yfimg", _yfimg))
@@ -466,7 +472,8 @@ Public Class AccesoLogica
                                                  _yfgr3 As Integer, _yfgr4 As Integer, _yfMed As Integer,
                                                  _yfumin As Integer, _yfusup As Integer, _yfvsup As Double,
                                                  _yfsmin As Integer, _yfap As Integer, _yfimg As String,
-                                                 TY0051 As DataTable, _tipoProducto As String
+                                                 TY0051 As DataTable, _tipoProducto As String,
+                                                  _ycodact As String, _ycodu As Integer, _ycodprosin As String, _ypreciosif As Double
                                               ) As Boolean
         Dim _resultado As Boolean
 
@@ -490,6 +497,11 @@ Public Class AccesoLogica
         _listParam.Add(New Datos.DParametro("@yfvsup", _yfvsup))
         _listParam.Add(New Datos.DParametro("@yfmstk", _tipoProducto))
         _listParam.Add(New Datos.DParametro("@yfclot", 0))
+
+        _listParam.Add(New Datos.DParametro("@ycodact", _ycodact))
+        _listParam.Add(New Datos.DParametro("@ygcodu", _ycodu))
+        _listParam.Add(New Datos.DParametro("@ycodprosin", _ycodprosin))
+        _listParam.Add(New Datos.DParametro("@ypreciosif", _ypreciosif))
 
         _listParam.Add(New Datos.DParametro("@yfsmin", _yfsmin))
         _listParam.Add(New Datos.DParametro("@yfap", _yfap))
@@ -2308,13 +2320,15 @@ Public Class AccesoLogica
                                        _NitCli As String, _CodCli As String, _DesCli1 As String, _DesCli2 As String,
                                        _A As String, _B As String, _C As String, _D As String, _E As String, _F As String,
                                        _G As String, _H As String, _CodCon As String, _FecLim As String,
-                                       _Imgqr As String, _Alm As String, _Numi2 As String, _hora As String)
+                                       _Imgqr As String, _Alm As String, _Numi2 As String, _hora As String, _qrurl As String,
+                                       _facturl As String, _2leyenda As String, _3leyenda As String, _cufd As String,
+                                        _anhio As String)
         Dim Sql As String
         Try
             Sql = "" + _Numi + ", " _
                 + "'" + _Fecha + "', " _
                 + "" + _Nfac + ", " _
-                + "" + _NAutoriz + ", " _
+                + "'" + _NAutoriz + "', " _
                 + "" + _Est + ", " _
                 + "'" + _NitCli + "', " _
                 + "" + _CodCli + ", " _
@@ -2333,7 +2347,13 @@ Public Class AccesoLogica
                 + "" + _Imgqr + ", " _
                 + "" + _Alm + ", " _
                 + "" + _Numi2 + ", " _
-                + "'" + _hora + "'"
+                + "'" + _hora + "', " _
+            + "'" + _qrurl + "', " _
+                + "'" + _facturl + "', " _
+                + "'" + _2leyenda + "', " _
+                + "'" + _3leyenda + "', " _
+                + "'" + _cufd + "', " _
+            + "" + _anhio + ""
             D_Insertar_Datos("TFV001", Sql)
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -2449,28 +2469,38 @@ Public Class AccesoLogica
         Return _Tabla
     End Function
 
-    Public Shared Sub L_Grabar_Nit(_Nit As String, _Nom1 As String, _Nom2 As String)
+    Public Shared Sub L_Grabar_Nit(_Nit As String, _Nom1 As String, _Nom2 As String, _TipoDoc As String, _Correo As String)
         Dim _Err As Boolean
-        Dim _Nom01, _Nom02 As String
+        Dim _Nom01, _Nom02, Correo, TipoDoc As String
         Dim Sql As String
         _Nom01 = ""
         _Nom02 = ""
-        L_Validar_Nit(_Nit, _Nom01, _Nom02)
+        Correo = ""
+        TipoDoc = ""
+        L_Validar_Nit(_Nit, _Nom01, _Nom02, Correo, TipoDoc, "")
 
         If _Nom01 = "" Then
-            Sql = _Nit + ", '" + _Nom1 + "', '" + _Nom2 + "'"
+            Sql = "'" + _Nit + "', '" + _Nom1 + "', '" + _Nom2 + "', '" + _TipoDoc + "','" + _Correo + "'"
             _Err = D_Insertar_Datos("TS001", Sql)
         Else
-            If (_Nom1 <> _Nom01) Or (_Nom2 <> _Nom02) Then
-                Sql = "sanom1 = '" + _Nom1 + "' " +
-                      IIf(_Nom02.ToString.Trim.Equals(""), "", ", sanom2 = '" + _Nom2 + "', ")
+            If (_Nom1 <> _Nom01 Or _Correo <> Correo Or _TipoDoc <> TipoDoc) Then
+                Sql = "sanom1 = '" + _Nom1 + "' " + " , satipdoc = '" + _TipoDoc + "' " + " , sacorreo = '" + _Correo + "' " +
+                       ", sanom2 = '" + _Nom2 + "' "
                 _Err = D_Modificar_Datos("TS001", Sql, "sanit = '" + _Nit + "'")
             End If
         End If
 
     End Sub
-
-    Public Shared Sub L_Validar_Nit(_Nit As String, ByRef _Nom1 As String, ByRef _Nom2 As String)
+    Public Shared Function L_fnRecuperarFactura(tanumi As Integer) As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 24))
+        _listParam.Add(New Datos.DParametro("@tanumi", tanumi))
+        _listParam.Add(New Datos.DParametro("@tauact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TV001", _listParam)
+        Return _Tabla
+    End Function
+    Public Shared Sub L_Validar_Nit(_Nit As String, ByRef _Nom1 As String, ByRef _Nom2 As String, ByRef _Correo As String, ByRef _TipoDoc As String, ByRef _Id As String)
         Dim _Tabla As DataTable
 
         _Tabla = D_Datos_Tabla("*", "TS001", "sanit = '" + _Nit + "'")
@@ -2478,6 +2508,9 @@ Public Class AccesoLogica
         If _Tabla.Rows.Count > 0 Then
             _Nom1 = _Tabla.Rows(0).Item(2)
             _Nom2 = IIf(_Tabla.Rows(0).Item(3).ToString.Trim.Equals(""), "", _Tabla.Rows(0).Item(3))
+            _Correo = _Tabla.Rows(0).Item(5)
+            _TipoDoc = _Tabla.Rows(0).Item(4)
+            _Id = _Tabla.Rows(0).Item(0)
         End If
     End Sub
 
@@ -5735,5 +5768,14 @@ Public Class AccesoLogica
         Return _Tabla
     End Function
 #End Region
-
+    Public Shared Function L_fnObtenerMaxFact(_nrocaja As Integer, _anhio As Integer) As DataTable
+        Dim _Tabla As DataTable
+        Dim _listParam As New List(Of Datos.DParametro)
+        _listParam.Add(New Datos.DParametro("@tipo", 19))
+        _listParam.Add(New Datos.DParametro("@taNrocaja", _nrocaja))
+        _listParam.Add(New Datos.DParametro("@anhio", _anhio))
+        _listParam.Add(New Datos.DParametro("@tauact", L_Usuario))
+        _Tabla = D_ProcedimientoConParam("sp_Mam_TV001", _listParam)
+        Return _Tabla
+    End Function
 End Class

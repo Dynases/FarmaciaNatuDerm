@@ -22,8 +22,10 @@ Partial Class F0_Ventas
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F0_Ventas))
         Dim cbSucursal_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
+        Dim CbTipoDoc_DesignTimeLayout As Janus.Windows.GridEX.GridEXLayout = New Janus.Windows.GridEX.GridEXLayout()
         Me.SuperTabItem1 = New DevComponents.DotNetBar.SuperTabItem()
         Me.SuperTabControlPanel2 = New DevComponents.DotNetBar.SuperTabControlPanel()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
@@ -71,6 +73,8 @@ Partial Class F0_Ventas
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.grdetalle = New Janus.Windows.GridEX.GridEX()
         Me.PanelTotal = New System.Windows.Forms.Panel()
+        Me.CbTipoDoc = New Janus.Windows.GridEX.EditControls.MultiColumnCombo()
+        Me.LabelX25 = New DevComponents.DotNetBar.LabelX()
         Me.GroupPanelFactura = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.QrFactura = New Gma.QrCodeNet.Encoding.Windows.Forms.QrCodeImgControl()
         Me.TbNit = New DevComponents.DotNetBar.Controls.TextBoxX()
@@ -94,6 +98,9 @@ Partial Class F0_Ventas
         Me.GPanelProductos = New DevComponents.DotNetBar.Controls.GroupPanel()
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.grProductos = New Janus.Windows.GridEX.GridEX()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.TbEmail = New DevComponents.DotNetBar.Controls.TextBoxX()
+        Me.LabelX27 = New DevComponents.DotNetBar.LabelX()
         Me.PanelSuperior.SuspendLayout()
         Me.PanelInferior.SuspendLayout()
         CType(Me.BubbleBarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -129,6 +136,7 @@ Partial Class F0_Ventas
         Me.Panel5.SuspendLayout()
         CType(Me.grdetalle, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelTotal.SuspendLayout()
+        CType(Me.CbTipoDoc, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupPanelFactura.SuspendLayout()
         CType(Me.QrFactura, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel4.SuspendLayout()
@@ -1250,6 +1258,10 @@ Partial Class F0_Ventas
         Me.PanelTotal.AutoScroll = True
         Me.PanelTotal.BackColor = System.Drawing.Color.SlateGray
         Me.PanelTotal.BackgroundImage = Global.DinoM.My.Resources.Resources.fondo1
+        Me.PanelTotal.Controls.Add(Me.TbEmail)
+        Me.PanelTotal.Controls.Add(Me.LabelX27)
+        Me.PanelTotal.Controls.Add(Me.CbTipoDoc)
+        Me.PanelTotal.Controls.Add(Me.LabelX25)
         Me.PanelTotal.Controls.Add(Me.GroupPanelFactura)
         Me.PanelTotal.Controls.Add(Me.Panel4)
         Me.PanelTotal.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -1257,6 +1269,39 @@ Partial Class F0_Ventas
         Me.PanelTotal.Name = "PanelTotal"
         Me.PanelTotal.Size = New System.Drawing.Size(1182, 140)
         Me.PanelTotal.TabIndex = 1
+        '
+        'CbTipoDoc
+        '
+        Me.CbTipoDoc.BorderStyle = Janus.Windows.GridEX.BorderStyle.Flat
+        Me.CbTipoDoc.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
+        CbTipoDoc_DesignTimeLayout.LayoutString = resources.GetString("CbTipoDoc_DesignTimeLayout.LayoutString")
+        Me.CbTipoDoc.DesignTimeLayout = CbTipoDoc_DesignTimeLayout
+        Me.CbTipoDoc.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CbTipoDoc.Location = New System.Drawing.Point(495, 35)
+        Me.CbTipoDoc.Name = "CbTipoDoc"
+        Me.CbTipoDoc.Office2007ColorScheme = Janus.Windows.GridEX.Office2007ColorScheme.Custom
+        Me.CbTipoDoc.Office2007CustomColor = System.Drawing.Color.DodgerBlue
+        Me.CbTipoDoc.SelectedIndex = -1
+        Me.CbTipoDoc.SelectedItem = Nothing
+        Me.CbTipoDoc.Size = New System.Drawing.Size(278, 22)
+        Me.CbTipoDoc.TabIndex = 420
+        Me.CbTipoDoc.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
+        '
+        'LabelX25
+        '
+        Me.LabelX25.BackColor = System.Drawing.Color.Transparent
+        '
+        '
+        '
+        Me.LabelX25.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX25.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX25.ForeColor = System.Drawing.Color.White
+        Me.LabelX25.Location = New System.Drawing.Point(495, 6)
+        Me.LabelX25.Name = "LabelX25"
+        Me.LabelX25.SingleLineColor = System.Drawing.SystemColors.Control
+        Me.LabelX25.Size = New System.Drawing.Size(112, 23)
+        Me.LabelX25.TabIndex = 421
+        Me.LabelX25.Text = "Tipo Documento:"
         '
         'GroupPanelFactura
         '
@@ -1669,6 +1714,43 @@ Partial Class F0_Ventas
         Me.grProductos.TabIndex = 0
         Me.grProductos.VisualStyle = Janus.Windows.GridEX.VisualStyle.Office2007
         '
+        'Timer1
+        '
+        Me.Timer1.Enabled = True
+        Me.Timer1.Interval = 1000
+        '
+        'TbEmail
+        '
+        Me.TbEmail.BackColor = System.Drawing.Color.White
+        '
+        '
+        '
+        Me.TbEmail.Border.Class = "TextBoxBorder"
+        Me.TbEmail.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.TbEmail.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.TbEmail.ForeColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(66, Byte), Integer))
+        Me.TbEmail.Location = New System.Drawing.Point(495, 82)
+        Me.TbEmail.Name = "TbEmail"
+        Me.TbEmail.PreventEnterBeep = True
+        Me.TbEmail.Size = New System.Drawing.Size(278, 21)
+        Me.TbEmail.TabIndex = 422
+        '
+        'LabelX27
+        '
+        Me.LabelX27.BackColor = System.Drawing.Color.Transparent
+        '
+        '
+        '
+        Me.LabelX27.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.LabelX27.Font = New System.Drawing.Font("Georgia", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelX27.ForeColor = System.Drawing.Color.White
+        Me.LabelX27.Location = New System.Drawing.Point(495, 58)
+        Me.LabelX27.Name = "LabelX27"
+        Me.LabelX27.SingleLineColor = System.Drawing.SystemColors.Control
+        Me.LabelX27.Size = New System.Drawing.Size(70, 23)
+        Me.LabelX27.TabIndex = 423
+        Me.LabelX27.Text = "Email:"
+        '
         'F0_Ventas
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1716,6 +1798,8 @@ Partial Class F0_Ventas
         Me.Panel5.ResumeLayout(False)
         CType(Me.grdetalle, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PanelTotal.ResumeLayout(False)
+        Me.PanelTotal.PerformLayout()
+        CType(Me.CbTipoDoc, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupPanelFactura.ResumeLayout(False)
         CType(Me.QrFactura, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel4.ResumeLayout(False)
@@ -1800,4 +1884,9 @@ Partial Class F0_Ventas
     Friend WithEvents Panel7 As Panel
     Friend WithEvents grProductos As Janus.Windows.GridEX.GridEX
     Friend WithEvents tbEmision As ComboBox
+    Public WithEvents CbTipoDoc As Janus.Windows.GridEX.EditControls.MultiColumnCombo
+    Friend WithEvents LabelX25 As DevComponents.DotNetBar.LabelX
+    Friend WithEvents Timer1 As Timer
+    Friend WithEvents TbEmail As DevComponents.DotNetBar.Controls.TextBoxX
+    Friend WithEvents LabelX27 As DevComponents.DotNetBar.LabelX
 End Class

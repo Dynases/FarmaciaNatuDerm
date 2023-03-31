@@ -482,19 +482,19 @@ Public Class P_Principal
 #Region "Modulo Venta"
 
     Private Sub btVentVenta_Click(sender As Object, e As EventArgs) Handles btVentVenta.Click
-        SideNav1.IsMenuExpanded = False
-        Ventana.Select()
+        'SideNav1.IsMenuExpanded = False
+        'Ventana.Select()
         Dim frm As New F0_Ventas
         frm._nameButton = btVentVenta.Name
-        Dim tab3 As SuperTabItem = superTabControl3.CreateTab(frm.Text)
-        frm._tab = tab3
+        'Dim tab3 As SuperTabItem = superTabControl3.CreateTab(frm.Text)
+        'frm._tab = tab3
         frm._modulo = FP_VENTAS
-        Dim panel As Panel = P_Global._fnCrearPanelVentanas(frm)
-        superTabControl3.SelectedTabIndex = superTabControl3.Tabs.Count - 1
-        tab3.AttachedControl.Controls.Add(panel)
+        'Dim panel As Panel = P_Global._fnCrearPanelVentanas(frm)
+        'superTabControl3.SelectedTabIndex = superTabControl3.Tabs.Count - 1
+        'tab3.AttachedControl.Controls.Add(panel)
         frm.Show()
-        tab3.Text = frm.Text
-        tab3.Icon = frm.Icon
+        'tab3.Text = frm.Text
+        'tab3.Icon = frm.Icon
     End Sub
 
     Private Sub btVentAnularFactura_Click(sender As Object, e As EventArgs) Handles btVentAnularFactura.Click

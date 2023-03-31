@@ -163,4 +163,5 @@ Module P_Global
 
 #End Region
 
+    Public gb_cufSifac As String = ""
 End Module
