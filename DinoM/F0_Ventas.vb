@@ -296,6 +296,10 @@ Public Class F0_Ventas
         SwProforma.Value = False
         tbCliente.Focus()
         Table_Producto = Nothing
+
+        'Borrar datos de los combobox de sifac
+        CbTipoDoc.SelectedIndex = 0
+        TbEmail.Clear()
     End Sub
     Public Sub _prMostrarRegistro(_N As Integer)
         '' grVentas.Row = _N
@@ -330,12 +334,16 @@ Public Class F0_Ventas
             'If (gb_FacturaEmite) Then
             If tbCodigo.Text <> String.Empty Then
 
+                'Dim dt As DataTable = L_fnObtenerTabla("TFV001", "fvanitcli, fvadescli1, fvadescli2, fvaautoriz, fvanfac, fvaccont, fvafec", "fvanumi=" + tbCodigo.Text.Trim)
+                Dim dt As DataTable = L_fnObtenerTabla("TFV001" + " inner join ts001 on tfv001.fvanitcli=ts001.sanit", "Top (1) fvanitcli, fvadescli1, fvadescli2, fvaautoriz, fvanfac, fvaccont, fvafec,ts001.sacorreo,ts001.satipdoc ", "fvanumi=" + tbCodigo.Text.Trim)
 
-                Dim dt As DataTable = L_fnObtenerTabla("TFV001", "fvanitcli, fvadescli1, fvadescli2, fvaautoriz, fvanfac, fvaccont, fvafec", "fvanumi=" + tbCodigo.Text.Trim)
                 If (dt.Rows.Count = 1) Then
                     TbNit.Text = dt.Rows(0).Item("fvanitcli").ToString
                     TbNombre1.Text = dt.Rows(0).Item("fvadescli1").ToString
                     TbNombre2.Text = dt.Rows(0).Item("fvadescli2").ToString
+                    TbEmail.Text = dt.Rows(0).Item("sacorreo").ToString
+                    CbTipoDoc.Value = dt.Rows(0).Item("satipdoc").ToString
+
 
                     tbNroAutoriz.Text = dt.Rows(0).Item("fvaautoriz").ToString
                     tbNroFactura.Text = dt.Rows(0).Item("fvanfac").ToString
@@ -345,6 +353,8 @@ Public Class F0_Ventas
                     TbNit.Clear()
                     TbNombre1.Clear()
                     TbNombre2.Clear()
+                    TbEmail.Clear()
+                    CbTipoDoc.SelectedIndex = -1
 
                     tbNroAutoriz.Clear()
                     tbNroFactura.Clear()
@@ -1582,12 +1592,12 @@ Public Class F0_Ventas
                     Return False
                 End If
             End If
-            If dtDosificacion.Tables(0).Rows.Count = 0 Then
-                'dtDosificacion.Tables.Cast(Of DataTable)().Any(Function(x) x.DefaultView.Count = 0)
-                Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
-                ToastNotification.Show(Me, "La Dosificación para las facturas ya caducó, ingrese nueva dosificación".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.BottomCenter)
-                Return False
-            End If
+            'If dtDosificacion.Tables(0).Rows.Count = 0 Then
+            '    'dtDosificacion.Tables.Cast(Of DataTable)().Any(Function(x) x.DefaultView.Count = 0)
+            '    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+            '    ToastNotification.Show(Me, "La Dosificación para las facturas ya caducó, ingrese nueva dosificación".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.BottomCenter)
+            '    Return False
+            'End If
 
             Return True
         Catch ex As Exception
@@ -1728,6 +1738,10 @@ Public Class F0_Ventas
                 If (gb_FacturaEmite) Then
                     If tbEmision.SelectedIndex = 0 Or TbNit.Text <> String.Empty And TbNit.Text <> "0" Then
                         P_fnGenerarFactura(numi)
+
+                        Dim dt As DataTable = L_fnRecuperarFactura(numi)
+                        Dim url As String = dt.Rows(0).Item("fvaFactUrl").ToString
+                        System.Diagnostics.Process.Start(url)
                     End If
                 End If
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
@@ -1736,6 +1750,7 @@ Public Class F0_Ventas
                                           eToastGlowColor.Green,
                                           eToastPosition.TopCenter
                                           )
+
                 _prImiprimirNotaVenta(numi)
                 MP_VerificarFormulas_Eliminadas()
                 _prCargarVenta()
@@ -1814,7 +1829,7 @@ Public Class F0_Ventas
                 _prMostrarRegistro(0)
             End If
         Else
-            _tab.Close()
+            Close()
             _modulo.Select()
         End If
     End Sub
@@ -3026,6 +3041,8 @@ salirIf:
                 CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbfechaVenc") = pcfven
                 CType(grdetalle.DataSource, DataTable).Rows(pos).Item("stock") = stock
                 CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbTipo") = 2 'Certifica que es de tipo  Formula
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("ygcodsin") = 35260
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("ygcodu") = 57
                 _prCalcularPrecioTotal()
                 _DesHabilitarProductos()
                 FilaSelectLote = Nothing
@@ -3330,13 +3347,18 @@ salirIf:
             If _ValidarCampos() = False Then
                 Exit Sub
             End If
-            Dim Succes As Integer = Emisor(tokenObtenido)
-            If Succes = 200 Then
-                _GuardarNuevo()
+            If tbEmision.SelectedIndex = 0 Then
+                Dim Succes As Integer = Emisor(tokenObtenido)
+                If Succes = 200 Then
+                    _GuardarNuevo()
+                Else
+                    'MsgBox("La factura no pudo enviarse al Siat")
+                    '_Limpiar()
+                End If
             Else
-                'MsgBox("La factura no pudo enviarse al Siat")
-                '_Limpiar()
+                _GuardarNuevo()
             End If
+
             'If (tbCodigo.Text = String.Empty) Then
             '    _GuardarNuevo()
             'Else
@@ -3509,12 +3531,20 @@ salirIf:
         If (P_fnValidarFactura()) Then
             ' MP_ImprimirFactura(tbCodigo.Text, True, True, True)
             Dim dt As DataTable = L_fnRecuperarFactura(tbCodigo.Text)
+            If dt.Rows.Count > 0 Then
+                Dim url As String = dt.Rows(0).Item("fvaFactUrl").ToString
+                System.Diagnostics.Process.Start(url)
+            Else
+                ToastNotification.Show(Me, "Esta factura no es con facturación online por eso no puede ser visualizada".ToUpper,
+                                  My.Resources.WARNING,
+                                  5 * 1000,
+                                  eToastGlowColor.Red,
+                                  eToastPosition.MiddleCenter)
+            End If
 
-            Dim url As String = dt.Rows(0).Item("fvaFactUrl").ToString
-            System.Diagnostics.Process.Start(url)
         Else
             ToastNotification.Show(Me, "No se encuentra habilitada la facturacion".ToUpper,
-                                   My.Resources.OK,
+                                   My.Resources.WARNING,
                                    5 * 1000,
                                    eToastGlowColor.Red,
                                    eToastPosition.MiddleCenter)
@@ -3821,7 +3851,7 @@ salirIf:
             CodTipoDocumento(tokenObtenido)
             'code = VerifConexion(tokenObtenido)
             'If (code = 200) Then Label1Conn.Text = "Conectado con Siat" Else Label1Conn.Text = "No conectado con Siat"
-            Me.WindowState = FormWindowState.Normal
+            Me.WindowState = FormWindowState.Maximized
         Else
             Me.Opacity = 100
             Timer1.Enabled = False
@@ -3917,14 +3947,14 @@ salirIf:
             EmenvioDetalle.codigoProducto = (row("tbty5prod").ToString)
             EmenvioDetalle.descripcion = (row("producto").ToString)
             EmenvioDetalle.unidadMedida = Convert.ToInt32(row("ygcodu"))
-            EmenvioDetalle.cantidad = (row("tbcmin"))
-            EmenvioDetalle.precioUnitario = (row("tbpbas"))
-            EmenvioDetalle.montoDescuento = 0
-            EmenvioDetalle.subTotal = (row("tbtotdesc"))
+            EmenvioDetalle.cantidad = Format((row("tbcmin")), "#.#0")
+            EmenvioDetalle.precioUnitario = Format((row("tbpbas")), "#.#0")
+            EmenvioDetalle.montoDescuento = Format((row("tbdesc")), "#.#0")
+            EmenvioDetalle.subTotal = Format((row("tbtotdesc")), "#.#0")
             'EmenvioDetalle.numeroSerie = [""],
             'EmenvioDetalle.numeroImei = [""]
 
-            PrecioTot = PrecioTot + (row("tbtotdesc")) 'total
+            PrecioTot = PrecioTot + Format((row("tbtotdesc")), "#.#0") 'total
             'CodProducto = (row("tbty5prod").ToString) 'cod producto
             'Cantidad = (row("tbcmin").ToString) ' cantidad
             'PrecioU = (row("tbpbas").ToString) ' precio u 
@@ -3948,7 +3978,7 @@ salirIf:
         Dim _NumFac As Integer
 
         If TbEmail.Text = String.Empty Then
-            email = ""
+            email = "FACTURAS.NATUDERM.SRL@GMAIL.COM"
             TbEmail.Text = email
         Else
             email = TbEmail.Text
@@ -3988,15 +4018,15 @@ salirIf:
         Emenvio.codigoDocumentoSector = 1 '-------------------
         Emenvio.codigoMoneda = 1 'falta
         Emenvio.tipoCambio = 1 'CDbl(cbCambioDolar.Text) '--------------------
-        Emenvio.descuentoAdicional = Math.Round(tbMdesc.Value, 2) '-------------------
-        Emenvio.montoTotal = Math.Round((PrecioTot - Emenvio.descuentoAdicional), 2)
-        Emenvio.montoTotalSujetoIva = Math.Round((PrecioTot - Emenvio.descuentoAdicional), 2)
-        Emenvio.montoTotalMoneda = Math.Round((PrecioTot - Emenvio.descuentoAdicional), 2)
+        Emenvio.descuentoAdicional = Format(tbMdesc.Value, "#.#0") '-------------------
+        Emenvio.montoTotal = Format((PrecioTot - Emenvio.descuentoAdicional), "#.#0")
+        Emenvio.montoTotalSujetoIva = Format((PrecioTot - Emenvio.descuentoAdicional), "#.#0")
+        Emenvio.montoTotalMoneda = Format((PrecioTot - Emenvio.descuentoAdicional), "#.#0")
         Emenvio.montoGiftCard = 0 '----------------
         Emenvio.codigoExcepcion = 0 '---------------
         Emenvio.usuario = gs_user
         Emenvio.email = email
-        Emenvio.actividadEconomica = 862010 'falta
+        Emenvio.actividadEconomica = 477311 'Actividad de Farmacia
         Emenvio.detalles = array
         Dim json = JsonConvert.SerializeObject(Emenvio)
         Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/emision"

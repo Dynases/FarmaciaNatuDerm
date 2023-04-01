@@ -54,6 +54,7 @@ Public Class F1_Productos
         Dim ico As Icon = Icon.FromHandle(blah.GetHicon())
         Me.Icon = ico
 
+           SuperTabControl_Imagenes_DetalleProducto.SelectedTabIndex = 2
     End Sub
 
     Private Sub armarGrillaDetalleProducto(numi As Integer)
