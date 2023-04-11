@@ -155,7 +155,7 @@ Public Class F1_Clientes
             .DropDownList.Columns.Clear()
             .DropDownList.Columns.Add("yccod3").Width = 70
             .DropDownList.Columns("yccod3").Caption = "COD"
-            .DropDownList.Columns.Add("ycdes3").Width = 200
+            .DropDownList.Columns.Add("ycdes3").Width = 300
             .DropDownList.Columns("ycdes3").Caption = "DESCRIPCION"
             .ValueMember = "yccod3"
             .DisplayMember = "ycdes3"

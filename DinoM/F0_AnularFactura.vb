@@ -4,6 +4,11 @@ Imports System.IO
 Imports DevComponents.DotNetBar
 Imports Janus.Windows.GridEX
 
+'importando librerias api conexion
+Imports Newtonsoft.Json
+Imports DinoM.RespMotivoAnulacion
+Imports DinoM.AnulacionResp
+
 Public Class F0_AnularFactura
 
 #Region "Variables Globales"
@@ -13,6 +18,8 @@ Public Class F0_AnularFactura
     Dim NroAutorizacion As String
     Public _nameButton As String
     Public _tab As SuperTabItem
+
+    Public tokenSifac As String
 #End Region
 
 #Region "Eventos"
@@ -55,6 +62,8 @@ Public Class F0_AnularFactura
 
         P_ArmarGrilla()
 
+        tokenSifac = F0_Ventas.ObtToken()
+        CodMotivoAnulacion(tokenSifac)
     End Sub
 
 #End Region
@@ -295,22 +304,51 @@ Public Class F0_AnularFactura
 
     Private Sub Bt1Guardar_Click(sender As Object, e As EventArgs) Handles Bt1Guardar.Click
         If (Sb1Estado.Value) Then
-            If (MessageBox.Show("Esta seguro de poner VIGENTE la Factura " + Tb2NroFactura.Text + "?", "PREGUNTA", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes) Then
-                L_Modificar_Factura("fvanumi = " + Tb1Codigo.Text + " and fvanfac = " + NroFactura + " and fvaautoriz = " + NroAutorizacion, "", "", "", IIf(Sb1Estado.Value, "1", "0"))
-                'P_ActStock()
-                P_LlenarDatosGrilla()
-                ToastNotification.Show(Me, "La Factura con Codigo " + Tb2NroFactura.Text + ", Se puso VIGENTE correctamente",
-                                       My.Resources.OK, _DuracionSms * 1000,
-                                       eToastGlowColor.Blue, eToastPosition.BottomLeft)
-            End If
+            'If (MessageBox.Show("Esta seguro de poner VIGENTE la Factura " + Tb2NroFactura.Text + "?", "PREGUNTA", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes) Then
+            '    L_Modificar_Factura("fvanumi = " + Tb1Codigo.Text + " and fvanfac = " + NroFactura + " and fvaautoriz = " + NroAutorizacion, "", "", "", IIf(Sb1Estado.Value, "1", "0"))
+            '    'P_ActStock()
+            '    P_LlenarDatosGrilla()
+            '    ToastNotification.Show(Me, "La Factura con Codigo " + Tb2NroFactura.Text + ", Se puso VIGENTE correctamente",
+            '                           My.Resources.OK, _DuracionSms * 1000,
+            '                           eToastGlowColor.Blue, eToastPosition.BottomLeft)
+            'End If
+            ToastNotification.Show(Me, "La Factura con Codigo " + Tb2NroFactura.Text + ", no se puede anular, debe cambiar el Estado a Anulada",
+                                   My.Resources.WARNING, _DuracionSms * 1000,
+                                   eToastGlowColor.Blue, eToastPosition.BottomLeft)
         Else
-            If (MessageBox.Show("Esta seguro de ANULAR la Factura " + Tb2NroFactura.Text + "?", "PREGUNTA", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes) Then
-                L_Modificar_Factura("fvanumi = " + Tb1Codigo.Text + " and fvanfac = " + NroFactura + " and fvaautoriz = " + NroAutorizacion, "", "", "", IIf(Sb1Estado.Value, "1", "0"))
-                'P_ActStock()
-                P_LlenarDatosGrilla()
-                ToastNotification.Show(Me, "La Factura " + Tb2NroFactura.Text + ", Se ANULADO correctamente",
+            Dim res1 As Boolean = L_fnVerificarPagosVentas(Tb1Codigo.Text)
+            If res1 Then
+                Dim img As Bitmap = New Bitmap(My.Resources.WARNING, 50, 50)
+                ToastNotification.Show(Me, "No se puede anular esta factura con código de venta:  ".ToUpper + Tb1Codigo.Text + ", porque tiene pagos realizados, por favor primero elimine los pagos correspondientes a esta venta".ToUpper,
+                                                  img, 5000,
+                                                  eToastGlowColor.Green,
+                                                  eToastPosition.TopCenter)
+                Exit Sub
+            End If
+
+            Dim result As Boolean = L_fnVerificarSiSeContabilizoVenta(Tb1Codigo.Text)
+            If result Then
+                Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
+                ToastNotification.Show(Me, "La Factura y Venta no puede ser anulada porque ya fue contabilizada".ToUpper, img, 4500, eToastGlowColor.Red, eToastPosition.TopCenter)
+                Exit Sub
+            End If
+
+            If (MessageBox.Show("Esta seguro de ANULAR la Factura " + Tb2NroFactura.Text + " y la Venta " + Tb1Codigo.Text + "?", "PREGUNTA", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes) Then
+
+                Dim Succes As Integer = AnularFactura(tokenSifac, NroAutorizacion, CbMotivoA.Value, True)
+                If Succes = 200 Then
+                    'Primero modifica factura correspondiente a la venta
+                    L_Modificar_Factura("fvanumi = " + Tb1Codigo.Text + " and fvanfac = " + NroFactura + " and fvaautoriz = '" + NroAutorizacion + "'", "", "", "", IIf(Sb1Estado.Value, "1", "0"))
+
+                    'Luego anula venta
+                    Dim mensajeError As String = ""
+                    Dim res As Boolean = L_fnEliminarVenta(Tb1Codigo.Text, mensajeError)
+                    P_LlenarDatosGrilla()
+                    ToastNotification.Show(Me, "La Factura: " + Tb2NroFactura.Text + " y Venta con código: " + Tb1Codigo.Text + " Se ANULARON correctamente",
                                        My.Resources.OK, _DuracionSms * 1000,
                                        eToastGlowColor.Blue, eToastPosition.BottomLeft)
+                End If
+
             End If
         End If
     End Sub
@@ -337,32 +375,118 @@ Public Class F0_AnularFactura
     '    G_ActStock(_Ds.Tables(0), Not Sb1Estado.Value, 1)
     'End Sub
 
-    Private Sub btnModificar_Click(sender As Object, e As EventArgs) Handles btnModificar.Click
+    Private Sub MostrarMensajeError(mensaje As String)
+        ToastNotification.Show(Me,
+                               mensaje.ToUpper,
+                               My.Resources.WARNING,
+                               5000,
+                               eToastGlowColor.Red,
+                               eToastPosition.TopCenter)
 
     End Sub
+    Public Function CodMotivoAnulacion(tokenObtenido)
 
-    Private Sub btnGrabar_Click(sender As Object, e As EventArgs) Handles btnGrabar.Click
+        Dim api = New DBApi()
 
-    End Sub
+        Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/motivo-anulacion"
 
-    Private Sub btnSalir_Click(sender As Object, e As EventArgs) Handles btnSalir.Click
+        Dim headers = New List(Of Parametro) From {
+            New Parametro("Authorization", "Bearer " + tokenObtenido),
+            New Parametro("Content-Type", "Accept:application/json; charset=utf-8")
+        }
 
-    End Sub
+        Dim parametros = New List(Of Parametro)
 
-    Private Sub btnPrimero_Click(sender As Object, e As EventArgs) Handles btnPrimero.Click
+        Dim response = api.MGet(url, headers, parametros)
 
-    End Sub
+        Dim result = JsonConvert.DeserializeObject(Of Motivo)(response)
 
-    Private Sub btnAnterior_Click(sender As Object, e As EventArgs) Handles btnAnterior.Click
+        Dim dt = result.data
+        dt.RemoveAt(1)
 
-    End Sub
+        With CbMotivoA
 
-    Private Sub btnSiguiente_Click(sender As Object, e As EventArgs) Handles btnSiguiente.Click
+            .DropDownList.Columns.Clear()
+            .DropDownList.Columns.Add("codigoClasificador").Width = 70
+            .DropDownList.Columns("codigoClasificador").Caption = "COD"
+            .DropDownList.Columns.Add("descripcion").Width = 500
+            .DropDownList.Columns("descripcion").Caption = "DESCRIPCION"
+            .ValueMember = "codigoClasificador"
+            .DisplayMember = "descripcion"
+            .DataSource = dt
+            .Refresh()
+        End With
 
-    End Sub
+        CbMotivoA.SelectedIndex = 1
 
-    Private Sub btnUltimo_Click(sender As Object, e As EventArgs) Handles btnUltimo.Click
+        Return ""
+    End Function
 
-    End Sub
+    Public Function AnularFactura(tokenObtenido, NroAutorizacion, MotivoAnulacion, MostrarMensajeAnulacion)
+        Try
+
+            Dim api = New DBApi()
+
+            Dim Aenvio = New AnulacionEnvio()
+            Aenvio.cuf = NroAutorizacion
+            Aenvio.codigoMotivo = MotivoAnulacion
+
+            Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/anular"
+
+            Dim headers = New List(Of Parametro) From {
+                New Parametro("Authorization", "Bearer " + tokenObtenido),
+                New Parametro("Content-Type", "Accept:application/json; charset=utf-8")
+            }
+
+            Dim parametros = New List(Of Parametro)
+            Dim response = api.Post(url, headers, parametros, Aenvio)
+
+            Dim result = JsonConvert.DeserializeObject(Of RespuestaAnul)(response)
+            Dim resultError = JsonConvert.DeserializeObject(Of error400)(response)
+
+            Dim codigo = result.meta.code
+
+            If MostrarMensajeAnulacion = True Then
+                If codigo = 200 Then
+                    Dim details = result.data.details
+                    Dim notifi = New notifi
+
+                    notifi.tipo = 2
+                    notifi.Context = "SIFAC".ToUpper
+                    notifi.Header = "Proceso Exitoso - Código: " + codigo.ToString() & vbCrLf & " " & vbCrLf & details & vbCrLf & " " & vbCrLf & "Factura Anulada".ToUpper
+                    notifi.ShowDialog()
+
+                ElseIf codigo = 400 Or codigo = 401 Or codigo = 404 Or codigo = 405 Or codigo = 422 Then
+                    Dim details = JsonConvert.SerializeObject(resultError.errors.details)
+                    Dim notifi = New notifi
+
+                    notifi.tipo = 2
+                    notifi.Context = "SIFAC".ToUpper
+                    notifi.Header = "Error de solicitud - Código: " + codigo.ToString() & vbCrLf & " " & vbCrLf & details & vbCrLf & " " & vbCrLf & "La factura no pudo anularse".ToUpper
+                    notifi.ShowDialog()
+
+                ElseIf codigo = 406 Or codigo = 409 Or codigo = 500 Then
+
+                    Dim details = JsonConvert.SerializeObject(resultError.errors.details)
+                    Dim siat = JsonConvert.SerializeObject(resultError.errors.siat)
+                    Dim notifi = New notifi
+
+                    notifi.tipo = 2
+                    notifi.Context = "SIFAC".ToUpper
+                    notifi.Header = "Error de solicitud - Código: " + codigo.ToString() & vbCrLf & " " & vbCrLf & details & vbCrLf & siat & vbCrLf & " " & vbCrLf & "La factura no pudo anularse".ToUpper
+                    notifi.ShowDialog()
+
+                End If
+            End If
+
+
+            Return codigo
+
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+            Return 0
+        End Try
+    End Function
+
 
 End Class

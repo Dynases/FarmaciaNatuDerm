@@ -298,7 +298,7 @@ Public Class F0_Ventas
         Table_Producto = Nothing
 
         'Borrar datos de los combobox de sifac
-        CbTipoDoc.SelectedIndex = 0
+        CbTipoDoc.SelectedIndex = -1
         TbEmail.Clear()
     End Sub
     Public Sub _prMostrarRegistro(_N As Integer)
@@ -1570,6 +1570,12 @@ Public Class F0_Ventas
                     tbVendedor.Focus()
                     Return False
                 End If
+                If (CbTipoDoc.SelectedIndex < 0) Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "Por Favor Seleccione Tipo de Documento".ToUpper, img, 2000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                    CbTipoDoc.Focus()
+                    Return False
+                End If
             End If
             Dim code = VerifConexion(tokenObtenido)
             If (code = 200) Then
@@ -1739,9 +1745,9 @@ Public Class F0_Ventas
                     If tbEmision.SelectedIndex = 0 Or TbNit.Text <> String.Empty And TbNit.Text <> "0" Then
                         P_fnGenerarFactura(numi)
 
-                        Dim dt As DataTable = L_fnRecuperarFactura(numi)
-                        Dim url As String = dt.Rows(0).Item("fvaFactUrl").ToString
-                        System.Diagnostics.Process.Start(url)
+                        'Dim dt As DataTable = L_fnRecuperarFactura(numi)
+                        'Dim url As String = dt.Rows(0).Item("fvaFactUrl").ToString
+                        'System.Diagnostics.Process.Start(url)
                     End If
                 End If
                 Dim img As Bitmap = New Bitmap(My.Resources.checked, 50, 50)
@@ -1908,6 +1914,7 @@ Public Class F0_Ventas
             If (P_fnValidarFactura()) Then
                 'Validar para facturar
                 ' P_prImprimirFacturar(numi, True, True) '_Codigo de a tabla TV001
+                P_prImprimirFacturaNueva(numi, True, True)
             Else
                 'Volver todo al estada anterior
                 ToastNotification.Show(Me, "No es posible facturar, vuelva a ingresar a la mesa he intente nuevamente!!!".ToUpper,
@@ -1998,6 +2005,117 @@ Public Class F0_Ventas
         Return True
     End Function
 
+    Public Sub P_prImprimirFacturaNueva(numi As String, impFactura As Boolean, grabarPDF As Boolean)
+        Dim _Fecha As Date
+        Dim _Ds, _Ds1, _Ds2, _Ds3 As New DataSet
+        Dim _Autorizacion, _Nit, _Total, _Hora,
+            _Literal, _TotalDecimal, _TotalDecimal2 As String
+        Dim I, _NumFac As Integer
+        Dim _TotalLi As Decimal
+        Dim _VistaPrevia As Integer = 0
+
+
+        _Ds = L_Reporte_FacturaNueva(numi, numi)
+
+        If _Ds.Tables.Count > 0 Then
+
+
+            _Fecha = _Ds.Tables(0).Rows(0).Item("fvafec")
+            _Hora = _Ds.Tables(0).Rows(0).Item("fvahora")
+            _Autorizacion = _Ds.Tables(0).Rows(0).Item("fvaautoriz")
+            _NumFac = _Ds.Tables(0).Rows(0).Item("fvanfac")
+
+
+            'Literal 
+            _TotalLi = _Ds.Tables(0).Rows(0).Item("fvasubtotal") - _Ds.Tables(0).Rows(0).Item("fvadesc")
+            _TotalDecimal = _TotalLi - Math.Truncate(_TotalLi)
+            _TotalDecimal2 = CDbl(_TotalDecimal) * 100
+
+            'Dim li As String = Facturacion.ConvertirLiteral.A_fnConvertirLiteral(CDbl(_Total) - CDbl(_TotalDecimal)) + " con " + IIf(_TotalDecimal2.Equals("0"), "00", _TotalDecimal2) + "/100 Bolivianos"
+            _Literal = Facturacion.ConvertirLiteral.A_fnConvertirLiteral(CDbl(_TotalLi) - CDbl(_TotalDecimal)) + "  " + IIf(_TotalDecimal2.Equals("0"), "00", _TotalDecimal2) + "/100 Bolivianos"
+
+            _Ds2 = L_Reporte_Factura_Cia("1")
+            QrFactura.Text = _Ds.Tables(0).Rows(0).Item("fvaQrUrl").ToString
+
+            If Not IsNothing(P_Global.Visualizador) Then
+                P_Global.Visualizador.Close()
+            End If
+
+            For I = 0 To _Ds.Tables(0).Rows.Count - 1
+                _Ds.Tables(0).Rows(I).Item("fvaimgqr") = P_fnImageToByteArray(QrFactura.Image)
+            Next
+            If (impFactura) Then
+                Dim objrep As Object = Nothing
+
+                objrep = New R_Factura_7_5x1000
+
+                SerPArametrosNuevo(_Ds, _Ds2, _Autorizacion, _Hora, _Literal, _NumFac, objrep,
+                                    _Fecha, grabarPDF, numi)
+
+
+            End If
+
+        Else
+            ToastNotification.Show(Me, "No existe datos de Facturación".ToUpper,
+                                                 My.Resources.WARNING, 3500,
+                                                 eToastGlowColor.Blue, eToastPosition.TopCenter)
+
+        End If
+    End Sub
+
+    Private Sub SerPArametrosNuevo(_Ds As DataSet, _Ds2 As DataSet, ByRef _Autorizacion As String, ByRef _Hora As String, ByRef _Literal As String,
+                              ByRef _NumFac As Integer, objrep As Object, _fecha As String, grabarPDF As Boolean, numi As String)
+
+        objrep.SetDataSource(_Ds.Tables(0))
+        objrep.SetParameterValue("Hora", _Hora)
+        objrep.SetParameterValue("Direccionpr", _Ds2.Tables(0).Rows(0).Item("scdir").ToString)
+        objrep.SetParameterValue("Telefonopr", "Tel. " + _Ds2.Tables(0).Rows(0).Item("sctelf").ToString)
+        objrep.SetParameterValue("Literal1", _Literal)
+        objrep.SetParameterValue("Literal2", " ")
+        objrep.SetParameterValue("Literal3", " ")
+        objrep.SetParameterValue("NroFactura", _NumFac)
+        objrep.SetParameterValue("NroAutoriz", _Autorizacion)
+        objrep.SetParameterValue("ENombre", _Ds2.Tables(0).Rows(0).Item("scneg").ToString) '?
+        objrep.SetParameterValue("ECasaMatriz", _Ds2.Tables(0).Rows(0).Item("scsuc").ToString)
+        objrep.SetParameterValue("PuntoVenta", "PUNTO DE VENTA No. 0")
+        objrep.SetParameterValue("ECiudadPais", _Ds2.Tables(0).Rows(0).Item("scpai").ToString)
+        objrep.SetParameterValue("ENit", _Ds2.Tables(0).Rows(0).Item("scnit").ToString)
+        objrep.SetParameterValue("EActividad", _Ds2.Tables(0).Rows(0).Item("scact").ToString)
+        objrep.SetParameterValue("ENota", "''" + "ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS, EL USO ILÍCITO SERÁ SANCIONADO DE ACUERDO A LEY." + "''")
+        objrep.SetParameterValue("Usuario", gs_user)
+
+
+        Dim _Ds3 As DataSet = L_ObtenerRutaImpresora("1") ' Datos de Impresion de Facturación
+        If (_Ds3.Tables(0).Rows(0).Item("cbvp")) Then 'Vista Previa de la Ventana de Vizualización 1 = True 0 = False
+            P_Global.Visualizador = New Visualizador
+            P_Global.Visualizador.CrGeneral.ReportSource = objrep
+            P_Global.Visualizador.ShowDialog()
+            P_Global.Visualizador.BringToFront()
+        Else
+            Dim pd As New PrintDocument()
+            Dim instance As New Printing.PrinterSettings
+            Dim impresosaPredt As String = instance.PrinterName
+            pd.PrinterSettings.PrinterName = impresosaPredt
+
+            If (Not pd.PrinterSettings.IsValid) Then
+                ToastNotification.Show(Me, "La Impresora ".ToUpper + impresosaPredt + Chr(13) + "No Existe".ToUpper,
+                                       My.Resources.WARNING, 5000,
+                                       eToastGlowColor.Blue, eToastPosition.BottomRight)
+            Else
+                objrep.PrintOptions.PrinterName = _Ds3.Tables(0).Rows(0).Item("cbrut").ToString '"EPSON TM-T20II Receipt5 (1)"
+                objrep.PrintToPrinter(1, True, 0, 0)
+
+            End If
+        End If
+        If (grabarPDF) Then
+            'Copia de Factura en PDF
+            If (Not Directory.Exists(gs_CarpetaRaiz + "\Facturas")) Then
+                Directory.CreateDirectory(gs_CarpetaRaiz + "\Facturas")
+            End If
+            objrep.ExportToDisk(ExportFormatType.PortableDocFormat, gs_CarpetaRaiz + "\Facturas\" + CStr(_NumFac) + "_" + CStr(_Autorizacion) + ".pdf")
+
+        End If
+    End Sub
     Private Sub P_prImprimirFacturar(numi As String, impFactura As Boolean, grabarPDF As Boolean)
         MP_ImprimirFactura(numi, impFactura, grabarPDF, False)
     End Sub
@@ -3440,6 +3558,7 @@ salirIf:
             If result Then
                 Dim img As Bitmap = New Bitmap(My.Resources.cancel, 50, 50)
                 ToastNotification.Show(Me, "La Venta no puede ser eliminada porque ya fue contabilizada".ToUpper, img, 4500, eToastGlowColor.Red, eToastPosition.TopCenter)
+                Exit Sub
             End If
 
             Dim ef = New Efecto
@@ -3517,31 +3636,39 @@ salirIf:
     End Sub
 
     Private Sub TbNit_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles TbNit.Validating
-        Dim nom1, nom2 As String
+        Dim nom1, nom2, correo, tipoDoc As String
         nom1 = ""
         nom2 = ""
+        correo = ""
+        tipoDoc = ""
+
         If (TbNit.Text.Trim = String.Empty) Then
             TbNit.Text = "0"
         End If
-        L_Validar_Nit(TbNit.Text.Trim, nom1, nom2, "", "", "")
+        L_Validar_Nit(TbNit.Text.Trim, nom1, nom2, correo, tipoDoc, "")
         TbNombre1.Text = nom1
         TbNombre2.Text = nom2
+        TbEmail.Text = correo
+        CbTipoDoc.Value = tipoDoc
     End Sub
     Private Sub btnImprimir_Click(sender As Object, e As EventArgs) Handles btnImprimir.Click
         If (P_fnValidarFactura()) Then
-            ' MP_ImprimirFactura(tbCodigo.Text, True, True, True)
-            Dim dt As DataTable = L_fnRecuperarFactura(tbCodigo.Text)
-            If dt.Rows.Count > 0 Then
-                Dim url As String = dt.Rows(0).Item("fvaFactUrl").ToString
-                System.Diagnostics.Process.Start(url)
-            Else
-                ToastNotification.Show(Me, "Esta factura no es con facturación online por eso no puede ser visualizada".ToUpper,
-                                  My.Resources.WARNING,
-                                  5 * 1000,
-                                  eToastGlowColor.Red,
-                                  eToastPosition.MiddleCenter)
-            End If
 
+            'Dim dt As DataTable = L_fnRecuperarFactura(tbCodigo.Text)
+            'If dt.Rows.Count > 0 Then
+            '    Dim url As String = dt.Rows(0).Item("fvaFactUrl").ToString
+            '    System.Diagnostics.Process.Start(url)
+
+
+
+            'Else
+            '    ToastNotification.Show(Me, "Esta factura no es con facturación online por eso no puede ser visualizada".ToUpper,
+            '                      My.Resources.WARNING,
+            '                      5 * 1000,
+            '                      eToastGlowColor.Red,
+            '                      eToastPosition.MiddleCenter)
+            'End If
+            P_prImprimirFacturaNueva(tbCodigo.Text, True, False)
         Else
             ToastNotification.Show(Me, "No se encuentra habilitada la facturacion".ToUpper,
                                    My.Resources.WARNING,

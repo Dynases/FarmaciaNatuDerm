@@ -838,6 +838,12 @@
       <DependentUpon>R_EtiquetaFormula.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reporte\R_Factura_7_5x1000.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>R_Factura_7_5x1000.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utils\Efecto.Designer.vb">
       <DependentUpon>Efecto.vb</DependentUpon>
     </Compile>
@@ -1239,6 +1245,10 @@
     <EmbeddedResource Include="R_EtiquetaFormula.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>R_EtiquetaFormula.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporte\R_Factura_7_5x1000.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>R_Factura_7_5x1000.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Utils\Efecto.resx">
       <DependentUpon>Efecto.vb</DependentUpon>
