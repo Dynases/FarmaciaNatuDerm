@@ -1171,7 +1171,7 @@ Public Class F1_Productos
             .DropDownList.Columns.Clear()
             .DropDownList.Columns.Add("codigoActividad").Width = 70
             .DropDownList.Columns("codigoActividad").Caption = "COD"
-            .DropDownList.Columns.Add("descripcion").Width = 1000
+            .DropDownList.Columns.Add("descripcion").Width = 300
             .DropDownList.Columns("descripcion").Caption = "DESCRIPCION"
             .ValueMember = "codigoActividad"
             .DisplayMember = "descripcion"

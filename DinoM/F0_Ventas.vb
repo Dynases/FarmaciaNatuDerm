@@ -60,6 +60,7 @@ Public Class F0_Ventas
     Public PrecioTot As Double
     Public NombreProd As String
     Public NroFact As Integer
+    Public NroTarjeta As String
 
     Public _Fecha As Date
 
@@ -78,6 +79,7 @@ Public Class F0_Ventas
 
         _prValidarLote()
         _prCargarComboLibreriaSucursal(cbSucursal)
+        _prCargarComboTipoVenta(cbTipoVenta)
 
         lbTipoMoneda.Visible = False
         swMoneda.Visible = False
@@ -142,7 +144,22 @@ Public Class F0_Ventas
             .Refresh()
         End With
     End Sub
+    Private Sub _prCargarComboTipoVenta(mCombo As Janus.Windows.GridEX.EditControls.MultiColumnCombo)
+        Dim dt As New DataTable
+        dt = L_fnTiposVenta()
 
+        With mCombo
+            .DropDownList.Columns.Clear()
+            .DropDownList.Columns.Add("Cod").Width = 60
+            .DropDownList.Columns("Cod").Caption = "COD"
+            .DropDownList.Columns.Add("Tipo").Width = 280
+            .DropDownList.Columns("Tipo").Caption = "TIPO VENTA"
+            .ValueMember = "Cod"
+            .DisplayMember = "Tipo"
+            .DataSource = dt
+            .Refresh()
+        End With
+    End Sub
     Private Sub _prAsignarPermisos()
 
         Dim dtRolUsu As DataTable = L_prRolDetalleGeneral(gi_userRol, _nameButton)
@@ -171,7 +188,9 @@ Public Class F0_Ventas
         tbFechaVenta.IsInputReadOnly = True
         tbFechaVenc.IsInputReadOnly = True
         swMoneda.IsReadOnly = True
-        swTipoVenta.IsReadOnly = True
+        cbTipoVenta.ReadOnly = True
+        tbNroTarjeta1.ReadOnly = True
+        tbNroTarjeta3.ReadOnly = True
         tbEmision.Enabled = False
 
         'Datos facturacion
@@ -214,7 +233,9 @@ Public Class F0_Ventas
         tbFechaVenta.IsInputReadOnly = False
         tbFechaVenc.IsInputReadOnly = False
         swMoneda.IsReadOnly = False
-        swTipoVenta.IsReadOnly = False
+        cbTipoVenta.ReadOnly = False
+        tbNroTarjeta1.ReadOnly = False
+        tbNroTarjeta3.ReadOnly = False
         btnGrabar.Enabled = True
 
         TbNit.ReadOnly = False
@@ -254,7 +275,7 @@ Public Class F0_Ventas
         tbVendedor.Clear()
         tbObservacion.Clear()
         swMoneda.Value = True
-        swTipoVenta.Value = True
+        cbTipoVenta.SelectedIndex = 1
         _CodCliente = 0
         _CodEmpleado = 0
         tbFechaVenta.Value = Now.Date
@@ -313,7 +334,7 @@ Public Class F0_Ventas
             tbFechaVenta.Value = .GetValue("tafdoc")
             _CodEmpleado = .GetValue("taven")
             tbVendedor.Text = .GetValue("vendedor")
-            swTipoVenta.Value = .GetValue("tatven")
+            cbTipoVenta.Value = .GetValue("tatven")
             _CodCliente = .GetValue("taclpr")
             tbCliente.Text = .GetValue("cliente")
             swMoneda.Value = .GetValue("tamon")
@@ -366,6 +387,11 @@ Public Class F0_Ventas
                 lbFecha.Text = CType(.GetValue("tafact"), Date).ToString("dd/MM/yyyy")
                 lbHora.Text = .GetValue("tahact").ToString
                 lbUsuario.Text = .GetValue("tauact").ToString
+            End If
+            If cbTipoVenta.Value = 2 Then
+                tbNroTarjeta1.Text = Mid(.GetValue("taNroTarjeta").ToString, 1, 4)
+                tbNroTarjeta2.Text = "00000000"
+                tbNroTarjeta3.Text = Mid(.GetValue("taNroTarjeta").ToString, 13, 4)
             End If
         End With
 
@@ -1576,18 +1602,22 @@ Public Class F0_Ventas
                     CbTipoDoc.Focus()
                     Return False
                 End If
-            End If
-            Dim code = VerifConexion(tokenObtenido)
-            If (code = 200) Then
-                If (CbTipoDoc.Value = 5) Then ''El tipo de Doc. es Nit
-                    Dim tokenSifac As String = F0_Ventas.ObtToken()
-                    Dim Succes As Integer = VerificarNit(tokenSifac)
-                    If Succes <> 200 Then
-                        Return False
-                    End If
 
+                Dim code = VerifConexion(tokenObtenido)
+                If (code = 200) Then
+                    If (CbTipoDoc.Value = 5) Then ''El tipo de Doc. es Nit
+                        Dim tokenSifac As String = F0_Ventas.ObtToken()
+                        Dim Succes As Integer = VerificarNit(tokenSifac)
+                        If Succes <> 200 Then
+                            Return False
+                        End If
+
+                    End If
                 End If
             End If
+
+
+
 
 
             If (grdetalle.RowCount = 1) Then
@@ -1604,6 +1634,17 @@ Public Class F0_Ventas
             '    ToastNotification.Show(Me, "La Dosificación para las facturas ya caducó, ingrese nueva dosificación".ToUpper, img, 3500, eToastGlowColor.Red, eToastPosition.BottomCenter)
             '    Return False
             'End If
+
+            If cbTipoVenta.Value = 2 Then
+                If tbNroTarjeta1.Text = String.Empty Or tbNroTarjeta1.Text = "0" Or tbNroTarjeta1.Text = "0000" Or
+                    tbNroTarjeta3.Text = String.Empty Or tbNroTarjeta3.Text = "0" Or tbNroTarjeta3.Text = "0000" Then
+                    Dim img As Bitmap = New Bitmap(My.Resources.mensaje, 50, 50)
+                    ToastNotification.Show(Me, "Debe colocar el Nro. de Tarjeta en los espacios correspondientes".ToUpper, img, 3000, eToastGlowColor.Red, eToastPosition.BottomCenter)
+                    tbNroTarjeta1.Focus()
+
+                    Return False
+                End If
+            End If
 
             Return True
         Catch ex As Exception
@@ -1666,7 +1707,7 @@ Public Class F0_Ventas
                                     Dim total As Decimal = CStr(Format(precio * saldo, "####0.00"))
 
                                     dtDetalle.Rows(pos).Item("tbptot") = total
-                                    dtDetalle.Rows(pos).Item("tbtotdesc") = total
+                                    dtDetalle.Rows(pos).Item("tbtotdesc") = total - dtDetalle.Rows(pos).Item("tbdesc")
                                     'CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbtotdesc") = total
                                     'CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbcmin") = saldo
                                     dtDetalle.Rows(pos).Item("tbcmin") = saldo
@@ -1688,7 +1729,7 @@ Public Class F0_Ventas
                                         Dim precio As Double = dtDetalle.Rows(pos).Item("tbpbas")
                                         Dim total As Decimal = CStr(Format(precio * inventario, "####0.00"))
                                         dtDetalle.Rows(pos).Item("tbptot") = total
-                                        dtDetalle.Rows(pos).Item("tbtotdesc") = total
+                                        dtDetalle.Rows(pos).Item("tbtotdesc") = total - dtDetalle.Rows(pos).Item("tbdesc")
                                         'CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbtotdesc") = total
                                         'CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbcmin") = inventario
                                         dtDetalle.Rows(pos).Item("tbcmin") = inventario
@@ -1711,7 +1752,7 @@ Public Class F0_Ventas
                                 Dim precio As Double = dtDetalle.Rows(pos).Item("tbpbas")
                                 Dim total As Decimal = CStr(Format(precio * saldo, "####0.00"))
                                 dtDetalle.Rows(pos).Item("tbptot") = total
-                                dtDetalle.Rows(pos).Item("tbtotdesc") = total
+                                dtDetalle.Rows(pos).Item("tbtotdesc") = total - dtDetalle.Rows(pos).Item("tbdesc")
                                 dtDetalle.Rows(pos).Item("tbcmin") = saldo
                                 Dim precioCosto As Double = dtDetalle.Rows(pos).Item("tbpcos")
                                 dtDetalle.Rows(pos).Item("tbptot2") = precioCosto * saldo
@@ -1732,17 +1773,24 @@ Public Class F0_Ventas
     Public Sub _GuardarNuevo()
         Try
             Dim numi As String = ""
+            If cbTipoVenta.Value = 2 Then 'Tipo Venta Pago Tarjeta
+                NroTarjeta = tbNroTarjeta1.Text & tbNroTarjeta2.Text & tbNroTarjeta3.Text
+            Else
+                NroTarjeta = ""
+            End If
+
             Dim dtDetalle As DataTable = rearmarDetalle()
-            Dim res As Boolean = L_fnGrabarVenta(numi, "", tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado, IIf(swTipoVenta.Value = True, 1, 0),
-                                                 IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")),
+            Dim res As Boolean = L_fnGrabarVenta(numi, "", tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado, cbTipoVenta.Value,
+                                                 IIf(cbTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")),
                                                  _CodCliente, IIf(swMoneda.Value = True, 1, 0), tbObservacion.Text, tbMdesc.Value, tbIce.Value, tbtotal.Value,
-                                                 dtDetalle, cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), tbEmision.SelectedIndex + 1)
+                                                 dtDetalle, cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), tbEmision.SelectedIndex + 1,
+                                                 NroTarjeta)
 
             If res Then
                 ' res = P_fnGrabarFacturarTFV001(numi)
 
                 If (gb_FacturaEmite) Then
-                    If tbEmision.SelectedIndex = 0 Or TbNit.Text <> String.Empty And TbNit.Text <> "0" Then
+                    If tbEmision.SelectedIndex = 0 And TbNit.Text <> String.Empty And TbNit.Text <> "0" Then
                         P_fnGenerarFactura(numi)
 
                         'Dim dt As DataTable = L_fnRecuperarFactura(numi)
@@ -1800,7 +1848,17 @@ Public Class F0_Ventas
         End If
     End Sub
     Private Sub _prGuardarModificado()
-        Dim res As Boolean = L_fnModificarVenta(tbCodigo.Text, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado, IIf(swTipoVenta.Value = True, 1, 0), IIf(swTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")), _CodCliente, IIf(swMoneda.Value = True, 1, 0), tbObservacion.Text, tbMdesc.Value, tbIce.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable), cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0), tbEmision.SelectedIndex - 1)
+        If cbTipoVenta.Value = 2 Then 'Tipo Venta Pago Tarjeta
+            NroTarjeta = tbNroTarjeta1.Text & tbNroTarjeta2.Text & tbNroTarjeta3.Text
+        Else
+            NroTarjeta = ""
+        End If
+        Dim res As Boolean = L_fnModificarVenta(tbCodigo.Text, tbFechaVenta.Value.ToString("yyyy/MM/dd"), _CodEmpleado,
+                                                cbTipoVenta.Value, IIf(cbTipoVenta.Value = True, Now.Date.ToString("yyyy/MM/dd"), tbFechaVenc.Value.ToString("yyyy/MM/dd")),
+                                                _CodCliente, IIf(swMoneda.Value = True, 1, 0), tbObservacion.Text,
+                                                tbMdesc.Value, tbIce.Value, tbtotal.Value, CType(grdetalle.DataSource, DataTable),
+                                                cbSucursal.Value, IIf(SwProforma.Value = True, tbProforma.Text, 0),
+                                                tbEmision.SelectedIndex - 1, NroTarjeta)
         If res Then
 
             If (gb_FacturaEmite) Then
@@ -2564,7 +2622,6 @@ Public Class F0_Ventas
 
 #Region "Eventos Formulario"
     Private Sub F0_Ventas_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
         _IniciarTodo()
     End Sub
     Private Sub btnNuevo_Click(sender As Object, e As EventArgs) Handles btnNuevo.Click
@@ -2701,9 +2758,9 @@ Public Class F0_Ventas
             MostrarMensajeError(ex.Message)
         End Try
     End Sub
-    Private Sub swTipoVenta_ValueChanged(sender As Object, e As EventArgs) Handles swTipoVenta.ValueChanged
+    Private Sub swTipoVenta_ValueChanged(sender As Object, e As EventArgs)
         Try
-            If (swTipoVenta.Value = False) Then
+            If (cbTipoVenta.Value = False) Then
                 lbCredito.Visible = True
                 tbFechaVenc.Visible = True
                 tbFechaVenc.Value = DateAdd(DateInterval.Day, _dias, Now.Date)
@@ -3542,7 +3599,7 @@ salirIf:
                     Exit Sub
                 End If
             End If
-            If (swTipoVenta.Value = False) Then
+            If (cbTipoVenta.Value = False) Then
                 Dim res1 As Boolean = L_fnVerificarPagosVentas(tbCodigo.Text)
                 If res1 Then
                     Dim img As Bitmap = New Bitmap(My.Resources.WARNING, 50, 50)
@@ -3642,9 +3699,9 @@ salirIf:
         correo = ""
         tipoDoc = ""
 
-        If (TbNit.Text.Trim = String.Empty) Then
-            TbNit.Text = "0"
-        End If
+        'If (TbNit.Text.Trim = String.Empty) Then
+        '    TbNit.Text = "0"
+        'End If
         L_Validar_Nit(TbNit.Text.Trim, nom1, nom2, correo, tipoDoc, "")
         TbNombre1.Text = nom1
         TbNombre2.Text = nom2
@@ -3686,7 +3743,7 @@ salirIf:
             P_GenerarReporte(tbCodigo.Text)
         End If
     End Sub
-    Private Sub swTipoVenta_Leave(sender As Object, e As EventArgs) Handles swTipoVenta.Leave
+    Private Sub swTipoVenta_Leave(sender As Object, e As EventArgs)
         grdetalle.Select()
     End Sub
 
@@ -4111,18 +4168,28 @@ salirIf:
             email = TbEmail.Text
         End If
 
-        'If chbTarjeta.Checked = True And tbMontoTarej.Value > 0 Then
-        '    CodMetPago = 2
-        '    NroTarjeta = tbNroTarjeta.Text
-        'Else
-        CodMetPago = 1
+
+        'CodMetPago = 1
+        'NroTarjeta = ""
+
+
+
+        If cbTipoVenta.Value = 1 Then
+            CodMetPago = 1
             NroTarjeta = ""
-        'End If
-        If swTipoVenta.Value = False Then
+        ElseIf cbTipoVenta.Value = 2 Then
+            CodMetPago = 2
+            NroTarjeta = tbNroTarjeta1.Text & tbNroTarjeta2.Text & tbNroTarjeta3.Text
+        ElseIf cbTipoVenta.Value = 0 Then
             CodMetPago = 6
+            NroTarjeta = ""
+        Else
+            CodMetPago = 1
+            NroTarjeta = ""
         End If
-        _DsDosificacion = L_Dosificacion("1", "1", _Fecha)
-        _NumFac = CInt(_DsDosificacion.Tables(0).Rows(0).Item("sbnfac"))
+
+
+
         Dim dtmax = L_fnObtenerMaxFact(cbSucursal.Value, Convert.ToInt32(Now.Date.Year))
         If dtmax.Rows.Count = 0 Then
             NumFactura = 1
@@ -4231,4 +4298,36 @@ salirIf:
 
         Return codigo
     End Function
+
+    Private Sub cbTipoVenta_ValueChanged(sender As Object, e As EventArgs) Handles cbTipoVenta.ValueChanged
+        Try
+            If cbTipoVenta.Value = 2 Then 'Tipo Venta Tarjeta
+                lbNroTarjeta.Visible = True
+                tbNroTarjeta1.Visible = True
+                tbNroTarjeta2.Visible = True
+                tbNroTarjeta3.Visible = True
+                lbEjemplo.Visible = True
+            Else
+                tbNroTarjeta1.Text = ""
+                tbNroTarjeta3.Text = ""
+                lbNroTarjeta.Visible = False
+                tbNroTarjeta1.Visible = False
+                tbNroTarjeta2.Visible = False
+                tbNroTarjeta3.Visible = False
+                lbEjemplo.Visible = False
+            End If
+
+            If (cbTipoVenta.Value = 0) Then
+                lbCredito.Visible = True
+                tbFechaVenc.Visible = True
+                tbFechaVenc.Value = DateAdd(DateInterval.Day, _dias, Now.Date)
+            Else
+                lbCredito.Visible = False
+                tbFechaVenc.Visible = False
+            End If
+        Catch ex As Exception
+            MostrarMensajeError(ex.Message)
+        End Try
+
+    End Sub
 End Class
