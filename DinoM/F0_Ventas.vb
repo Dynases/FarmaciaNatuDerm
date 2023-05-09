@@ -3217,7 +3217,7 @@ salirIf:
                 CType(grdetalle.DataSource, DataTable).Rows(pos).Item("stock") = stock
                 CType(grdetalle.DataSource, DataTable).Rows(pos).Item("tbTipo") = 2 'Certifica que es de tipo  Formula
                 CType(grdetalle.DataSource, DataTable).Rows(pos).Item("ygcodsin") = 35260
-                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("ygcodu") = 57
+                CType(grdetalle.DataSource, DataTable).Rows(pos).Item("ygcodu") = 80  'Frasco
                 _prCalcularPrecioTotal()
                 _DesHabilitarProductos()
                 FilaSelectLote = Nothing

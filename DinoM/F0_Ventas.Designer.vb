@@ -660,6 +660,7 @@ Partial Class F0_Ventas
         Me.tbEmision.Name = "tbEmision"
         Me.tbEmision.Size = New System.Drawing.Size(185, 24)
         Me.tbEmision.TabIndex = 374
+        Me.tbEmision.Visible = False
         '
         'LabelX19
         '
@@ -674,6 +675,7 @@ Partial Class F0_Ventas
         Me.LabelX19.Size = New System.Drawing.Size(75, 23)
         Me.LabelX19.TabIndex = 372
         Me.LabelX19.Text = "Emisión:"
+        Me.LabelX19.Visible = False
         '
         'SwProforma
         '
