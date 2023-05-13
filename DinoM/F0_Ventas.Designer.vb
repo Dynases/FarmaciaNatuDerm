@@ -107,6 +107,7 @@ Partial Class F0_Ventas
         Me.Panel7 = New System.Windows.Forms.Panel()
         Me.grProductos = New Janus.Windows.GridEX.GridEX()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.swMostrar = New DevComponents.DotNetBar.Controls.SwitchButton()
         Me.PanelSuperior.SuspendLayout()
         Me.PanelInferior.SuspendLayout()
         CType(Me.BubbleBarUsuario, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -159,6 +160,7 @@ Partial Class F0_Ventas
         '
         'PanelSuperior
         '
+        Me.PanelSuperior.Controls.Add(Me.swMostrar)
         Me.PanelSuperior.Controls.Add(Me.ButtonX1)
         Me.PanelSuperior.Margin = New System.Windows.Forms.Padding(4)
         Me.PanelSuperior.Size = New System.Drawing.Size(1284, 72)
@@ -180,6 +182,7 @@ Partial Class F0_Ventas
         Me.PanelSuperior.Controls.SetChildIndex(Me.MRlAccion, 0)
         Me.PanelSuperior.Controls.SetChildIndex(Me.ButtonX1, 0)
         Me.PanelSuperior.Controls.SetChildIndex(Me.PictureBox1, 0)
+        Me.PanelSuperior.Controls.SetChildIndex(Me.swMostrar, 0)
         '
         'PanelInferior
         '
@@ -660,7 +663,6 @@ Partial Class F0_Ventas
         Me.tbEmision.Name = "tbEmision"
         Me.tbEmision.Size = New System.Drawing.Size(185, 24)
         Me.tbEmision.TabIndex = 374
-        Me.tbEmision.Visible = False
         '
         'LabelX19
         '
@@ -675,7 +677,6 @@ Partial Class F0_Ventas
         Me.LabelX19.Size = New System.Drawing.Size(75, 23)
         Me.LabelX19.TabIndex = 372
         Me.LabelX19.Text = "Emisión:"
-        Me.LabelX19.Visible = False
         '
         'SwProforma
         '
@@ -1854,6 +1855,22 @@ Partial Class F0_Ventas
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 1000
         '
+        'swMostrar
+        '
+        '
+        '
+        '
+        Me.swMostrar.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
+        Me.swMostrar.Location = New System.Drawing.Point(454, 27)
+        Me.swMostrar.Name = "swMostrar"
+        Me.swMostrar.OffBackColor = System.Drawing.Color.Gold
+        Me.swMostrar.OffText = "MOSTRAR ÚLT. 300"
+        Me.swMostrar.OnBackColor = System.Drawing.Color.ForestGreen
+        Me.swMostrar.OnText = "MOSTRAR TODOS"
+        Me.swMostrar.Size = New System.Drawing.Size(190, 22)
+        Me.swMostrar.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled
+        Me.swMostrar.TabIndex = 425
+        '
         'F0_Ventas
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1998,4 +2015,5 @@ Partial Class F0_Ventas
     Friend WithEvents tbNroTarjeta1 As DevComponents.DotNetBar.Controls.TextBoxX
     Friend WithEvents cbTipoVenta As Janus.Windows.GridEX.EditControls.MultiColumnCombo
     Friend WithEvents lbNroTarjeta As DevComponents.DotNetBar.LabelX
+    Friend WithEvents swMostrar As DevComponents.DotNetBar.Controls.SwitchButton
 End Class

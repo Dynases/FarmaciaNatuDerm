@@ -622,7 +622,7 @@ Public Class F0_Ventas
 
     Private Sub _prCargarVenta()
         Dim dt As New DataTable
-        dt = L_fnGeneralVenta()
+        dt = L_fnGeneralVenta(IIf(swMostrar.Value = True, 1, 0))
         grVentas.DataSource = dt
         grVentas.RetrieveStructure()
         grVentas.AlternatingColors = True
@@ -2105,7 +2105,7 @@ Public Class F0_Ventas
             If (impFactura) Then
                 Dim objrep As Object = Nothing
 
-                objrep = New R_Factura_7_5x1000
+                objrep = New R_Factura76x3276mm
 
                 SerPArametrosNuevo(_Ds, _Ds2, _Autorizacion, _Hora, _Literal, _NumFac, objrep,
                                     _Fecha, grabarPDF, numi)
@@ -4329,5 +4329,9 @@ salirIf:
             MostrarMensajeError(ex.Message)
         End Try
 
+    End Sub
+
+    Private Sub swMostrar_ValueChanged(sender As Object, e As EventArgs) Handles swMostrar.ValueChanged
+        _prCargarVenta()
     End Sub
 End Class
