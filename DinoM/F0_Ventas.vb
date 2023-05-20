@@ -2151,17 +2151,18 @@ Public Class F0_Ventas
             P_Global.Visualizador.BringToFront()
         Else
             Dim pd As New PrintDocument()
-            Dim instance As New Printing.PrinterSettings
-            Dim impresosaPredt As String = instance.PrinterName
-            pd.PrinterSettings.PrinterName = impresosaPredt
+            'Dim instance As New Printing.PrinterSettings
+            'Dim impresosaPredt As String = instance.PrinterName
+            pd.PrinterSettings.PrinterName = _Ds3.Tables(0).Rows(0).Item("cbrut").ToString
 
             If (Not pd.PrinterSettings.IsValid) Then
-                ToastNotification.Show(Me, "La Impresora ".ToUpper + impresosaPredt + Chr(13) + "No Existe".ToUpper,
+                ToastNotification.Show(Me, "La Impresora ".ToUpper + _Ds3.Tables(0).Rows(0).Item("cbrut").ToString + "No Existe".ToUpper,
                                        My.Resources.WARNING, 5000,
                                        eToastGlowColor.Blue, eToastPosition.BottomRight)
             Else
                 objrep.PrintOptions.PrinterName = _Ds3.Tables(0).Rows(0).Item("cbrut").ToString '"EPSON TM-T20II Receipt5 (1)"
                 objrep.PrintToPrinter(1, True, 0, 0)
+
 
             End If
         End If
@@ -2433,7 +2434,7 @@ Public Class F0_Ventas
             objrep.SetParameterValue("usuario", gs_user)
             objrep.SetParameterValue("estado", 1)
 
-            Dim _DsRutaImpresora = L_ObtenerRutaImpresora("1") ' Datos de Impresion de Facturación
+            Dim _DsRutaImpresora = L_ObtenerRutaImpresora("2") ' Datos de Impresion de Facturación
             If (_DsRutaImpresora.Tables(0).Rows(0).Item("cbvp")) Then 'Vista Previa de la Ventana de Vizualización 1 = True 0 = False
                 P_Global.Visualizador = New Visualizador
                 P_Global.Visualizador.CrGeneral.ReportSource = objrep
@@ -2441,13 +2442,15 @@ Public Class F0_Ventas
                 P_Global.Visualizador.BringToFront()
             Else
                 Dim pd As New PrintDocument()
-                pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
+                'pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
+                pd.PrinterSettings.PrinterName = _DsRutaImpresora.Tables(0).Rows(0).Item("cbrut").ToString
                 If (Not pd.PrinterSettings.IsValid) Then
-                    ToastNotification.Show(Me, "La Impresora ".ToUpper + "EPSON LX-350 ESC/P" + "No Existe".ToUpper,
+                    ToastNotification.Show(Me, "La Impresora ".ToUpper + _DsRutaImpresora.Tables(0).Rows(0).Item("cbrut").ToString + Chr(13) + "No Existe".ToUpper,
                                            My.Resources.WARNING, 5 * 1000,
                                            eToastGlowColor.Blue, eToastPosition.BottomRight)
                 Else
-                    objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString 
+                    'objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" 
+                    objrep.PrintOptions.PrinterName = _DsRutaImpresora.Tables(0).Rows(0).Item("cbrut").ToString
                     objrep.PrintToPrinter(1, False, 1, 1)
                 End If
             End If
