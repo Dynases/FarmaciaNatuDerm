@@ -18,7 +18,7 @@ Imports System
 Imports System.ComponentModel
 
 
-Public Class R_EtiquetaFormula_45x13
+Public Class R_EtiquetaFormula___Copia
     Inherits ReportClass
     
     Public Sub New()
@@ -27,7 +27,7 @@ Public Class R_EtiquetaFormula_45x13
     
     Public Overrides Property ResourceName() As String
         Get
-            Return "R_EtiquetaFormula_4.5x1.3.rpt"
+            Return "R_EtiquetaFormula - Copia.rpt"
         End Get
         Set
             'Do nothing
@@ -45,7 +45,7 @@ Public Class R_EtiquetaFormula_45x13
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "DinoM.R_EtiquetaFormula_4.5x1.3.rpt"
+            Return "DinoM.R_EtiquetaFormula - Copia.rpt"
         End Get
         Set
             'Do nothing
@@ -94,7 +94,7 @@ Public Class R_EtiquetaFormula_45x13
 End Class
 
 <System.Drawing.ToolboxBitmapAttribute(GetType(CrystalDecisions.[Shared].ExportOptions), "report.bmp")>  _
-Public Class CachedR_EtiquetaFormula_45x13
+Public Class CachedR_EtiquetaFormula___Copia
     Inherits Component
     Implements ICachedReport
     
@@ -136,7 +136,7 @@ Public Class CachedR_EtiquetaFormula_45x13
     End Property
     
     Public Overridable Function CreateReport() As CrystalDecisions.CrystalReports.Engine.ReportDocument Implements CrystalDecisions.ReportSource.ICachedReport.CreateReport
-        Dim rpt As R_EtiquetaFormula_45x13 = New R_EtiquetaFormula_45x13()
+        Dim rpt As R_EtiquetaFormula___Copia = New R_EtiquetaFormula___Copia()
         rpt.Site = Me.Site
         Return rpt
     End Function

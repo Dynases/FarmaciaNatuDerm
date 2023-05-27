@@ -58,7 +58,7 @@ Public Class ModeloF1
                         .FormatString = _MListEstBuscador.Item(i).formato
                     End If
                 Else
-                    .Visible = False
+                    '.Visible = False
                 End If
             End With
         Next

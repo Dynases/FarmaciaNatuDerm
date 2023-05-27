@@ -18,7 +18,7 @@ Imports System
 Imports System.ComponentModel
 
 
-Public Class R_Factura76x3276mm
+Public Class R_Factura_7_5x100___Copia
     Inherits ReportClass
     
     Public Sub New()
@@ -27,7 +27,7 @@ Public Class R_Factura76x3276mm
     
     Public Overrides Property ResourceName() As String
         Get
-            Return "R_Factura76x3276mm.rpt"
+            Return "R_Factura_7_5x100 - Copia.rpt"
         End Get
         Set
             'Do nothing
@@ -45,7 +45,7 @@ Public Class R_Factura76x3276mm
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "DinoM.R_Factura76x3276mm.rpt"
+            Return "DinoM.R_Factura_7_5x100 - Copia.rpt"
         End Get
         Set
             'Do nothing
@@ -206,7 +206,7 @@ Public Class R_Factura76x3276mm
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Parameter_ELey() As CrystalDecisions.[Shared].IParameterField
+    Public ReadOnly Property Parameter_EActividad() As CrystalDecisions.[Shared].IParameterField
         Get
             Return Me.DataDefinition.ParameterFields(13)
         End Get
@@ -214,7 +214,7 @@ Public Class R_Factura76x3276mm
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Parameter_EDuenho() As CrystalDecisions.[Shared].IParameterField
+    Public ReadOnly Property Parameter_ELey() As CrystalDecisions.[Shared].IParameterField
         Get
             Return Me.DataDefinition.ParameterFields(14)
         End Get
@@ -222,7 +222,7 @@ Public Class R_Factura76x3276mm
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Parameter_ENota() As CrystalDecisions.[Shared].IParameterField
+    Public ReadOnly Property Parameter_EDuenho() As CrystalDecisions.[Shared].IParameterField
         Get
             Return Me.DataDefinition.ParameterFields(15)
         End Get
@@ -230,7 +230,7 @@ Public Class R_Factura76x3276mm
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Parameter_FechaLim() As CrystalDecisions.[Shared].IParameterField
+    Public ReadOnly Property Parameter_ENota() As CrystalDecisions.[Shared].IParameterField
         Get
             Return Me.DataDefinition.ParameterFields(16)
         End Get
@@ -246,39 +246,15 @@ Public Class R_Factura76x3276mm
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Parameter_TipoVenta() As CrystalDecisions.[Shared].IParameterField
-        Get
-            Return Me.DataDefinition.ParameterFields(18)
-        End Get
-    End Property
-    
-    <Browsable(false),  _
-     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Parameter_PlazoPago() As CrystalDecisions.[Shared].IParameterField
-        Get
-            Return Me.DataDefinition.ParameterFields(19)
-        End Get
-    End Property
-    
-    <Browsable(false),  _
-     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Parameter_EActividad() As CrystalDecisions.[Shared].IParameterField
-        Get
-            Return Me.DataDefinition.ParameterFields(20)
-        End Get
-    End Property
-    
-    <Browsable(false),  _
-     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
     Public ReadOnly Property Parameter_PuntoVenta() As CrystalDecisions.[Shared].IParameterField
         Get
-            Return Me.DataDefinition.ParameterFields(21)
+            Return Me.DataDefinition.ParameterFields(18)
         End Get
     End Property
 End Class
 
 <System.Drawing.ToolboxBitmapAttribute(GetType(CrystalDecisions.[Shared].ExportOptions), "report.bmp")>  _
-Public Class CachedR_Factura76x3276mm
+Public Class CachedR_Factura_7_5x100___Copia
     Inherits Component
     Implements ICachedReport
     
@@ -320,7 +296,7 @@ Public Class CachedR_Factura76x3276mm
     End Property
     
     Public Overridable Function CreateReport() As CrystalDecisions.CrystalReports.Engine.ReportDocument Implements CrystalDecisions.ReportSource.ICachedReport.CreateReport
-        Dim rpt As R_Factura76x3276mm = New R_Factura76x3276mm()
+        Dim rpt As R_Factura_7_5x100___Copia = New R_Factura_7_5x100___Copia()
         rpt.Site = Me.Site
         Return rpt
     End Function

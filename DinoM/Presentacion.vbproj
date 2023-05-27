@@ -574,6 +574,12 @@
       <DependentUpon>R_EtiquetaFormula_4.5x1.3.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reporte\R_Factura_7_5x100 - Copia.vb">
+      <DependentUpon>R_Factura_7_5x100 - Copia.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Reporte\R_Factura_7_5x100.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -838,6 +844,12 @@
       <DependentUpon>R_VentasVendedor12Meses.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="R_EtiquetaFormula - Copia.vb">
+      <DependentUpon>R_EtiquetaFormula - Copia.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="R_EtiquetaFormula.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1077,6 +1089,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>R_EtiquetaFormula_4.5x1.3.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reporte\R_Factura_7_5x100 - Copia.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>R_Factura_7_5x100 - Copia.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reporte\R_Factura_7_5x100.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>R_Factura_7_5x100.vb</LastGenOutput>
@@ -1251,6 +1267,10 @@
     <EmbeddedResource Include="Reporte\R_VentasVendedor12Meses.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>R_VentasVendedor12Meses.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="R_EtiquetaFormula - Copia.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>R_EtiquetaFormula - Copia.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="R_EtiquetaFormula.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
