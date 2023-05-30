@@ -38,7 +38,7 @@ Public Class F0_Formula
                 If tEtiqueta.Rows.Count = 0 Then
                     Throw New Exception("Formula no completada")
                 End If
-                Dim objrep As New R_EtiquetaFormula___Copia
+                Dim objrep As New R_EtiquetaFormula2
                 objrep.SetDataSource(tEtiqueta)
                 Dim _DsRutaImpresora = L_ObtenerRutaImpresora("1") ' Datos de Impresion de Facturación
                 If (_DsRutaImpresora.Tables(0).Rows(0).Item("cbvp")) Then 'Vista Previa de la Ventana de Vizualización 1 = True 0 = False

@@ -2105,7 +2105,7 @@ Public Class F0_Ventas
             If (impFactura) Then
                 Dim objrep As Object = Nothing
 
-                objrep = New R_Factura_7_5x100___Copia
+                objrep = New R_Factura76x3276mm
 
                 SerPArametrosNuevo(_Ds, _Ds2, _Autorizacion, _Hora, _Literal, _NumFac, objrep,
                                     _Fecha, grabarPDF, numi)

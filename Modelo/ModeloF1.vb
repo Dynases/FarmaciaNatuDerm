@@ -58,7 +58,7 @@ Public Class ModeloF1
                         .FormatString = _MListEstBuscador.Item(i).formato
                     End If
                 Else
-                    '.Visible = False
+                    .Visible = False
                 End If
             End With
         Next
@@ -382,5 +382,7 @@ Public Class ModeloF1
     Private Sub btnUltimo_Click(sender As Object, e As EventArgs) Handles btnUltimo.Click
         _PMUltimoRegistro()
     End Sub
+
+
 #End Region
 End Class
