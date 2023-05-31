@@ -3918,10 +3918,10 @@ salirIf:
         Dim api = New DBApi()
 
         Dim Lenvio = New LoginEnvio()
-        Lenvio.email = "alexanderledezmasanchez53@gmail.com"
-        Lenvio.password = "123456Alex*"
+        Lenvio.email = "natuderm.srl@gmail.com"
+        Lenvio.password = "123456Veliz*"
 
-        Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/login"
+        Dim url = "https://di.sifac.nwc.com.bo/api/v2/login"
 
         Dim headers = New List(Of Parametro) From {
             New Parametro("Authorization", "bearer "),
@@ -3945,7 +3945,7 @@ salirIf:
 
         Dim api = New DBApi()
 
-        Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/conexion-siat"
+        Dim url = "https://di.sifac.nwc.com.bo/api/v2/conexion-siat"
 
         Dim headers = New List(Of Parametro) From {
             New Parametro("Authorization", "Bearer " + tokenObtenido),
@@ -3969,7 +3969,7 @@ salirIf:
 
         Dim api = New DBApi()
 
-        Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/metodos-pago"
+        Dim url = "https://di.sifac.nwc.com.bo/api/v2/metodos-pago"
 
         Dim headers = New List(Of Parametro) From {
             New Parametro("Authorization", "Bearer " + tokenObtenido),
@@ -3997,7 +3997,7 @@ salirIf:
 
         Dim api = New DBApi()
 
-        Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/tipo-documento"
+        Dim url = "https://di.sifac.nwc.com.bo/api/v2/tipo-documento"
 
         Dim headers = New List(Of Parametro) From {
             New Parametro("Authorization", "Bearer " + tokenObtenido),
@@ -4050,7 +4050,7 @@ salirIf:
         Dim api = New DBApi()
         Dim nit As String = TbNit.Text.Trim
 
-        Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/nit/" + nit + ""
+        Dim url = "https://di.sifac.nwc.com.bo/api/v2/nit/" + nit + ""
 
         Dim headers = New List(Of Parametro) From {
             New Parametro("Authorization", "Bearer " + tokenObtenido),
@@ -4226,7 +4226,7 @@ salirIf:
         Emenvio.actividadEconomica = 477311 'Actividad de Farmacia
         Emenvio.detalles = array
         Dim json = JsonConvert.SerializeObject(Emenvio)
-        Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/emision"
+        Dim url = "https://di.sifac.nwc.com.bo/api/v2/emision"
 
         Dim headers = New List(Of Parametro) From {
             New Parametro("Authorization", "Bearer " + tokenObtenido),

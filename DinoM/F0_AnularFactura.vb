@@ -388,7 +388,7 @@ Public Class F0_AnularFactura
 
         Dim api = New DBApi()
 
-        Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/motivo-anulacion"
+        Dim url = "https://di.sifac.nwc.com.bo/api/v2/motivo-anulacion"
 
         Dim headers = New List(Of Parametro) From {
             New Parametro("Authorization", "Bearer " + tokenObtenido),
@@ -431,7 +431,7 @@ Public Class F0_AnularFactura
             Aenvio.cuf = NroAutorizacion
             Aenvio.codigoMotivo = MotivoAnulacion
 
-            Dim url = "https://pilotofacturas.sifac.nwc.com.bo/api/v2/anular"
+            Dim url = "https://di.sifac.nwc.com.bo/api/v2/anular"
 
             Dim headers = New List(Of Parametro) From {
                 New Parametro("Authorization", "Bearer " + tokenObtenido),
