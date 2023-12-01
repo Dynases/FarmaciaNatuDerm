@@ -443,6 +443,7 @@ Public Class F0_KardexMovimiento
             .Visible = True
             '.CellStyle.BackColor = Color.AliceBlue
             .FormatString = "0.00"
+            .AggregateFunction = AggregateFunction.Sum
         End With
         With Dgj1Datos.RootTable.Columns(15)
             .Caption = "SALIDA"
@@ -454,6 +455,7 @@ Public Class F0_KardexMovimiento
             .Visible = True
             '.CellStyle.BackColor = Color.AliceBlue
             .FormatString = "0.00"
+            .AggregateFunction = AggregateFunction.Sum
         End With
         With Dgj1Datos.RootTable.Columns(16)
             .Caption = "Saldo"
@@ -491,15 +493,21 @@ Public Class F0_KardexMovimiento
         With Dgj1Datos
             .GroupByBoxVisible = False
             '.FilterRowFormatStyle.BackColor = Color.Blue
-            '.DefaultFilterRowComparison = FilterConditionOperator.Contains
-            '.FilterMode = FilterMode.Automatic
+            .DefaultFilterRowComparison = FilterConditionOperator.Contains
+            .FilterMode = FilterMode.Automatic
             .FilterRowUpdateMode = FilterRowUpdateMode.WhenValueChanges
+
+
             'Diseño de la tabla
             .VisualStyle = VisualStyle.Office2007
             .AlternatingColors = True
             .RecordNavigator = True
             .RecordNavigatorText = "Movimiento"
             .RowHeaders = InheritableBoolean.True
+
+            .TotalRow = InheritableBoolean.True
+            .TotalRowFormatStyle.BackColor = Color.Gold
+            .TotalRowPosition = TotalRowPosition.BottomFixed
         End With
         _prAplicarCondiccionJanus()
     End Sub
