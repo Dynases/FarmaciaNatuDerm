@@ -1057,7 +1057,9 @@ Public Class F0_MCompras
             sujetoCreditoFiscal = tbSACF.Text
             'nosujetoCreditoFiscal = fmonto - sujetoCreditoFiscal
             nosujetoCreditoFiscal = tbtotal.Value.ToString - sujetoCreditoFiscal
-            subTotal = fmonto - nosujetoCreditoFiscal
+            Dim nosujetoCreditoFiscal1 As Double = CDbl(nosujetoCreditoFiscal).ToString("0.00000")
+
+            subTotal = fmonto - nosujetoCreditoFiscal1
             'If tbMdesc.Value = String.Empty Then
             '    tbMdesc.Value = 0
             'End If
@@ -1068,7 +1070,7 @@ Public Class F0_MCompras
             fccont = tbCodControl.Text
             Dim numi As String = ""
 
-            _detalleCompras.Rows.Add(1, ffec, fnit, frsocial, fnro, fndui, fautoriz, fmonto, nosujetoCreditoFiscal, subTotal, fdesc, importeBaseCreditoFiscal, creditoFiscal, fccont, 1, 0, 0)
+            _detalleCompras.Rows.Add(1, ffec, fnit, frsocial, fnro, fndui, fautoriz, fmonto, nosujetoCreditoFiscal1, subTotal, fdesc, importeBaseCreditoFiscal, creditoFiscal, fccont, 1, 0, 0)
 
         Else
             ffec = tbFechaVenta.Value.ToString("yyyy/MM/dd")

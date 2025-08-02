@@ -14,6 +14,8 @@ Public Class Efecto
     Public ancho As Integer
     Public Row As Janus.Windows.GridEX.GridEXRow
     Public SeleclCol As Integer = -1
+    Public Cantidad As Double
+    Public impresora As Integer
 
 
 
@@ -31,6 +33,8 @@ Public Class Efecto
                 _prMostrarFormAyuda()
             Case 4
                 _prLogin()
+            Case 5
+                _prImpresora()
         End Select
     End Sub
     Public Sub _prLogin()
@@ -86,6 +90,25 @@ Public Class Efecto
             band = False
             Me.Close()
 
+        End If
+    End Sub
+    Sub _prImpresora()
+
+        Dim frmAyuda As F1_Cantidad
+        frmAyuda = New F1_Cantidad
+
+        frmAyuda.Cantidad = 1
+        frmAyuda.ShowDialog()
+
+        If frmAyuda.bandera = True Then
+
+            Cantidad = frmAyuda.Cantidad
+            impresora = frmAyuda.Impresora
+            band = True
+            Me.Close()
+        Else
+            band = False
+            Me.Close()
         End If
     End Sub
 End Class

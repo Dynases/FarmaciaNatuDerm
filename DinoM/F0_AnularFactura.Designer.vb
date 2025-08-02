@@ -147,6 +147,12 @@ Partial Class F0_AnularFactura
         Me.TxtNombreUsu.Size = New System.Drawing.Size(135, 32)
         Me.TxtNombreUsu.Text = "DEFAULT"
         '
+        'btnGrabar
+        '
+        '
+        'btnNuevo
+        '
+        '
         'PanelToolBar2
         '
         Me.PanelToolBar2.Location = New System.Drawing.Point(1204, 0)

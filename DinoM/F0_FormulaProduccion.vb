@@ -393,11 +393,13 @@ Public Class F0_FormulaProduccion
     Private Sub Imprimir()
         Try
             Dim ef = New Efecto
-            ef.tipo = 2
-            ef.Context = "MENSAJE PRINCIPAL".ToUpper
-            ef.Header = "¿desea imprimir la etiqueta?".ToUpper
+            ef.tipo = 5
+            'ef.Context = "MENSAJE PRINCIPAL".ToUpper
+            'ef.Header = "¿desea imprimir la etiqueta?".ToUpper
             ef.ShowDialog()
             Dim bandera As Boolean = False
+            Dim cant As Double = ef.Cantidad
+            Dim impresora As Integer = ef.impresora
             bandera = ef.band
             If (bandera = True) Then
                 If Not IsNothing(P_Global.Visualizador) Then
@@ -411,7 +413,7 @@ Public Class F0_FormulaProduccion
                 End If
                 Dim objrep As New R_EtiquetaFormula
                 objrep.SetDataSource(tEtiqueta)
-                Dim _DsRutaImpresora = L_ObtenerRutaImpresora("1") ' Datos de Impresion de Facturación
+                Dim _DsRutaImpresora = L_ObtenerRutaImpresora(impresora) ' Datos de Impresion de Facturación
                 If (_DsRutaImpresora.Tables(0).Rows(0).Item("cbvp")) Then 'Vista Previa de la Ventana de Vizualización 1 = True 0 = False
                     P_Global.Visualizador = New Visualizador
                     P_Global.Visualizador.CrGeneral.ReportSource = objrep
@@ -419,14 +421,14 @@ Public Class F0_FormulaProduccion
                     P_Global.Visualizador.BringToFront()
                 Else
                     Dim pd As New PrintDocument()
-                    pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
+                    pd.PrinterSettings.PrinterName = _DsRutaImpresora.Tables(0).Rows(0).Item("cbrut")
                     If (Not pd.PrinterSettings.IsValid) Then
-                        ToastNotification.Show(Me, "La Impresora ".ToUpper + "EPSON LX-350 ESC/P" + "No Existe".ToUpper,
+                        ToastNotification.Show(Me, "La Impresora ".ToUpper + _DsRutaImpresora.Tables(0).Rows(0).Item("cbrut") + "No Existe".ToUpper,
                                                My.Resources.WARNING, 5 * 1000,
                                                eToastGlowColor.Blue, eToastPosition.BottomRight)
                     Else
-                        objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString 
-                        objrep.PrintToPrinter(1, False, 1, 1)
+                        objrep.PrintOptions.PrinterName = _DsRutaImpresora.Tables(0).Rows(0).Item("cbrut") '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString 
+                        objrep.PrintToPrinter(cant, False, 1, 1)
                     End If
                 End If
 

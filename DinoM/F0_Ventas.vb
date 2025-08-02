@@ -4337,4 +4337,8 @@ salirIf:
     Private Sub swMostrar_ValueChanged(sender As Object, e As EventArgs) Handles swMostrar.ValueChanged
         _prCargarVenta()
     End Sub
+
+    Private Sub tbEmision_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tbEmision.SelectedIndexChanged
+
+    End Sub
 End Class

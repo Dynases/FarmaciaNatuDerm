@@ -568,6 +568,12 @@
       <DependentUpon>R_EstadoCuentasCompraTodos.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reporte\R_EtiquetaFormula21.vb">
+      <DependentUpon>R_EtiquetaFormula21.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Reporte\R_EtiquetaFormula2.vb">
       <DependentUpon>R_EtiquetaFormula2.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -905,6 +911,12 @@
     </Compile>
     <Compile Include="P_Encrypt.vb" />
     <Compile Include="P_Global.vb" />
+    <Compile Include="Utils\F1_Cantidad.Designer.vb">
+      <DependentUpon>F1_Cantidad.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\F1_Cantidad.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Utils\notifi.designer.vb">
       <DependentUpon>notifi.vb</DependentUpon>
     </Compile>
@@ -1090,6 +1102,10 @@
     <EmbeddedResource Include="Reporte\R_EstadoCuentasCompraTodos.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>R_EstadoCuentasCompraTodos.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporte\R_EtiquetaFormula21.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>R_EtiquetaFormula21.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reporte\R_EtiquetaFormula2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -1305,6 +1321,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utils\F1_Cantidad.resx">
+      <DependentUpon>F1_Cantidad.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utils\notifi.resx">
       <DependentUpon>notifi.vb</DependentUpon>

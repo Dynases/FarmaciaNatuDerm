@@ -63,6 +63,20 @@ Public Class AccesoLogica
     End Function
 
 
+
+
+    Public Shared Function L_prCargarImpresoras() As DataTable
+        Dim _Tabla As DataTable
+
+        Dim _listParam As New List(Of Datos.DParametro)
+
+        _listParam.Add(New Datos.DParametro("@tipo", 32))
+        _listParam.Add(New Datos.DParametro("@ibuact", L_Usuario))
+
+        _Tabla = D_ProcedimientoConParam("sp_Marco_TI002", _listParam)
+
+        Return _Tabla
+    End Function
 #End Region
 
 #Region "VALIDAR ELIMINACION"

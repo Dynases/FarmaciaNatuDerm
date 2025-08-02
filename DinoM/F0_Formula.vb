@@ -22,11 +22,13 @@ Public Class F0_Formula
     Private Sub Imprimir()
         Try
             Dim ef = New Efecto
-            ef.tipo = 2
-            ef.Context = "MENSAJE PRINCIPAL".ToUpper
-            ef.Header = "¿desea imprimir la etiqueta?".ToUpper
+            ef.tipo = 5
+            'ef.Context = "MENSAJE PRINCIPAL".ToUpper
+            'ef.Header = "¿desea imprimir la etiqueta?".ToUpper
             ef.ShowDialog()
             Dim bandera As Boolean = False
+            Dim cant As Double = ef.Cantidad
+            Dim impresora As Integer = ef.impresora
             bandera = ef.band
             If (bandera = True) Then
                 If Not IsNothing(P_Global.Visualizador) Then
@@ -38,32 +40,67 @@ Public Class F0_Formula
                 If tEtiqueta.Rows.Count = 0 Then
                     Throw New Exception("Formula no completada")
                 End If
-                Dim objrep As New R_EtiquetaFormula2
-                objrep.SetDataSource(tEtiqueta)
-                Dim _DsRutaImpresora = L_ObtenerRutaImpresora("1") ' Datos de Impresion de Facturación
-                If (_DsRutaImpresora.Tables(0).Rows(0).Item("cbvp")) Then 'Vista Previa de la Ventana de Vizualización 1 = True 0 = False
-                    P_Global.Visualizador = New Visualizador
-                    P_Global.Visualizador.CrGeneral.ReportSource = objrep
-                    P_Global.Visualizador.ShowDialog()
-                    P_Global.Visualizador.BringToFront()
-                Else
-                    Dim pd As New PrintDocument()
-                    pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
-                    If (Not pd.PrinterSettings.IsValid) Then
-                        ToastNotification.Show(Me, "La Impresora ".ToUpper + "EPSON LX-350 ESC/P" + "No Existe".ToUpper,
+
+                If impresora = 3 Then
+                    Dim objrep As New R_EtiquetaFormula21
+                    objrep.SetDataSource(tEtiqueta)
+                    Dim _DsRutaImpresora = L_ObtenerRutaImpresora("3") ' Datos de Impresion de Facturación
+                    If (_DsRutaImpresora.Tables(0).Rows(0).Item("cbvp")) Then 'Vista Previa de la Ventana de Vizualización 1 = True 0 = False
+                        P_Global.Visualizador = New Visualizador
+                        P_Global.Visualizador.CrGeneral.ReportSource = objrep
+                        P_Global.Visualizador.ShowDialog()
+                        P_Global.Visualizador.BringToFront()
+                    Else
+                        Dim pd As New PrintDocument()
+                        pd.PrinterSettings.PrinterName = "EPSON LX-350 ESC/P"
+                        If (Not pd.PrinterSettings.IsValid) Then
+                            ToastNotification.Show(Me, "La Impresora ".ToUpper + _DsRutaImpresora.Tables(0).Rows(0).Item("cbrut") + " No Existe".ToUpper,
                                                My.Resources.WARNING, 5 * 1000,
                                                eToastGlowColor.Blue, eToastPosition.BottomRight)
+                        Else
+                            objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString 
+                            objrep.PrintToPrinter(cant, False, 1, 1)
+                        End If
+                    End If
+
+                ElseIf impresora = 4 Then
+                    Dim objrep As New R_EtiquetaFormula2
+                    AjustarFecha(tEtiqueta)
+                    objrep.SetDataSource(tEtiqueta)
+                    Dim _DsRutaImpresora = L_ObtenerRutaImpresora("4") ' Datos de Impresion de Facturación
+                    If (_DsRutaImpresora.Tables(0).Rows(0).Item("cbvp")) Then 'Vista Previa de la Ventana de Vizualización 1 = True 0 = False
+                        P_Global.Visualizador = New Visualizador
+                        P_Global.Visualizador.CrGeneral.ReportSource = objrep
+                        P_Global.Visualizador.ShowDialog()
+                        P_Global.Visualizador.BringToFront()
                     Else
-                        objrep.PrintOptions.PrinterName = "EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString 
-                        objrep.PrintToPrinter(1, False, 1, 1)
+                        Dim pd As New PrintDocument()
+                        pd.PrinterSettings.PrinterName = "ZDesigner ZD230-203dpi ZPL"
+                        If (Not pd.PrinterSettings.IsValid) Then
+                            ToastNotification.Show(Me, "La Impresora ".ToUpper + _DsRutaImpresora.Tables(0).Rows(0).Item("cbrut") + " No Existe".ToUpper,
+                                               My.Resources.WARNING, 5 * 1000,
+                                               eToastGlowColor.Blue, eToastPosition.BottomRight)
+                        Else
+                            For i = 0 To cant - 1 Step 1
+                                objrep.PrintOptions.PrinterName = "ZDesigner ZD230-203dpi ZPL" '"EPSON LX-350 ESC/P" '_Ds3.Tables(0).Rows(0).Item("cbrut").ToString 
+                                objrep.PrintToPrinter(1, False, 0, 0)
+                            Next
+                        End If
                     End If
                 End If
-
             End If
 
         Catch ex As Exception
             MP_MostrarMensajeError(ex.Message)
         End Try
+    End Sub
+
+    Private Sub ajustarFecha(ByRef dt As DataTable)
+        Dim fec As String
+        For i = 0 To dt.Rows.Count - 1 Step 1
+            fec = dt.Rows(i).Item("Fecha")
+            dt.Rows(i).Item("Fecha") = fec.Substring(13, fec.Length - 13)
+        Next
     End Sub
     Private Sub Btn_Imprimir_Click(sender As Object, e As EventArgs) Handles Btn_Imprimir.Click
         Try
